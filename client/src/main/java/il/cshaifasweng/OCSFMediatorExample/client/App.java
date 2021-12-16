@@ -26,9 +26,8 @@ public class App extends Application {
     	EventBus.getDefault().register(this);
     	client = SimpleClient.getClient();
     	client.openConnection();
-        SimpleClient.getClient().sendToServer("#ClincInit");
-        scene = new Scene(loadFXML("primary"), 640, 480);
         SimpleClient.getClient().sendToServer("#GetAllClinics");
+        scene = new Scene(loadFXML("primary"), 640, 480);
         stage.setScene(scene);
         stage.show();
     }
@@ -41,8 +40,6 @@ public class App extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
         return fxmlLoader.load();
     }
-    
-    
 
     @Override
 	public void stop() throws Exception {
@@ -61,7 +58,6 @@ public class App extends Application {
         	);
         	alert.show();
     	});
-    	
     }
 
 	public static void main(String[] args) {
