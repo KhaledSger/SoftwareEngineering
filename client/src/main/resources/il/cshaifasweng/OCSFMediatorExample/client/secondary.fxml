@@ -1,16 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Button?>
 <?import javafx.geometry.Insets?>
 
-<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.SecondaryController">
-    <children>
-        <Label text="Secondary View" />
-        <Button fx:id="secondaryButton" text="Switch to Primary View" onAction="#switchToPrimary" />
-    </children>
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-    </padding>
-</VBox>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.SecondaryController">
+   <children>
+      <MenuButton fx:id="choose_clinic" layoutX="247.0" layoutY="58.0" mnemonicParsing="false" text="choose clinic">
+        <items>
+          <MenuItem fx:id="option1" mnemonicParsing="false" onAction="#open_1" text="Haifa clinic" />
+          <MenuItem fx:id="option2" mnemonicParsing="false" onAction="#open_2" text="Acre clinic" />
+            <MenuItem fx:id="option3" mnemonicParsing="false" onAction="#open_3" text=" Tel-Aviv clinic" />
+            <MenuItem fx:id="option4" mnemonicParsing="false" onAction="#open_4" text="Eilaboun clinic" />
+        </items>
+      </MenuButton>
+      <TextField fx:id="clinic_info" layoutX="44.0" layoutY="152.0" prefHeight="97.0" prefWidth="512.0" />
+      <TextField fx:id="opening_hours" layoutX="200.0" layoutY="275.0" prefHeight="27.0" prefWidth="59.0" />
+      <Button fx:id="update_button" layoutX="273.0" layoutY="331.0" mnemonicParsing="false" onAction="#update_hours" text="update" />
+       <Button fx:id="closeButton" cancelButton="true" layoutX="350.0" layoutY="767.0" mnemonicParsing="false" onAction="#handleCloseButtonAction" prefWidth="100.0" text="Close" />
+      <TextField fx:id="closing_hours" layoutX="486.0" layoutY="275.0" prefHeight="27.0" prefWidth="59.0" />
+      <TextArea layoutX="21.0" layoutY="275.0" prefHeight="27.0" prefWidth="151.0" text="Update opening hours:" />
+      <TextArea layoutX="309.0" layoutY="275.0" prefHeight="27.0" prefWidth="141.0" text="Update closing hours:" />
+   </children>
+</AnchorPane>
