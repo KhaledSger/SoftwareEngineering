@@ -1,5 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.server;
 import il.cshaifasweng.OCSFMediatorExample.entities.ClinicEntity;
+import il.cshaifasweng.OCSFMediatorExample.entities.PatientEntity;
 import il.cshaifasweng.OCSFMediatorExample.entities.Warning;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.AbstractServer;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
@@ -33,6 +34,10 @@ public class SimpleServer extends AbstractServer {
             service = new String[]{"ww", "zz"};
             ClinicEntity clinic4 = new ClinicEntity("Eilaboun clinic", "08:00", "12:00", service);
             session.save(clinic4);
+            PatientEntity pat1 = new PatientEntity(318588324,"Emad","Emad123",23,clinic1);
+            session.save(pat1);
+            PatientEntity pat2 = new PatientEntity(318234732,"Khaled","Khaled123",23,clinic4);
+            session.save(pat2);
             session.flush();
             session.getTransaction().commit();
         } catch (Exception e) {
@@ -56,6 +61,8 @@ public class SimpleServer extends AbstractServer {
     private static SessionFactory getSessionFactory() {
         Configuration configuration = new Configuration();
         configuration.addAnnotatedClass(ClinicEntity.class);
+        configuration.addAnnotatedClass(PatientEntity.class);
+
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
                 .build();

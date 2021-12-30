@@ -2,6 +2,7 @@ package il.cshaifasweng.OCSFMediatorExample.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 
 @Entity
@@ -17,12 +18,21 @@ public class ClinicEntity implements Serializable {
     private String close;
     private String[] services;
 
+
+    @OneToMany
+    @JoinColumn(name = "Clinic_id")
+    private List<PatientEntity> Patients;
+
+
+
+
     public ClinicEntity(String name, String open, String close, String[] services) {
         this.name = name;
         this.open = open;
         this.close = close;
         this.services = services;
     }
+
 
     public ClinicEntity(ClinicEntity CE) {
         this.name = CE.name;
@@ -72,5 +82,13 @@ public class ClinicEntity implements Serializable {
 
     public int getId() {
         return id;
+    }
+
+    public List<PatientEntity> getPatients() {
+        return Patients;
+    }
+
+    public void setPatients(List<PatientEntity> patients) {
+        Patients = patients;
     }
 }
