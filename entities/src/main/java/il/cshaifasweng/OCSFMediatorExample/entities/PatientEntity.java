@@ -15,7 +15,7 @@ public class PatientEntity implements Serializable {
     private int age;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "Clinic_Id")
+    @JoinColumn(name = "Clinic_id")
     private ClinicEntity clinic;
 
 
