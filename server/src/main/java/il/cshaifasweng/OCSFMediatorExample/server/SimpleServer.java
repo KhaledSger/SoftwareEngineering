@@ -1,6 +1,5 @@
 package il.cshaifasweng.OCSFMediatorExample.server;
-
-import il.cshaifasweng.OCSFMediatorExample.entities.ClincEntity;
+import il.cshaifasweng.OCSFMediatorExample.entities.ClinicEntity;
 import il.cshaifasweng.OCSFMediatorExample.entities.Warning;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.AbstractServer;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
@@ -17,23 +16,23 @@ import java.util.List;
 
 public class SimpleServer extends AbstractServer {
     private static Session session;
-    private static List<ClincEntity> Clinics;
+    private static List<ClinicEntity> Clinics;
 
     public void initSesssion() {
         session = getSessionFactory().openSession();
         try {
             String[] service = new String[]{"aaa", "bbb", "ccc"};
-            ClincEntity clinc1 = new ClincEntity("Haifa clinic", "10:00", "20:00", service);
-            session.save(clinc1);
+            ClinicEntity clinic1 = new ClinicEntity("Haifa clinic", "10:00", "20:00", service);
+            session.save(clinic1);
             service = new String[]{"bbb", "ddd", "ccc"};
-            ClincEntity clinc2 = new ClincEntity("Acre clinic", "12:00", "18:00", service);
-            session.save(clinc2);
+            ClinicEntity clinic2 = new ClinicEntity("Acre clinic", "12:00", "18:00", service);
+            session.save(clinic2);
             service = new String[]{"aaa", "eee", "ddd"};
-            ClincEntity clinc3 = new ClincEntity("Tel-Aviv clinic", "14:00", "22:00", service);
-            session.save(clinc3);
+            ClinicEntity clinic3 = new ClinicEntity("Tel-Aviv clinic", "14:00", "22:00", service);
+            session.save(clinic3);
             service = new String[]{"ww", "zz"};
-            ClincEntity clinc4 = new ClincEntity("Eilaboun clinic", "08:00", "12:00", service);
-            session.save(clinc4);
+            ClinicEntity clinic4 = new ClinicEntity("Eilaboun clinic", "08:00", "12:00", service);
+            session.save(clinic4);
             session.flush();
             session.getTransaction().commit();
         } catch (Exception e) {
@@ -56,7 +55,7 @@ public class SimpleServer extends AbstractServer {
 
     private static SessionFactory getSessionFactory() {
         Configuration configuration = new Configuration();
-        configuration.addAnnotatedClass(ClincEntity.class);
+        configuration.addAnnotatedClass(ClinicEntity.class);
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
                 .build();
@@ -78,36 +77,36 @@ public class SimpleServer extends AbstractServer {
             stopSession();
         } else if (msgString.equals("#GetAllClinics")) {
             try {
-                List<ClincEntity> clnics = getALLClinics();
+                List<ClinicEntity> clnics = getALLClinics();
                 Clinics = clnics;
                 client.sendToClient(clnics);
-                System.out.format("Sent all clincs to client %s\n", client.getInetAddress().getHostAddress());
+                System.out.format("Sent all clinics to client %s\n", client.getInetAddress().getHostAddress());
             } catch (Exception e) {
                 if (session != null) {
                     session.getTransaction().rollback();
                 }
             }
-        } else if (msg.getClass().equals(ClincEntity.class)) {
+        } else if (msg.getClass().equals(ClinicEntity.class)) {
             for (int i = 0; i < Clinics.size(); i++) {
-                if (Clinics.get(i).getId() == ((ClincEntity) msg).getId()) {
+                if (Clinics.get(i).getId() == ((ClinicEntity) msg).getId()) {
                     session.beginTransaction();
-                    Clinics.get(i).setOpen(((ClincEntity) msg).getOpen());
-                    Clinics.get(i).setClose(((ClincEntity) msg).getClose());
+                    Clinics.get(i).setOpen(((ClinicEntity) msg).getOpen());
+                    Clinics.get(i).setClose(((ClinicEntity) msg).getClose());
                     session.save(Clinics.get(i));
                     session.flush();
                     session.getTransaction().commit();
-                    System.out.format("Updating all clincs on client %s\n", client.getInetAddress().getHostAddress());
+                    System.out.format("Updating all clinics on client %s\n", client.getInetAddress().getHostAddress());
                 }
             }
         }
 
     }
 
-    private static List<ClincEntity> getALLClinics() {
+    private static List<ClinicEntity> getALLClinics() {
         CriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<ClincEntity> query = builder.createQuery(ClincEntity.class);
-        query.from(ClincEntity.class);
-        List<ClincEntity> result = session.createQuery(query).getResultList();
+        CriteriaQuery<ClinicEntity> query = builder.createQuery(ClinicEntity.class);
+        query.from(ClinicEntity.class);
+        List<ClinicEntity> result = session.createQuery(query).getResultList();
         return result;
     }
 }
