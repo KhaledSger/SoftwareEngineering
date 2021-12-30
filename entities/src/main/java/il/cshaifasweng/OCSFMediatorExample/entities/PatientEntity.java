@@ -24,7 +24,7 @@ public class PatientEntity implements Serializable {
         this.name = name;
         this.password = password;
         this.age = age;
-        this.setClinic(clinic);
+        setClinic(clinic);
     }
 
 
