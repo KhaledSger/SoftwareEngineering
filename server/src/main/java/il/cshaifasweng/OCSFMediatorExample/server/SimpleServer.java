@@ -116,4 +116,12 @@ public class SimpleServer extends AbstractServer {
         List<ClinicEntity> result = session.createQuery(query).getResultList();
         return result;
     }
+
+    private static List<PatientEntity> getALLPatients() {
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<PatientEntity> query = builder.createQuery(PatientEntity.class);
+        query.from(PatientEntity.class);
+        List<PatientEntity> result = session.createQuery(query).getResultList();
+        return result;
+    }
 }
