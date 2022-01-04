@@ -1,4 +1,5 @@
 package il.cshaifasweng.OCSFMediatorExample.server;
+
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.AbstractServer;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
@@ -11,9 +12,8 @@ import org.hibernate.service.ServiceRegistry;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class SimpleServer extends AbstractServer {
     private static Session session;
@@ -38,18 +38,18 @@ public class SimpleServer extends AbstractServer {
             session.save(pat1);
             PatientEntity pat2 = new PatientEntity(318234732,"Khaled","Khaled123",23,clinic4);
             session.save(pat2);
-            NurseEntity nurse1 = new NurseEntity(792596666,"Good","Nurse","nursegood@gmail.com");
+            NurseEntity nurse1 = new NurseEntity(792596666,"Good","Nurse","nursegood@gmail.com",clinic1);
             session.save(nurse1);
             DoctorEntity doc1= new DoctorEntity(2113423,"dr","fischer","drfischer@gmail.com","Neurology");
             session.save(doc1);
-            Map<Integer,String> times=new HashMap<Integer, String>();
-            times.put(1,"15:00-17:00");
-            times.put(2,"15:00-17:00");
-            times.put(3,"15:00-17:00");
-            times.put(4,"15:00-17:00");
-            times.put(5,"15:00-17:00");
-            times.put(6,"");
-            times.put(7,"");
+            ArrayList<String> times=new ArrayList<String>();
+            times.add("15:00-17:00");
+            times.add("15:00-17:00");
+            times.add("15:00-17:00");
+            times.add("15:00-17:00");
+            times.add("15:00-17:00");
+            times.add("");
+            times.add("");
             DoctorClinicEntity doctorClinic= new DoctorClinicEntity(doc1,clinic3,times);
             session.save(doctorClinic);
             session.flush();
