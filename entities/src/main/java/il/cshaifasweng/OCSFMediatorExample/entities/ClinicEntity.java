@@ -29,6 +29,9 @@ public class ClinicEntity implements Serializable {
     @JoinColumn(name = "Clinic_id")
     private List<NurseEntity> nurseEntities;
 
+    @OneToMany(mappedBy = "clinic")
+    private  List<DoctorClinicEntity> doctorClinicEntities;
+
 
 
 
@@ -40,7 +43,7 @@ public class ClinicEntity implements Serializable {
 
         this.Patients=new ArrayList<PatientEntity>();
         this.nurseEntities=new ArrayList<NurseEntity>();
-
+        this.doctorClinicEntities=new ArrayList<DoctorClinicEntity>();
     }
 
 
@@ -49,6 +52,9 @@ public class ClinicEntity implements Serializable {
         this.open = CE.open;
         this.close = CE.close;
         this.services = CE.services;
+        this.Patients=CE.Patients;
+        this.nurseEntities= CE.nurseEntities;
+        this.doctorClinicEntities=CE.doctorClinicEntities;
     }
 
     public ClinicEntity() {
@@ -100,5 +106,13 @@ public class ClinicEntity implements Serializable {
     }
     public List<NurseEntity> getNurseEntities() {
         return nurseEntities;
+    }
+
+    public List<DoctorClinicEntity> getDoctorClinicEntities() {
+        return doctorClinicEntities;
+    }
+
+    public void setDoctorClinicEntities(List<DoctorClinicEntity> doctorClinicEntities) {
+        this.doctorClinicEntities = doctorClinicEntities;
     }
 }

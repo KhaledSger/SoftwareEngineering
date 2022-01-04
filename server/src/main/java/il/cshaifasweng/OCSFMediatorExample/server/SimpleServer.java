@@ -1,7 +1,5 @@
 package il.cshaifasweng.OCSFMediatorExample.server;
-import il.cshaifasweng.OCSFMediatorExample.entities.ClinicEntity;
-import il.cshaifasweng.OCSFMediatorExample.entities.PatientEntity;
-import il.cshaifasweng.OCSFMediatorExample.entities.Warning;
+import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.AbstractServer;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
 import org.hibernate.Session;
@@ -13,8 +11,9 @@ import org.hibernate.service.ServiceRegistry;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SimpleServer extends AbstractServer {
     private static Session session;
@@ -39,6 +38,20 @@ public class SimpleServer extends AbstractServer {
             session.save(pat1);
             PatientEntity pat2 = new PatientEntity(318234732,"Khaled","Khaled123",23,clinic4);
             session.save(pat2);
+            NurseEntity nurse1 = new NurseEntity(792596666,"Good","Nurse","nursegood@gmail.com");
+            session.save(nurse1);
+            DoctorEntity doc1= new DoctorEntity(2113423,"dr","fischer","drfischer@gmail.com","Neurology");
+            session.save(doc1);
+            Map<Integer,String> times=new HashMap<Integer, String>();
+            times.put(1,"15:00-17:00");
+            times.put(2,"15:00-17:00");
+            times.put(3,"15:00-17:00");
+            times.put(4,"15:00-17:00");
+            times.put(5,"15:00-17:00");
+            times.put(6,"");
+            times.put(7,"");
+            DoctorClinicEntity doctorClinic= new DoctorClinicEntity(doc1,clinic3,times);
+            session.save(doctorClinic);
             session.flush();
             session.getTransaction().commit();
         } catch (Exception e) {
@@ -63,6 +76,14 @@ public class SimpleServer extends AbstractServer {
         Configuration configuration = new Configuration();
         configuration.addAnnotatedClass(ClinicEntity.class);
         configuration.addAnnotatedClass(PatientEntity.class);
+        configuration.addAnnotatedClass(NurseEntity.class);
+        configuration.addAnnotatedClass(DoctorEntity.class);
+        configuration.addAnnotatedClass(DoctorClinicEntity.class);
+
+
+
+
+
 
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
@@ -123,6 +144,27 @@ public class SimpleServer extends AbstractServer {
         CriteriaQuery<PatientEntity> query = builder.createQuery(PatientEntity.class);
         query.from(PatientEntity.class);
         List<PatientEntity> result = session.createQuery(query).getResultList();
+        return result;
+    }
+    private static List<NurseEntity> getALLNurses() {
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<NurseEntity> query = builder.createQuery(NurseEntity.class);
+        query.from(NurseEntity.class);
+        List<NurseEntity> result = session.createQuery(query).getResultList();
+        return result;
+    }
+    private static List<DoctorEntity> getALLDoctors() {
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<DoctorEntity> query = builder.createQuery(DoctorEntity.class);
+        query.from(DoctorEntity.class);
+        List<DoctorEntity> result = session.createQuery(query).getResultList();
+        return result;
+    }
+    private static List<DoctorClinicEntity> getALLDoctorClinics() {
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<DoctorClinicEntity> query = builder.createQuery(DoctorClinicEntity.class);
+        query.from(DoctorClinicEntity.class);
+        List<DoctorClinicEntity> result = session.createQuery(query).getResultList();
         return result;
     }
 }
