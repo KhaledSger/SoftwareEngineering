@@ -79,12 +79,6 @@ public class SimpleServer extends AbstractServer {
         configuration.addAnnotatedClass(NurseEntity.class);
         configuration.addAnnotatedClass(DoctorEntity.class);
         configuration.addAnnotatedClass(DoctorClinicEntity.class);
-
-
-
-
-
-
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
                 .build();
