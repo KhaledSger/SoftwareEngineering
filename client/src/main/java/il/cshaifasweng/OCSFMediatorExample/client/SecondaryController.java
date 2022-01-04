@@ -56,25 +56,25 @@ public class SecondaryController {
     @FXML
     void open_1(ActionEvent event) {
         current = 0;
-        clinic_info.setText("Name : " + SimpleClient.ClinicList.get(0).getName() + " ,Open : " + SimpleClient.ClnicList.get(0).getOpen() + " ,Close : " + SimpleClient.ClnicList.get(0).getClose());
+        clinic_info.setText("Name : " + SimpleClient.ClinicList.get(0).getName() + " ,Open : " + SimpleClient.ClinicList.get(0).getOpen() + " ,Close : " + SimpleClient.ClinicList.get(0).getClose());
     }
 
     @FXML
     void open_2(ActionEvent event) {
         current = 1;
-        clinic_info.setText("Name : " + SimpleClient.ClinicList.get(1).getName() + " ,Open : " + SimpleClient.ClnicList.get(1).getOpen() + " ,Close : " + SimpleClient.ClnicList.get(1).getClose());
+        clinic_info.setText("Name : " + SimpleClient.ClinicList.get(1).getName() + " ,Open : " + SimpleClient.ClinicList.get(1).getOpen() + " ,Close : " + SimpleClient.ClinicList.get(1).getClose());
     }
 
     @FXML
     void open_3(ActionEvent event) {
         current = 2;
-        clinic_info.setText("Name : " + SimpleClient.ClinicList.get(2).getName() + " ,Open : " + SimpleClient.ClnicList.get(2).getOpen() + " ,Close : " + SimpleClient.ClnicList.get(2).getClose());
+        clinic_info.setText("Name : " + SimpleClient.ClinicList.get(2).getName() + " ,Open : " + SimpleClient.ClinicList.get(2).getOpen() + " ,Close : " + SimpleClient.ClinicList.get(2).getClose());
     }
 
     @FXML
     void open_4(ActionEvent event) {
         current = 3;
-        clinic_info.setText("Name : " + SimpleClient.ClinicList.get(3).getName() + " ,Open : " + SimpleClient.ClnicList.get(3).getOpen() + " ,Close : " + SimpleClient.ClnicList.get(3).getClose());
+        clinic_info.setText("Name : " + SimpleClient.ClinicList.get(3).getName() + " ,Open : " + SimpleClient.ClinicList.get(3).getOpen() + " ,Close : " + SimpleClient.ClinicList.get(3).getClose());
     }
 
     @FXML
@@ -93,7 +93,7 @@ public class SecondaryController {
                 e.printStackTrace();
             }
         }
-        clinic_info.setText("Name : " + SimpleClient.ClinicList.get(current).getName() + " Open : " + SimpleClient.ClnicList.get(current).getOpen() + " Close : " + SimpleClient.ClnicList.get(current).getClose());
+        clinic_info.setText("Name : " + SimpleClient.ClinicList.get(current).getName() + " Open : " + SimpleClient.ClinicList.get(current).getOpen() + " Close : " + SimpleClient.ClinicList.get(current).getClose());
         opening_hours.setText("");
         closing_hours.setText("");
     }

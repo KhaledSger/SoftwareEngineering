@@ -35,11 +35,12 @@ public class ClinicEntity implements Serializable {
 
 
 
-    public ClinicEntity(String name, String open, String close, String[] services) {
+    public ClinicEntity(String name, String open, String close, String[] services,List<PatientEntity> Patients) {
         this.name = name;
         this.open = open;
         this.close = close;
         this.services = services;
+
         this.Patients=new ArrayList<PatientEntity>();
         this.nurseEntities=new ArrayList<NurseEntity>();
         this.doctorClinicEntities=new ArrayList<DoctorClinicEntity>();
