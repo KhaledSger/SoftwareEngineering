@@ -47,6 +47,8 @@ public class ClinicEntity implements Serializable {
         this.open = CE.open;
         this.close = CE.close;
         this.services = CE.services;
+        this.Patients=CE.Patients;
+        this.nurseEntities= CE.nurseEntities;
     }
 
     public ClinicEntity() {
