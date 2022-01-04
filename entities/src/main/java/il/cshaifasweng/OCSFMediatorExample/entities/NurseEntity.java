@@ -7,6 +7,7 @@ import javax.persistence.*;
 public class NurseEntity extends EmployeeEntity{
     public NurseEntity(int id, String employee_name, String family_name, String mail) {
         super(id, employee_name, family_name, mail);
+
     }
      @ManyToOne(fetch=FetchType.LAZY)
      @JoinColumn(name="Clinic_id")
