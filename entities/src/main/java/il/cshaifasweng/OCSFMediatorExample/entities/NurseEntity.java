@@ -5,13 +5,15 @@ import javax.persistence.*;
 @Entity
 @Table(name = "Nurse")
 public class NurseEntity extends EmployeeEntity{
-    public NurseEntity(int id, String employee_name, String family_name, String mail) {
+    public NurseEntity(int id, String employee_name, String family_name, String mail,ClinicEntity clinic) {
         super(id, employee_name, family_name, mail);
-
+        this.clinic = clinic;
     }
+    
      @ManyToOne(fetch=FetchType.LAZY)
      @JoinColumn(name="Clinic_id")
      private ClinicEntity clinic;
+
     public int getNurse_id() {
         return nurse_id;
     }

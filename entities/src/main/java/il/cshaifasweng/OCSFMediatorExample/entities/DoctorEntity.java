@@ -8,6 +8,7 @@ import java.util.List;
 @Table(name = "doctor_entity")
 public class DoctorEntity extends EmployeeEntity {
     public DoctorEntity(int id, String employee_name, String family_name, String mail, String specialization) {
+        super(id, employee_name, family_name, mail);
         Specialization = specialization;
         this.doctorClinicEntities=new ArrayList<DoctorClinicEntity>();
     }

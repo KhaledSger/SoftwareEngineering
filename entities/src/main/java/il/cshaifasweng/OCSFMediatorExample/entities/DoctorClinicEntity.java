@@ -5,9 +5,8 @@ package il.cshaifasweng.OCSFMediatorExample.entities;
 
 
 import javax.persistence.*;
-
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 @Entity
 public class DoctorClinicEntity {
@@ -26,14 +25,35 @@ public class DoctorClinicEntity {
     @JoinColumn(name="clinic_id")
     ClinicEntity clinic;
 
-   private Map<Integer,String> day_hours;
 
 
-    public DoctorClinicEntity(DoctorEntity doctor, ClinicEntity clinic, Map<Integer, String> day_hours) {
+    String day_hours;
+
+
+    public DoctorClinicEntity(DoctorEntity doctor, ClinicEntity clinic, ArrayList<String> day_hour) {
         this.doctor = doctor;
         this.clinic = clinic;
-        this.day_hours = day_hours ;
+        setDay_hours(day_hour);
 
+    }
+
+    public void setDay_hours(ArrayList<String> day_hour) {
+        String ListToString = "";
+        for(int i = 0; i < day_hour.size(); i++){
+            ListToString += day_hour.get(i);
+            ListToString += "@&%@";
+        }
+        this.day_hours = ListToString;
+
+    }
+
+    public String getDay_hours() {
+        return day_hours;
+    }
+
+    public ArrayList<String> getWorkingHours(){
+        String workingHours = getDay_hours();
+        return (ArrayList<String>) Arrays.stream(workingHours.split("@&%@")).toList();
     }
 
     public DoctorEntity getDoctor() {
@@ -54,13 +74,13 @@ public class DoctorClinicEntity {
         clinic.getDoctorClinicEntities().add(this);
     }
 
-    public Map<Integer, String> getDay_hours() {
-        return day_hours;
-    }
+//    public Map<Integer, String> getDay_hours() {
+//        return day_hours;
+//    }
 
-    public void setDay_hours(Map<Integer, String> day_hours) {
-        this.day_hours = day_hours;
-    }
+//    public void setDay_hours(Map<Integer, String> day_hours) {
+//        this.day_hours = day_hours;
+//    }
 
     public int getDoctorClinic_id() {
         return DoctorClinic_id;
