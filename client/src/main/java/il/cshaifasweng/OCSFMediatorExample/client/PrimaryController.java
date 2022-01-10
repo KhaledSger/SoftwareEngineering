@@ -37,5 +37,6 @@ public class PrimaryController {
 		assert clinics != null : "fx:id=\"clinics\" was not injected: check your FXML file 'primary.fxml'.";
 
 	}
+
 }
 
