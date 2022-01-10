@@ -10,8 +10,7 @@ import java.util.Arrays;
 
 @Entity
 public class DoctorClinicEntity {
-    public DoctorClinicEntity() {
-    }
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,6 +34,8 @@ public class DoctorClinicEntity {
         this.clinic = clinic;
         setDay_hours(day_hour);
 
+    }
+    public DoctorClinicEntity() {
     }
 
     public void setDay_hours(ArrayList<String> day_hour) {
