@@ -111,9 +111,9 @@ public class SimpleServer extends AbstractServer {
             stopSession();
         } else if (msgString.equals("#GetAllClinics")) {
             try {
-                List<ClinicEntity> clnics = getALLClinics();
-                Clinics = clnics;
-                client.sendToClient(clnics);
+                List<ClinicEntity> clinics = getALLClinics();
+                Clinics = clinics;
+                client.sendToClient(clinics);
                 System.out.format("Sent all clinics to client %s\n", client.getInetAddress().getHostAddress());
             } catch (Exception e) {
                 if (session != null) {
@@ -130,6 +130,19 @@ public class SimpleServer extends AbstractServer {
                     session.flush();
                     session.getTransaction().commit();
                     System.out.format("Updating all clinics on client %s\n", client.getInetAddress().getHostAddress());
+                }
+            }
+        } else if (msg.getClass().equals(UserEntity.class)){
+            List<ManagerEntity> Mangers = getALLMangers();
+            for (int i = 0 ; i < Mangers.size(); i++){
+                if((((ManagerEntity) msg).getId() == Mangers.get(i).getId()) && Mangers.get(i).comparePassword(((ManagerEntity) msg).getPassword())){
+                    try {
+                        client.sendToClient(Mangers.get(i));
+                    } catch (IOException e) {
+                        if (session != null) {
+                            session.getTransaction().rollback();
+                        }
+                    }
                 }
             }
         }
@@ -163,6 +176,13 @@ public class SimpleServer extends AbstractServer {
         CriteriaQuery<DoctorEntity> query = builder.createQuery(DoctorEntity.class);
         query.from(DoctorEntity.class);
         List<DoctorEntity> result = session.createQuery(query).getResultList();
+        return result;
+    }
+    private static List<ManagerEntity> getALLMangers() {
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<ManagerEntity> query = builder.createQuery(ManagerEntity.class);
+        query.from(ManagerEntity.class);
+        List<ManagerEntity> result = session.createQuery(query).getResultList();
         return result;
     }
     private static List<DoctorClinicEntity> getALLDoctorClinics() {

@@ -96,5 +96,8 @@ public class UserEntity implements Serializable {
     public boolean comparePassword(String inputPassword){
         return getPassword() == getSecurePassword(inputPassword,this.Salt);
     }
-    
+
+    public void setTmpPassword(String Password){
+        this.Password = Password;
+    }
 }
