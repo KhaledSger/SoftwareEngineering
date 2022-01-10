@@ -23,16 +23,16 @@ public class SimpleServer extends AbstractServer {
         session = getSessionFactory().openSession();
         try {
             String[] service = new String[]{"aaa", "bbb", "ccc"};
-            ClinicEntity clinic1 = new ClinicEntity("Haifa clinic", "10:00", "20:00", service);
+            ClinicEntity clinic1 = new ClinicEntity("Haifa clinic", "10:00", "20:00", service, new ArrayList<PatientEntity>());
             session.save(clinic1);
             service = new String[]{"bbb", "ddd", "ccc"};
-            ClinicEntity clinic2 = new ClinicEntity("Acre clinic", "12:00", "18:00", service);
+            ClinicEntity clinic2 = new ClinicEntity("Acre clinic", "12:00", "18:00", service, new ArrayList<PatientEntity>());
             session.save(clinic2);
             service = new String[]{"aaa", "eee", "ddd"};
-            ClinicEntity clinic3 = new ClinicEntity("Tel-Aviv clinic", "14:00", "22:00", service);
+            ClinicEntity clinic3 = new ClinicEntity("Tel-Aviv clinic", "14:00", "22:00", service, new ArrayList<PatientEntity>());
             session.save(clinic3);
             service = new String[]{"ww", "zz"};
-            ClinicEntity clinic4 = new ClinicEntity("Eilaboun clinic", "08:00", "12:00", service);
+            ClinicEntity clinic4 = new ClinicEntity("Eilaboun clinic", "08:00", "12:00", service, new ArrayList<PatientEntity>());
             session.save(clinic4);
             PatientEntity pat1 = new PatientEntity(318588324,"Emad","Emad123",23,clinic1);
             session.save(pat1);
@@ -54,6 +54,12 @@ public class SimpleServer extends AbstractServer {
             times.add("");
             DoctorClinicEntity doctorClinic= new DoctorClinicEntity(doc1,clinic3,times);
             session.save(doctorClinic);
+            ManagerEntity manger = new ManagerEntity(doc1.getDoctor_id(), doc1.getFirst_name(), doc1.getFamily_name(),
+                    doc1.getMail(),"Man123",clinic2);
+            session.save(manger);
+            DoctorPatientEntity docpat=new DoctorPatientEntity(doc1,pat1);
+            session.save(docpat);
+
             session.flush();
             session.getTransaction().commit();
         } catch (Exception e) {
@@ -82,6 +88,11 @@ public class SimpleServer extends AbstractServer {
         configuration.addAnnotatedClass(DoctorEntity.class);
         configuration.addAnnotatedClass(DoctorClinicEntity.class);
         configuration.addAnnotatedClass(AppointmentEntity.class);
+        configuration.addAnnotatedClass(ManagerEntity.class);
+        configuration.addAnnotatedClass(DoctorPatientEntity.class);
+
+
+
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
                 .build();
@@ -103,9 +114,9 @@ public class SimpleServer extends AbstractServer {
             stopSession();
         } else if (msgString.equals("#GetAllClinics")) {
             try {
-                List<ClinicEntity> clnics = getALLClinics();
-                Clinics = clnics;
-                client.sendToClient(clnics);
+                List<ClinicEntity> clinics = getALLClinics();
+                Clinics = clinics;
+                client.sendToClient(clinics);
                 System.out.format("Sent all clinics to client %s\n", client.getInetAddress().getHostAddress());
             } catch (Exception e) {
                 if (session != null) {
@@ -122,6 +133,19 @@ public class SimpleServer extends AbstractServer {
                     session.flush();
                     session.getTransaction().commit();
                     System.out.format("Updating all clinics on client %s\n", client.getInetAddress().getHostAddress());
+                }
+            }
+        } else if (msg.getClass().equals(UserEntity.class)){
+            List<ManagerEntity> Mangers = getALLMangers();
+            for (int i = 0 ; i < Mangers.size(); i++){
+                if((((ManagerEntity) msg).getId() == Mangers.get(i).getId()) && Mangers.get(i).comparePassword(((ManagerEntity) msg).getPassword())){
+                    try {
+                        client.sendToClient(Mangers.get(i));
+                    } catch (IOException e) {
+                        if (session != null) {
+                            session.getTransaction().rollback();
+                        }
+                    }
                 }
             }
         }
@@ -155,6 +179,13 @@ public class SimpleServer extends AbstractServer {
         CriteriaQuery<DoctorEntity> query = builder.createQuery(DoctorEntity.class);
         query.from(DoctorEntity.class);
         List<DoctorEntity> result = session.createQuery(query).getResultList();
+        return result;
+    }
+    private static List<ManagerEntity> getALLMangers() {
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<ManagerEntity> query = builder.createQuery(ManagerEntity.class);
+        query.from(ManagerEntity.class);
+        List<ManagerEntity> result = session.createQuery(query).getResultList();
         return result;
     }
     private static List<DoctorClinicEntity> getALLDoctorClinics() {

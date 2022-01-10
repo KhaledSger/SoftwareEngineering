@@ -2,12 +2,9 @@ package il.cshaifasweng.OCSFMediatorExample.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @Table(name = "Patient")
-public class PatientEntity implements Serializable {
+public class PatientEntity extends UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Patient_id")
@@ -26,17 +23,17 @@ public class PatientEntity implements Serializable {
     private List<AppointmentEntity> appointments;
 
 
-    public PatientEntity(int id, String name, String password, int age,ClinicEntity clinic) {
-        this.id = id;
-        this.name = name;
-        this.password = password;
+
+    @OneToMany(mappedBy = "patient")
+    List<DoctorPatientEntity> doctorPatientEntities;
+
+
+    public PatientEntity(int id, String first_name,String family_name,String mail ,String Password,int age,ClinicEntity clinic) throws NoSuchAlgorithmException {
+        super(id, first_name, family_name, mail,Password);
         this.age = age;
         this.appointments = new ArrayList<AppointmentEntity>();
         setClinic(clinic);
-    }
-
-    public PatientEntity() {
-
+        this.doctorPatientEntities=new ArrayList<DoctorPatientEntity>();
     }
 
 
@@ -86,5 +83,13 @@ public class PatientEntity implements Serializable {
 
     public void setAppointments(List<AppointmentEntity> appointments) {
         this.appointments = appointments;
+    }
+
+    public List<DoctorPatientEntity> getDoctorPatientEntities() {
+        return doctorPatientEntities;
+    }
+
+    public void setDoctorPatientEntities(List<DoctorPatientEntity> doctorPatientEntities) {
+        this.doctorPatientEntities = doctorPatientEntities;
     }
 }
