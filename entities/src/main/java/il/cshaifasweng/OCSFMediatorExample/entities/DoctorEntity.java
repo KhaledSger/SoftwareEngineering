@@ -1,15 +1,16 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
 
 import javax.persistence.*;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "doctor_entity")
 
-public class DoctorEntity extends EmployeeEntity {
-    public DoctorEntity(int id, String employee_name, String family_name, String mail, String specialization) {
-        super(id, employee_name, family_name, mail);
+public class DoctorEntity extends UserEntity {
+    public DoctorEntity(int id, String first_name, String family_name, String mail,String Password,String specialization) throws NoSuchAlgorithmException {
+        super(id, first_name, family_name, mail,Password);
         Specialization = specialization;
         this.doctorClinicEntities=new ArrayList<DoctorClinicEntity>();
         this.doctorPatientEntities=new ArrayList<DoctorPatientEntity>();

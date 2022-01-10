@@ -34,13 +34,13 @@ public class SimpleServer extends AbstractServer {
             service = new String[]{"ww", "zz"};
             ClinicEntity clinic4 = new ClinicEntity("Eilaboun clinic", "08:00", "12:00", service, new ArrayList<PatientEntity>());
             session.save(clinic4);
-            PatientEntity pat1 = new PatientEntity(318588324,"Emad","Emad123",23,clinic1);
+            PatientEntity pat1 = new PatientEntity(318588324,"Emad","daraw","Emad123@gmail.xom","Em12345",23,clinic1);
             session.save(pat1);
-            PatientEntity pat2 = new PatientEntity(318234732,"Khaled","Khaled123",23,clinic4);
+            PatientEntity pat2 = new PatientEntity(318234732,"Khaled","Sger","Khaled123@gmail.com","Kh12345",23,clinic4);
             session.save(pat2);
-            NurseEntity nurse1 = new NurseEntity(792596666,"Good","Nurse","nursegood@gmail.com",clinic1);
+            NurseEntity nurse1 = new NurseEntity(792596666,"Good","Nurse","nursegood@gmail.com","Goo123",clinic1);
             session.save(nurse1);
-            DoctorEntity doc1= new DoctorEntity(2113423,"dr","fischer","drfischer@gmail.com","Neurology");
+            DoctorEntity doc1= new DoctorEntity(2113423,"dr","fischer","drfischer@gmail.com","fis123","Neurology");
             session.save(doc1);
             ArrayList<String> times=new ArrayList<String>();
             times.add("15:00-17:00");
@@ -52,8 +52,8 @@ public class SimpleServer extends AbstractServer {
             times.add("");
             DoctorClinicEntity doctorClinic= new DoctorClinicEntity(doc1,clinic3,times);
             session.save(doctorClinic);
-            ManagerEntity manger = new ManagerEntity(doc1.getDoctor_id(), doc1.getEmployee_name(), doc1.getFamily_name(),
-                    doc1.getMail(),clinic2);
+            ManagerEntity manger = new ManagerEntity(doc1.getDoctor_id(), doc1.getFirst_name(), doc1.getFamily_name(),
+                    doc1.getMail(),"Man123",clinic2);
             session.save(manger);
             DoctorPatientEntity docpat=new DoctorPatientEntity(doc1,pat1);
             session.save(docpat);

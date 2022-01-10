@@ -113,12 +113,12 @@ public class SecondaryController {
 
     }
 
-    @FXML
-    public void handleCloseButtonAction(ActionEvent actionEvent) {
-        try {
-            SimpleClient.getClient().sendToServer("#CloseSession");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    @FXML
+//    public void handleCloseButtonAction(ActionEvent actionEvent) {
+//        try {
+//            SimpleClient.getClient().sendToServer("#CloseSession");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 }
