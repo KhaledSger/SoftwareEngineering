@@ -13,10 +13,10 @@ public class SimpleClient extends AbstractClient {
 
     private static SimpleClient client = null;
     public static List<ClinicEntity> ClinicList;
-    public static PatientEntity thisPatient;
-    public static DoctorEntity thisDoctor;
-    public static ManagerEntity thisManger;
-    public static NurseEntity thisNurse;
+    public static PatientEntity thisPatient = null;
+    public static DoctorEntity thisDoctor = null;
+    public static ManagerEntity thisManger = null;
+    public static NurseEntity thisNurse = null;
 
     private SimpleClient(String host, int port) {
         super(host, port);
@@ -46,10 +46,15 @@ public class SimpleClient extends AbstractClient {
         return client;
     }
 
-    public void LogIn(int id, String password) throws IOException {
+    public void LogIn(int id, String password){
         UserEntity thisUser = new UserEntity();
         thisUser.setTmpPassword(password);
         thisUser.setId(id);
-        SimpleClient.getClient().sendToServer(thisUser);
+        try {
+            SimpleClient.getClient().sendToServer(thisUser);
+        } catch (IOException e) {
+
+            System.out.println("EXCEPTION FROM HERE");
+        }
     }
 }
