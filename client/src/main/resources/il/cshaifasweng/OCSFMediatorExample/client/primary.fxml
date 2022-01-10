@@ -10,6 +10,8 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.PrimaryController">
    <children>
-      <Button fx:id="clinics" layoutX="217.0" layoutY="165.0" mnemonicParsing="false" onAction="#view_clinics" prefHeight="27.0" prefWidth="154.0" text="View Clinics" />
+      <PasswordField fx:id="Password" layoutX="220.0" layoutY="149.0" promptText="Password" />
+      <TextField fx:id="ID" layoutX="220.0" layoutY="101.0" promptText="ID" />
+      <Button fx:id="LoginBtn" layoutX="274.0" layoutY="254.0" mnemonicParsing="false" onAction="#Login" text="Log in" />
    </children>
 </AnchorPane>

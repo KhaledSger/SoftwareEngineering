@@ -64,4 +64,5 @@ public class DoctorEntity extends UserEntity {
     public void setDoctorPatientEntities(List<DoctorPatientEntity> doctorPatientEntities) {
         this.doctorPatientEntities = doctorPatientEntities;
     }
+
 }

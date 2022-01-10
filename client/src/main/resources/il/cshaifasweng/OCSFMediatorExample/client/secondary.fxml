@@ -21,7 +21,7 @@
       <TextField fx:id="clinic_info" layoutX="44.0" layoutY="152.0" prefHeight="97.0" prefWidth="512.0" />
       <TextField fx:id="opening_hours" layoutX="200.0" layoutY="275.0" prefHeight="27.0" prefWidth="59.0" />
       <Button fx:id="update_button" layoutX="273.0" layoutY="331.0" mnemonicParsing="false" onAction="#update_hours" text="update" />
-       <Button fx:id="closeButton" cancelButton="true" layoutX="350.0" layoutY="767.0" mnemonicParsing="false" onAction="#handleCloseButtonAction" prefWidth="100.0" text="Close" />
+       <Button fx:id="closeButton" cancelButton="true" layoutX="350.0" layoutY="767.0" mnemonicParsing="false" prefWidth="100.0" text="Close" />
       <TextField fx:id="closing_hours" layoutX="486.0" layoutY="275.0" prefHeight="27.0" prefWidth="59.0" />
       <TextArea layoutX="21.0" layoutY="275.0" prefHeight="27.0" prefWidth="151.0" text="Update opening hours:" />
       <TextArea layoutX="309.0" layoutY="275.0" prefHeight="27.0" prefWidth="141.0" text="Update closing hours:" />

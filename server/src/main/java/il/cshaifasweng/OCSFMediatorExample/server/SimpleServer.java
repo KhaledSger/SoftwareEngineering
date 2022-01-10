@@ -40,7 +40,7 @@ public class SimpleServer extends AbstractServer {
             session.save(pat2);
             NurseEntity nurse1 = new NurseEntity(792596666,"Good","Nurse","nursegood@gmail.com","Goo123",clinic1);
             session.save(nurse1);
-            DoctorEntity doc1= new DoctorEntity(2113423,"dr","fischer","drfischer@gmail.com","fis123","Neurology");
+            DoctorEntity doc1= new DoctorEntity(2113423,"dr","fischer","drfischer@gmail.com","111","Neurology");
             session.save(doc1);
             ArrayList<String> times=new ArrayList<String>();
             times.add("15:00-17:00");
@@ -52,8 +52,8 @@ public class SimpleServer extends AbstractServer {
             times.add("");
             DoctorClinicEntity doctorClinic= new DoctorClinicEntity(doc1,clinic3,times);
             session.save(doctorClinic);
-            ManagerEntity manger = new ManagerEntity(doc1.getDoctor_id(), doc1.getFirst_name(), doc1.getFamily_name(),
-                    doc1.getMail(),"Man123",clinic2);
+            ManagerEntity manger = new ManagerEntity(doc1.getId(), doc1.getFirst_name(), doc1.getFamily_name(),
+                    doc1.getMail(),"111",clinic2);
             session.save(manger);
             DoctorPatientEntity docpat=new DoctorPatientEntity(doc1,pat1);
             session.save(docpat);
@@ -134,21 +134,35 @@ public class SimpleServer extends AbstractServer {
             }
         } else if (msg.getClass().equals(UserEntity.class)){
             List<ManagerEntity> Mangers = getALLMangers();
-            for (int i = 0 ; i < Mangers.size(); i++){
-                if((((ManagerEntity) msg).getId() == Mangers.get(i).getId()) && Mangers.get(i).comparePassword(((ManagerEntity) msg).getPassword())){
+            System.out.println(Mangers.size());
+            checkPassword(Mangers,((UserEntity) msg),client);
+            List<DoctorEntity> Doctors = getALLDoctors();
+            checkPassword(Doctors,((UserEntity) msg),client);
+            List<NurseEntity> Nurses = getALLNurses();
+            checkPassword(Nurses,((UserEntity) msg),client);
+            List<PatientEntity> Patients = getALLPatients();
+            checkPassword(Patients,((UserEntity) msg),client);
+        }
+    }
+
+    <T extends UserEntity> void checkPassword(List<T> Users,UserEntity user,ConnectionToClient client){
+        for (int i = 0 ; i < Users.size(); i++){
+            if(user.getId() == Users.get(i).getId()){
+                System.out.println("Manager Id is correct");
+                if(Users.get(i).comparePassword(user.getPassword())) {
+                    System.out.println("Manager in server");
                     try {
-                        client.sendToClient(Mangers.get(i));
+                        client.sendToClient(Users.get(i));
                     } catch (IOException e) {
                         if (session != null) {
+                            System.out.println("MANaGER still in server");
                             session.getTransaction().rollback();
                         }
                     }
-                }
+                }else{return;}
             }
         }
-
     }
-
     private static List<ClinicEntity> getALLClinics() {
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<ClinicEntity> query = builder.createQuery(ClinicEntity.class);
