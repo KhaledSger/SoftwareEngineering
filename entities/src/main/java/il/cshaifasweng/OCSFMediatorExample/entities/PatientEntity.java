@@ -1,20 +1,17 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
 
 import javax.persistence.*;
-import java.io.Serializable;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "Patient")
-public class PatientEntity implements Serializable {
+public class PatientEntity extends UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Patient_id")
     private int patient_id;
-    private int id;
-    private String name;
-    private String password;
     private int age;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -27,10 +24,8 @@ public class PatientEntity implements Serializable {
     List<DoctorPatientEntity> doctorPatientEntities;
 
 
-    public PatientEntity(int id, String name, String password, int age,ClinicEntity clinic) {
-        this.id = id;
-        this.name = name;
-        this.password = password;
+    public PatientEntity(int id, String first_name,String family_name,String mail ,String Password,int age,ClinicEntity clinic) throws NoSuchAlgorithmException {
+        super(id, first_name, family_name, mail,Password);
         this.age = age;
         setClinic(clinic);
         this.doctorPatientEntities=new ArrayList<DoctorPatientEntity>();
@@ -39,33 +34,9 @@ public class PatientEntity implements Serializable {
     public PatientEntity() {
     }
 
-
-    public int getId() {
-        return id;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getName() {
-        return name;
-    }
-
     public int getAge() {
         return age;
     }
-
-
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
 
     public void setAge(int age) {
         this.age = age;
