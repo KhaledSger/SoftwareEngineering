@@ -52,6 +52,12 @@ public class SimpleServer extends AbstractServer {
             times.add("");
             DoctorClinicEntity doctorClinic= new DoctorClinicEntity(doc1,clinic3,times);
             session.save(doctorClinic);
+            ManagerEntity manger = new ManagerEntity(doc1.getDoctor_id(), doc1.getEmployee_name(), doc1.getFamily_name(),
+                    doc1.getMail(),clinic2);
+            session.save(manger);
+            DoctorPatientEntity docpat=new DoctorPatientEntity(doc1,pat1);
+            session.save(docpat);
+
             session.flush();
             session.getTransaction().commit();
         } catch (Exception e) {
@@ -79,6 +85,11 @@ public class SimpleServer extends AbstractServer {
         configuration.addAnnotatedClass(NurseEntity.class);
         configuration.addAnnotatedClass(DoctorEntity.class);
         configuration.addAnnotatedClass(DoctorClinicEntity.class);
+        configuration.addAnnotatedClass(ManagerEntity.class);
+        configuration.addAnnotatedClass(DoctorPatientEntity.class);
+
+
+
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
                 .build();
