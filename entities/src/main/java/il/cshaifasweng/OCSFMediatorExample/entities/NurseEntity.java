@@ -9,6 +9,10 @@ public class NurseEntity extends EmployeeEntity{
         super(id, employee_name, family_name, mail);
         this.clinic = clinic;
     }
+
+    public NurseEntity() {
+
+    }
     
      @ManyToOne(fetch=FetchType.LAZY)
      @JoinColumn(name="Clinic_id")

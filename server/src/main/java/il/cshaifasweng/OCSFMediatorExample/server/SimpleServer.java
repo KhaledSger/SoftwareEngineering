@@ -23,16 +23,16 @@ public class SimpleServer extends AbstractServer {
         session = getSessionFactory().openSession();
         try {
             String[] service = new String[]{"aaa", "bbb", "ccc"};
-            ClinicEntity clinic1 = new ClinicEntity("Haifa clinic", "10:00", "20:00", service, new ArrayList<PatientEntity>());
+            ClinicEntity clinic1 = new ClinicEntity("Haifa clinic", "10:00", "20:00", service);
             session.save(clinic1);
             service = new String[]{"bbb", "ddd", "ccc"};
-            ClinicEntity clinic2 = new ClinicEntity("Acre clinic", "12:00", "18:00", service, new ArrayList<PatientEntity>());
+            ClinicEntity clinic2 = new ClinicEntity("Acre clinic", "12:00", "18:00", service);
             session.save(clinic2);
             service = new String[]{"aaa", "eee", "ddd"};
-            ClinicEntity clinic3 = new ClinicEntity("Tel-Aviv clinic", "14:00", "22:00", service, new ArrayList<PatientEntity>());
+            ClinicEntity clinic3 = new ClinicEntity("Tel-Aviv clinic", "14:00", "22:00", service);
             session.save(clinic3);
             service = new String[]{"ww", "zz"};
-            ClinicEntity clinic4 = new ClinicEntity("Eilaboun clinic", "08:00", "12:00", service, new ArrayList<PatientEntity>());
+            ClinicEntity clinic4 = new ClinicEntity("Eilaboun clinic", "08:00", "12:00", service);
             session.save(clinic4);
             PatientEntity pat1 = new PatientEntity(318588324,"Emad","Emad123",23,clinic1);
             session.save(pat1);
@@ -42,6 +42,8 @@ public class SimpleServer extends AbstractServer {
             session.save(nurse1);
             DoctorEntity doc1= new DoctorEntity(2113423,"dr","fischer","drfischer@gmail.com","Neurology");
             session.save(doc1);
+            AppointmentEntity app1= new AppointmentEntity("12:00","1/1/2021","12:00",clinic1,pat1,doc1);
+            session.save(app1);
             ArrayList<String> times=new ArrayList<String>();
             times.add("15:00-17:00");
             times.add("15:00-17:00");
@@ -79,6 +81,7 @@ public class SimpleServer extends AbstractServer {
         configuration.addAnnotatedClass(NurseEntity.class);
         configuration.addAnnotatedClass(DoctorEntity.class);
         configuration.addAnnotatedClass(DoctorClinicEntity.class);
+        configuration.addAnnotatedClass(AppointmentEntity.class);
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
                 .build();
