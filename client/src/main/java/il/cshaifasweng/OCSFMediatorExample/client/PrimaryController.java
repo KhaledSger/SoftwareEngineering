@@ -54,6 +54,7 @@ public class PrimaryController {
 				 	SimpleClient.getClient().logInFlag = -1;
 				 }else if(SimpleClient.getClient().getAvailableUsers() == 1){
 				 	App.setRoot("patient");
+					 SimpleClient.getClient().setCurrentUser(0);
 				 }else{
 				 	App.setRoot("login");
 				 }
