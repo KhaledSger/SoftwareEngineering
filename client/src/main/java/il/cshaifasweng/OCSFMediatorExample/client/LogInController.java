@@ -49,17 +49,21 @@ public class LogInController {
 
     public void NurseA(javafx.event.ActionEvent actionEvent) throws IOException {
         App.setRoot("nurse");
+        SimpleClient.getClient().setCurrentUser(1);
     }
 
     public void PatientA(javafx.event.ActionEvent actionEvent) throws IOException {
         App.setRoot("patient");
+        SimpleClient.getClient().setCurrentUser(0);
     }
 
     public void DoctorA(javafx.event.ActionEvent actionEvent) throws IOException {
         App.setRoot("doctor");
+        SimpleClient.getClient().setCurrentUser(2);
     }
 
     public void ManagerA(javafx.event.ActionEvent actionEvent) throws IOException {
         App.setRoot("manager");
+        SimpleClient.getClient().setCurrentUser(3);
     }
 }

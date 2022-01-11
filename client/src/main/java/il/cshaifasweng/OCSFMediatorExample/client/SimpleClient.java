@@ -19,6 +19,7 @@ public class SimpleClient extends AbstractClient {
     public static ManagerClient managerClient = null;
     public int logInFlag = -1;
     public int availableUsers = 0;
+    public int currentUser = -1;
 
 
     private SimpleClient(String host, int port) {
@@ -31,6 +32,14 @@ public class SimpleClient extends AbstractClient {
             EventBus.getDefault().post(new WarningEvent((Warning) msg));
         } else if (msg.getClass().equals(ArrayList.class)) {
             ClinicList = ((List<ClinicEntity>) msg);
+        } else if(currentUser == 0){
+            patientClient.handleMessageFromServer(msg);
+        } else if(currentUser == 1){
+            nurseClient.handleMessageFromServer(msg);
+        } else if(currentUser == 2){
+            doctorClient.handleMessageFromServer(msg);
+        } else if(currentUser == 3){
+            managerClient.handleMessageFromServer(msg);
         } else if (msg.getClass().equals(PatientEntity.class)) {
             patientClient = new PatientClient(this.getHost(), this.getPort(), (PatientEntity) msg);
             availableUsers++;
@@ -85,6 +94,14 @@ public class SimpleClient extends AbstractClient {
 
     public int getAvailableUsers(){
         return availableUsers;
+    }
+
+    public int getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(int currentUser) {
+        this.currentUser = currentUser;
     }
 
     public void LogIn(int id, String password){
