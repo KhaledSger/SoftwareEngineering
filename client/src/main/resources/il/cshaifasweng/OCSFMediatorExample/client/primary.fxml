@@ -13,5 +13,6 @@
       <PasswordField fx:id="Password" layoutX="220.0" layoutY="149.0" promptText="Password" />
       <TextField fx:id="ID" layoutX="220.0" layoutY="101.0" promptText="ID" />
       <Button fx:id="LoginBtn" layoutX="274.0" layoutY="254.0" mnemonicParsing="false" onAction="#Login" text="Log in" />
+      <VBox layoutX="250.0" layoutY="76.0" prefHeight="200.0" prefWidth="100.0" />
    </children>
 </AnchorPane>

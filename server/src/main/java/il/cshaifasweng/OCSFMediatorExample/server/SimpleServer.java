@@ -134,7 +134,6 @@ public class SimpleServer extends AbstractServer {
             }
         } else if (msg.getClass().equals(UserEntity.class)){
             List<ManagerEntity> Mangers = getALLMangers();
-            System.out.println(Mangers.size());
            boolean flag_manager = checkPassword(Mangers,((UserEntity) msg),client);
             List<DoctorEntity> Doctors = getALLDoctors();
             boolean flag_doctor = checkPassword(Doctors,((UserEntity) msg),client);
@@ -162,15 +161,12 @@ public class SimpleServer extends AbstractServer {
     <T extends UserEntity> boolean checkPassword(List<T> Users,UserEntity user,ConnectionToClient client){
         for (int i = 0 ; i < Users.size(); i++){
             if(user.getId() == Users.get(i).getId()){
-                System.out.println("Manager Id is correct");
                 if(Users.get(i).comparePassword(user.getPassword())) {
-                    System.out.println("Manager in server");
                     try {
                         client.sendToClient(Users.get(i));
                         return true;
                     } catch (IOException e) {
                         if (session != null) {
-                            System.out.println("MANaGER still in server");
                             session.getTransaction().rollback();
                         }
                     }

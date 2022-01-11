@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.LogInController">
+   <children>
+      <VBox layoutX="250.0" layoutY="100.0" prefHeight="200.0" prefWidth="130.0" spacing="15.0">
+         <children>
+            <Button fx:id="Nursebtn" mnemonicParsing="false" onAction="#NurseA" prefHeight="30.0" prefWidth="130.0" text="Nurse" />
+            <Button fx:id="PatientBtn" mnemonicParsing="false" onAction="#PatientA" prefHeight="30.0" prefWidth="130.0" text="Patient" />
+            <Button fx:id="DoctorBtn" mnemonicParsing="false" onAction="#DoctorA" prefHeight="30.0" prefWidth="130.0" text="Doctor" />
+            <Button fx:id="ManagerBtn" mnemonicParsing="false" onAction="#ManagerA" prefHeight="30.0" prefWidth="130.0" text="Manager" />
+         </children>
+         <padding>
+            <Insets bottom="10.0" top="25.0" />
+         </padding>
+      </VBox>
+      <Label alignment="CENTER" layoutX="248.0" layoutY="85.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="140.0" text="join" textAlignment="CENTER">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
