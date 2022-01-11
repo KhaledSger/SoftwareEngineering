@@ -134,34 +134,48 @@ public class SimpleServer extends AbstractServer {
             }
         } else if (msg.getClass().equals(UserEntity.class)){
             List<ManagerEntity> Mangers = getALLMangers();
-            System.out.println(Mangers.size());
-            checkPassword(Mangers,((UserEntity) msg),client);
+           boolean flag_manager = checkPassword(Mangers,((UserEntity) msg),client);
             List<DoctorEntity> Doctors = getALLDoctors();
-            checkPassword(Doctors,((UserEntity) msg),client);
+            boolean flag_doctor = checkPassword(Doctors,((UserEntity) msg),client);
             List<NurseEntity> Nurses = getALLNurses();
-            checkPassword(Nurses,((UserEntity) msg),client);
+            boolean flag_nurse = checkPassword(Nurses,((UserEntity) msg),client);
             List<PatientEntity> Patients = getALLPatients();
-            checkPassword(Patients,((UserEntity) msg),client);
+            boolean flag_patient = checkPassword(Patients,((UserEntity) msg),client);
+            String stringResult="";
+            if(flag_manager||flag_doctor||flag_patient||flag_nurse){
+                stringResult="#Login Success";
+            }else{
+                stringResult="#Login Failure";
+            }
+            try {
+                client.sendToClient(stringResult);
+
+            }catch (Exception e) {
+                if (session != null) {
+                    session.getTransaction().rollback();
+                }
+            }
+
         }
     }
-
-    <T extends UserEntity> void checkPassword(List<T> Users,UserEntity user,ConnectionToClient client){
+    <T extends UserEntity> boolean checkPassword(List<T> Users,UserEntity user,ConnectionToClient client){
         for (int i = 0 ; i < Users.size(); i++){
             if(user.getId() == Users.get(i).getId()){
-                System.out.println("Manager Id is correct");
                 if(Users.get(i).comparePassword(user.getPassword())) {
-                    System.out.println("Manager in server");
                     try {
                         client.sendToClient(Users.get(i));
+                        return true;
                     } catch (IOException e) {
                         if (session != null) {
-                            System.out.println("MANaGER still in server");
                             session.getTransaction().rollback();
                         }
                     }
-                }else{return;}
+                }else{
+                    return false;
+                }
             }
         }
+        return  false;
     }
     private static List<ClinicEntity> getALLClinics() {
         CriteriaBuilder builder = session.getCriteriaBuilder();
