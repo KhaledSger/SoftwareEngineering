@@ -192,8 +192,14 @@ public class SimpleServer extends AbstractServer {
             if(user.getId() == Users.get(i).getId()){
                 if(Users.get(i).comparePassword(user.getPassword())) {
                     try {
-                        client.sendToClient(Users.get(i));
-                        return true;
+                        if(Users.get(i).isActive() == false) {
+                            Users.get(i).setActive(true); // TO-DO move to client(after handling users in server)
+                            client.sendToClient(Users.get(i));
+                            return true;
+                        }else {
+                            client.sendToClient("#Login Active");
+                            return false;
+                        }
                     } catch (IOException e) {
                         if (session != null) {
                             session.getTransaction().rollback();
