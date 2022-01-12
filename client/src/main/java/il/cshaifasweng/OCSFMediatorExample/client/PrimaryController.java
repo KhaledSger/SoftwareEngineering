@@ -58,6 +58,16 @@ public class PrimaryController {
 				 }else{
 				 	App.setRoot("login");
 				 }
+			} else if(SimpleClient.getClient().logInFlag == 3){
+				SimpleClient.getClient().logInFlag = -1;
+				ID.setText("");
+				Password.setText("");
+				Platform.runLater(() -> {
+					Alert alert = new Alert(Alert.AlertType.ERROR,
+							String.format("User already active")
+					);
+					alert.show();
+				});
 			} else {
 				Password.setText("");
 				SimpleClient.getClient().logInFlag = -1;
