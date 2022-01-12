@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.MenuButton?>
-<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.PrimaryController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.PrimaryController">
    <children>
      
 <!--       <Button fx:id="clinics" layoutX="209.0" layoutY="165.0" mnemonicParsing="false" onAction="#view_clinics" prefHeight="27.0" prefWidth="162.0" text="View Clinics" />
@@ -31,7 +34,6 @@
       <PasswordField fx:id="Password" layoutX="220.0" layoutY="149.0" promptText="Password" />
       <TextField fx:id="ID" layoutX="220.0" layoutY="101.0" promptText="ID" />
       <Button fx:id="LoginBtn" layoutX="274.0" layoutY="254.0" mnemonicParsing="false" onAction="#Login" text="Log in" />
-      <VBox layoutX="250.0" layoutY="76.0" prefHeight="200.0" prefWidth="100.0" />
 
    </children>
 </AnchorPane>

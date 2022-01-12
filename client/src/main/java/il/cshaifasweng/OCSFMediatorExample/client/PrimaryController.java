@@ -2,9 +2,7 @@ package il.cshaifasweng.OCSFMediatorExample.client;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuItem;
-
+import javafx.scene.control.*;
 
 import java.io.IOException;
 import java.net.URL;
@@ -74,7 +72,7 @@ public class PrimaryController {
 	@FXML
 	void initialize() {
 		assert LoginBtn != null : "fx:id=\"LoginBtn\" was not injected: check your FXML file 'primary.fxml'.";
-		assert ID != null : "fx:id=\"ID\" was not injected: check your FXML file 'primary.fxml'.";
+		assert ID != null : "fx:id=\"ID_num\" was not injected: check your FXML file 'primary.fxml'.";
 		assert Password != null : "fx:id=\"Password\" was not injected: check your FXML file 'primary.fxml'.";
 
 	}
