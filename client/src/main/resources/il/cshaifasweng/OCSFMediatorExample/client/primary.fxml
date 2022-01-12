@@ -1,15 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.PrimaryController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.PrimaryController">
    <children>
-      <Button fx:id="clinics" layoutX="217.0" layoutY="165.0" mnemonicParsing="false" onAction="#view_clinics" prefHeight="27.0" prefWidth="154.0" text="View Clinics" />
+      <Button fx:id="clinics" layoutX="209.0" layoutY="165.0" mnemonicParsing="false" onAction="#view_clinics" prefHeight="27.0" prefWidth="162.0" text="View Clinics" />
+      <MenuButton layoutX="209.0" layoutY="200.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="161.0" text="reserve an appointment">
+         <items>
+            <MenuItem mnemonicParsing="false" text="family doctor" />
+            <MenuItem fx:id="specialized_button" mnemonicParsing="false" onAction="#reserve_specialization_handler" text="specialized doctor">
+               <graphic>
+                  <MenuButton mnemonicParsing="false">
+                     <items>
+                        <MenuItem fx:id="otolaryngology_button" mnemonicParsing="false" onAction="#otolaryngology_handler" text="otolaryngology" />
+                        <MenuItem fx:id="skin_button" mnemonicParsing="false" onAction="#skin_handler" text="skin " />
+                     </items>
+                  </MenuButton>
+               </graphic>
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" text="vaccine appointment" />
+            <MenuItem mnemonicParsing="false" text="covid test" />
+            <MenuItem mnemonicParsing="false" text="nurse and lab tests" />
+         </items>
+      </MenuButton>
    </children>
 </AnchorPane>

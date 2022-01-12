@@ -13,8 +13,10 @@ public class AppointmentEntity implements Serializable {
     @Column(name = "Appointment_id")
     private int id;
     private String date; // date of the appointment
-    private String time; // time of the appointment
+    private String time; // time of the appointment   must be initialized by generated value of 15 minutes each between open and close hours of clinic
     private String actual_date; // time of treatment
+    private boolean reserved = false; // the appointment is not reserved by default
+    private String duration="0";
     @ManyToOne
     @JoinColumn(name = "Clinic_id")
     private ClinicEntity clinic;
@@ -24,21 +26,28 @@ public class AppointmentEntity implements Serializable {
     private PatientEntity patient;
 
     @ManyToOne
-    @JoinColumn(name = "Employee_id")
-    private EmployeeEntity employee;
+    @JoinColumn(name = "Doctor_id")
+    private DoctorEntity doctor;
+
+    @ManyToOne
+    @JoinColumn(name = "Nurse_id")
+    private NurseEntity Nurse;
 
     public AppointmentEntity() {
 
     }
 
-    public AppointmentEntity(String actual_date, String date,String time, ClinicEntity clinic,PatientEntity patient,EmployeeEntity employee)
+    public AppointmentEntity(String actual_date, String date,String time, ClinicEntity clinic,PatientEntity patient,DoctorEntity doctor,NurseEntity nurse,boolean valid,String duration)
     {
         this.date=date;
         this.time=time;
         setClinic_app(clinic);
         setPatient_app(patient);
-        setEmployee_app(employee);
+        setDoctor_app(doctor);
+        setNurse_app(nurse);
         this.actual_date=actual_date;
+        this.reserved = valid;
+        this.duration = duration;
     }
 
     public void setClinic_app(ClinicEntity clinic) {
@@ -48,12 +57,17 @@ public class AppointmentEntity implements Serializable {
 
     public void setPatient_app(PatientEntity patient) {
         this.patient=patient;
-        clinic.getAppointments().add(this);
+        patient.getAppointments().add(this);
     }
 
-    public void setEmployee_app(EmployeeEntity employee) {
-        this.employee=employee;
-        clinic.getAppointments().add(this);
+    public void setDoctor_app(DoctorEntity doctor) {
+        this.doctor=doctor;
+        doctor.getAppointments().add(this);
+    }
+
+    public void setNurse_app(NurseEntity Nurse) {
+        this.Nurse=Nurse;
+        Nurse.getAppointments().add(this);
     }
 
     public int getId() {
@@ -104,11 +118,35 @@ public class AppointmentEntity implements Serializable {
         this.actual_date = actual_date;
     }
 
-    public EmployeeEntity getEmployee() {
-        return employee;
+    public DoctorEntity getDoctor() {
+        return doctor;
     }
 
-    public void setEmployee(EmployeeEntity employee) {
-        this.employee = employee;
+    public void setDoctor(DoctorEntity doctor) {
+        this.doctor = doctor;
+    }
+
+    public NurseEntity getNurse() {
+        return Nurse;
+    }
+
+    public void setNurse(NurseEntity nurse) {
+        Nurse = nurse;
+    }
+
+    public boolean isReserved() {
+        return reserved;
+    }
+
+    public void setReserved(boolean reserved) {
+        this.reserved = reserved;
+    }
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
     }
 }

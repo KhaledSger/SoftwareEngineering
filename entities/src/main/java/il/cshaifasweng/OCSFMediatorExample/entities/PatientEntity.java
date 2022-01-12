@@ -2,6 +2,10 @@ package il.cshaifasweng.OCSFMediatorExample.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "Patient")
 public class PatientEntity extends UserEntity {
@@ -11,7 +15,6 @@ public class PatientEntity extends UserEntity {
     private int patient_id;
     private int id;
     private String name;
-    private String password;
     private int age;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -25,7 +28,7 @@ public class PatientEntity extends UserEntity {
 
 
     @OneToMany(mappedBy = "patient")
-    List<DoctorPatientEntity> doctorPatientEntities;
+    private List<DoctorPatientEntity> doctorPatientEntities;
 
 
     public PatientEntity(int id, String first_name,String family_name,String mail ,String Password,int age,ClinicEntity clinic) throws NoSuchAlgorithmException {
@@ -36,14 +39,15 @@ public class PatientEntity extends UserEntity {
         this.doctorPatientEntities=new ArrayList<DoctorPatientEntity>();
     }
 
+    public PatientEntity(){
+
+    }
+
 
     public int getId() {
         return id;
     }
 
-    public String getPassword() {
-        return password;
-    }
 
     public String getName() {
         return name;
@@ -59,9 +63,6 @@ public class PatientEntity extends UserEntity {
         this.name = name;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
 
     public void setAge(int age) {

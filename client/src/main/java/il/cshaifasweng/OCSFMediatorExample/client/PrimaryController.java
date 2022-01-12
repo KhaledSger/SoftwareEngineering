@@ -7,6 +7,7 @@ package il.cshaifasweng.OCSFMediatorExample.client;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
 
 import java.io.IOException;
 import java.net.URL;
@@ -23,6 +24,15 @@ public class PrimaryController {
 	@FXML // fx:id="clinics"
 	private Button clinics; // Value injected by FXMLLoader
 
+	@FXML // fx:id="otolaryngology_button"
+	private MenuItem otolaryngology_button; // Value injected by FXMLLoader
+
+	@FXML // fx:id="skin_button"
+	private MenuItem skin_button; // Value injected by FXMLLoader
+
+	@FXML // fx:id="specialized_button"
+	private MenuItem specialized_button; // Value injected by FXMLLoader
+
 	@FXML
 	void view_clinics(ActionEvent event){
 		try {
@@ -30,6 +40,25 @@ public class PrimaryController {
 		}catch (IOException e){
 			e.printStackTrace();
 		}
+	}
+	@FXML
+	void otolaryngology_handler(ActionEvent event) {
+
+	}
+
+	@FXML
+	void reserve_specialization_handler(ActionEvent event) {
+
+	}
+
+	@FXML
+	void skin_handler(ActionEvent event) {
+		try {
+			App.setRoot("secondary");
+		}catch (IOException e){
+			e.printStackTrace();
+		}
+
 	}
 
 	@FXML // This method is called by the FXMLLoader when initialization is complete
