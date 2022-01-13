@@ -36,6 +36,10 @@ public class ClinicEntity implements Serializable {
     @JoinColumn(name = "Appointment_id")
     private List<AppointmentEntity> appointments;
 
+    @OneToMany
+    @JoinColumn(name = "LabWorker_id")
+    private List<LabWorkerEntity> labWorkers;
+
 
 
     public ClinicEntity(String name, String open, String close, String[] services) {
@@ -48,9 +52,10 @@ public class ClinicEntity implements Serializable {
         this.nurseEntities=new ArrayList<NurseEntity>();
         this.doctorClinicEntities=new ArrayList<DoctorClinicEntity>();
         this.appointments = new ArrayList<AppointmentEntity>();
+        this.labWorkers = new ArrayList<LabWorkerEntity>();
     }
 
-    public ClinicEntity(String name, String open, String close, String[] services,List<PatientEntity> Patients,List<AppointmentEntity> apps,List<NurseEntity> nurse, List<DoctorClinicEntity> doctor) {
+    public ClinicEntity(String name, String open, String close, String[] services,List<PatientEntity> Patients,List<AppointmentEntity> apps,List<NurseEntity> nurse, List<DoctorClinicEntity> doctor, List<LabWorkerEntity> labWorkers) {
         this.name = name;
         this.open = open;
         this.close = close;
@@ -60,6 +65,7 @@ public class ClinicEntity implements Serializable {
         this.nurseEntities=nurse;
         this.doctorClinicEntities=doctor;
         this.appointments = apps;
+        this.labWorkers = labWorkers;
     }
 
     public ClinicEntity(ClinicEntity CE) {
@@ -71,6 +77,7 @@ public class ClinicEntity implements Serializable {
         this.nurseEntities= CE.nurseEntities;
         this.doctorClinicEntities=CE.doctorClinicEntities;
         this.appointments = CE.appointments;
+        this.labWorkers = CE.labWorkers;
     }
 
     public ClinicEntity() {
@@ -138,5 +145,13 @@ public class ClinicEntity implements Serializable {
 
     public void setAppointments(List<AppointmentEntity> appointments) {
         this.appointments = appointments;
+    }
+
+    public List<LabWorkerEntity> getLabWorkers() {
+        return labWorkers;
+    }
+
+    public void setLabWorkers(List<LabWorkerEntity> labWorkers) {
+        this.labWorkers = labWorkers;
     }
 }

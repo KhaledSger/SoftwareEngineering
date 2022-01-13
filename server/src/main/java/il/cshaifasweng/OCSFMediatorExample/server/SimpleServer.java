@@ -14,6 +14,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class SimpleServer extends AbstractServer {
     private static Session session;
@@ -24,7 +25,8 @@ public class SimpleServer extends AbstractServer {
         session = getSessionFactory().openSession();
         try {
             String[] service = new String[]{"aaa", "bbb", "ccc"};
-            ClinicEntity clinic1 = new ClinicEntity("Haifa clinic", "10:00", "20:00", service);
+            String[] service1 = new String[]{"skin", "bbb", "ccc"};
+            ClinicEntity clinic1 = new ClinicEntity("Haifa clinic", "10:00", "20:00", service1);
             session.save(clinic1);
             service = new String[]{"bbb", "ddd", "ccc"};
             ClinicEntity clinic2 = new ClinicEntity("Acre clinic", "12:00", "18:00", service);
@@ -91,6 +93,7 @@ public class SimpleServer extends AbstractServer {
         configuration.addAnnotatedClass(AppointmentEntity.class);
         configuration.addAnnotatedClass(ManagerEntity.class);
         configuration.addAnnotatedClass(DoctorPatientEntity.class);
+        configuration.addAnnotatedClass(LabWorkerEntity.class);
 
 
 
@@ -134,6 +137,17 @@ public class SimpleServer extends AbstractServer {
                     session.flush();
                     session.getTransaction().commit();
                     System.out.format("Updating all clinics on client %s\n", client.getInetAddress().getHostAddress());
+                }
+            }
+        } else if (msgString.equals("#GeSkinClinics")) {
+            try {
+                List<ClinicEntity> clinics = getSkinClinics();
+                Clinics = clinics;
+                client.sendToClient(clinics);
+                System.out.format("Sent all clinics to client %s\n", client.getInetAddress().getHostAddress());
+            } catch (Exception e) {
+                if (session != null) {
+                    session.getTransaction().rollback();
                 }
             }
         }
@@ -184,6 +198,22 @@ public class SimpleServer extends AbstractServer {
         query.from(ClinicEntity.class);
         List<ClinicEntity> result = session.createQuery(query).getResultList();
         return result;
+    }
+    private static List<ClinicEntity> getSkinClinics() {
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<ClinicEntity> query = builder.createQuery(ClinicEntity.class);
+        query.from(ClinicEntity.class);
+        List<ClinicEntity> result = session.createQuery(query).getResultList();
+        List<ClinicEntity> clinics_to_return = new ArrayList<ClinicEntity>();
+        for(ClinicEntity clinic : result)
+        {
+            for(String service : clinic.getServices())
+            {
+                if(service.toLowerCase(Locale.ROOT) == "skin")
+                    clinics_to_return.add(clinic);
+            }
+        }
+        return clinics_to_return;
     }
     private static List<AppointmentEntity> getALLReservedApps() {
         CriteriaBuilder builder = session.getCriteriaBuilder();
@@ -246,6 +276,13 @@ public class SimpleServer extends AbstractServer {
         CriteriaQuery<DoctorClinicEntity> query = builder.createQuery(DoctorClinicEntity.class);
         query.from(DoctorClinicEntity.class);
         List<DoctorClinicEntity> result = session.createQuery(query).getResultList();
+        return result;
+    }
+    private static List<LabWorkerEntity> getALLLabWorkers() {
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<LabWorkerEntity> query = builder.createQuery(LabWorkerEntity.class);
+        query.from(LabWorkerEntity.class);
+        List<LabWorkerEntity> result = session.createQuery(query).getResultList();
         return result;
     }
 }
