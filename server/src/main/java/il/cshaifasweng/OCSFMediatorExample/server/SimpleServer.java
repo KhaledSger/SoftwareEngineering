@@ -43,7 +43,7 @@ public class SimpleServer extends AbstractServer {
             session.save(pat2);
             NurseEntity nurse1 = new NurseEntity(792596666,"Good","Nurse","nursegood@gmail.com","1367",clinic1);
             session.save(nurse1);
-            DoctorEntity doc1= new DoctorEntity(2113423,"dr","fischer","drfischer@gmail.com","1903","Neurology");
+            DoctorEntity doc1= new DoctorEntity(2113423,"dr","fischer","drfischer@gmail.com","111","Neurology");
             session.save(doc1);
             AppointmentEntity app1= new AppointmentEntity("12:00","1/1/2021","12:00",clinic1,pat1,doc1,null,true,"20");
             session.save(app1);
@@ -57,8 +57,8 @@ public class SimpleServer extends AbstractServer {
             times.add("");
             DoctorClinicEntity doctorClinic= new DoctorClinicEntity(doc1,clinic3,times);
             session.save(doctorClinic);
-            ManagerEntity manger = new ManagerEntity(doc1.getDoctor_id(), doc1.getFirst_name(), doc1.getFamily_name(),
-                    doc1.getMail(),"Man123",clinic2);
+            ManagerEntity manger = new ManagerEntity(doc1.getId(), doc1.getFirst_name(), doc1.getFamily_name(),
+                    doc1.getMail(),"111",clinic2);
             session.save(manger);
             DoctorPatientEntity docpat=new DoctorPatientEntity(doc1,pat1);
             session.save(docpat);
@@ -177,21 +177,49 @@ public class SimpleServer extends AbstractServer {
         }
         else if (msg.getClass().equals(UserEntity.class)){
             List<ManagerEntity> Mangers = getALLMangers();
-            for (int i = 0 ; i < Mangers.size(); i++){
-                if((((ManagerEntity) msg).getId() == Mangers.get(i).getId()) && Mangers.get(i).comparePassword(((ManagerEntity) msg).getPassword())){
+           boolean flag_manager = checkPassword(Mangers,((UserEntity) msg),client);
+            List<DoctorEntity> Doctors = getALLDoctors();
+            boolean flag_doctor = checkPassword(Doctors,((UserEntity) msg),client);
+            List<NurseEntity> Nurses = getALLNurses();
+            boolean flag_nurse = checkPassword(Nurses,((UserEntity) msg),client);
+            List<PatientEntity> Patients = getALLPatients();
+            boolean flag_patient = checkPassword(Patients,((UserEntity) msg),client);
+            String stringResult="";
+            if(flag_manager||flag_doctor||flag_patient||flag_nurse){
+                stringResult="#Login Success";
+            }else{
+                stringResult="#Login Failure";
+            }
+            try {
+                client.sendToClient(stringResult);
+
+            }catch (Exception e) {
+                if (session != null) {
+                    session.getTransaction().rollback();
+                }
+            }
+
+        }
+    }
+    <T extends UserEntity> boolean checkPassword(List<T> Users,UserEntity user,ConnectionToClient client){
+        for (int i = 0 ; i < Users.size(); i++){
+            if(user.getId() == Users.get(i).getId()){
+                if(Users.get(i).comparePassword(user.getPassword())) {
                     try {
-                        client.sendToClient(Mangers.get(i));
+                        client.sendToClient(Users.get(i));
+                        return true;
                     } catch (IOException e) {
                         if (session != null) {
                             session.getTransaction().rollback();
                         }
                     }
+                }else{
+                    return false;
                 }
             }
         }
-
+        return  false;
     }
-
     private static List<ClinicEntity> getALLClinics() {
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<ClinicEntity> query = builder.createQuery(ClinicEntity.class);

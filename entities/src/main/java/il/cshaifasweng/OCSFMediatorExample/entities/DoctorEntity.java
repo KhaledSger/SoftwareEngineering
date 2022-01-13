@@ -77,6 +77,7 @@ public class DoctorEntity extends UserEntity {
         this.doctorPatientEntities = doctorPatientEntities;
     }
 
+
     public List<AppointmentEntity> getAppointments() {
         return appointments;
     }
@@ -84,4 +85,5 @@ public class DoctorEntity extends UserEntity {
     public void setAppointments(List<AppointmentEntity> appointments) {
         this.appointments = appointments;
     }
+  
 }

@@ -91,13 +91,17 @@ public class UserEntity implements Serializable {
     }
 
     public void setPassword(String password) { this.Password = getSecurePassword(password,this.Salt);}
-
-    //To-Do check this function
+    
     public boolean comparePassword(String inputPassword){
-        return getPassword() == getSecurePassword(inputPassword,this.Salt);
+        String pass = getSecurePassword(inputPassword,this.Salt);
+        return pass.equals(getPassword());
     }
 
     public void setTmpPassword(String Password){
         this.Password = Password;
+    }
+
+    public void setTmpSalt(String Salt){
+        this.Salt = Salt;
     }
 }
