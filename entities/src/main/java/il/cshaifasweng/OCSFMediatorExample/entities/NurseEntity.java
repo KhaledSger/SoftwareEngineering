@@ -10,7 +10,7 @@ import java.util.List;
 public class NurseEntity extends UserEntity{
     public NurseEntity(int id, String employee_name, String family_name, String mail,String Password,ClinicEntity clinic) throws NoSuchAlgorithmException {
         super(id, employee_name, family_name, mail,Password);
-        this.clinic = clinic;
+        setClinic(clinic);
         this.appointments=new ArrayList<AppointmentEntity>();
     }
 
