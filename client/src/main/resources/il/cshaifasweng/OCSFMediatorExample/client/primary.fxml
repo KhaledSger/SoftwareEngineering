@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.PrimaryController">
+
+<AnchorPane accessibleRole="BUTTON" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.PrimaryController">
    <children>
       <PasswordField fx:id="Password" layoutX="220.0" layoutY="149.0" promptText="Password" />
       <TextField fx:id="ID" layoutX="220.0" layoutY="101.0" promptText="ID" />
-      <Button fx:id="LoginBtn" layoutX="274.0" layoutY="254.0" mnemonicParsing="false" onAction="#Login" text="Log in" />
-      <VBox layoutX="250.0" layoutY="76.0" prefHeight="200.0" prefWidth="100.0" />
+      <Button fx:id="LoginBtn" layoutX="273.0" layoutY="254.0" mnemonicParsing="false" onAction="#Login" text="Log in" />
    </children>
 </AnchorPane>

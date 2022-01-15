@@ -23,16 +23,17 @@ public class SimpleServer extends AbstractServer {
         session = getSessionFactory().openSession();
         try {
             String[] service = new String[]{"aaa", "bbb", "ccc"};
-            ClinicEntity clinic1 = new ClinicEntity("Haifa clinic", "10:00", "20:00", service, new ArrayList<PatientEntity>());
+            String[] service1 = new String[]{"skin", "bbb", "ccc"};
+            ClinicEntity clinic1 = new ClinicEntity("Haifa clinic", "10:00", "20:00", service1);
             session.save(clinic1);
             service = new String[]{"bbb", "ddd", "ccc"};
-            ClinicEntity clinic2 = new ClinicEntity("Acre clinic", "12:00", "18:00", service, new ArrayList<PatientEntity>());
+            ClinicEntity clinic2 = new ClinicEntity("Acre clinic", "12:00", "18:00", service);
             session.save(clinic2);
             service = new String[]{"aaa", "eee", "ddd"};
-            ClinicEntity clinic3 = new ClinicEntity("Tel-Aviv clinic", "14:00", "22:00", service, new ArrayList<PatientEntity>());
+            ClinicEntity clinic3 = new ClinicEntity("Tel-Aviv clinic", "14:00", "22:00", service);
             session.save(clinic3);
             service = new String[]{"ww", "zz"};
-            ClinicEntity clinic4 = new ClinicEntity("Eilaboun clinic", "08:00", "12:00", service, new ArrayList<PatientEntity>());
+            ClinicEntity clinic4 = new ClinicEntity("Eilaboun clinic", "08:00", "12:00", service);
             session.save(clinic4);
             PatientEntity pat1 = new PatientEntity(318588324,"Emad","daraw","Emad123@gmail.xom","Em12345",23,clinic1);
             session.save(pat1);
@@ -87,6 +88,7 @@ public class SimpleServer extends AbstractServer {
         configuration.addAnnotatedClass(DoctorClinicEntity.class);
         configuration.addAnnotatedClass(ManagerEntity.class);
         configuration.addAnnotatedClass(DoctorPatientEntity.class);
+        configuration.addAnnotatedClass(LabWorkerEntity.class);
 
 
 

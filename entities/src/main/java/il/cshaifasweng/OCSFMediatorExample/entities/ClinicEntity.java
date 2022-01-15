@@ -22,11 +22,11 @@ public class ClinicEntity implements Serializable {
 
 
     @OneToMany
-    @JoinColumn(name = "Clinic_id")
+    @JoinColumn(name = "Patient_id")
     private List<PatientEntity> Patients;
 
     @OneToMany
-    @JoinColumn(name = "Clinic_id")
+    @JoinColumn(name = "Nurse_id")
     private List<NurseEntity> nurseEntities;
 
     @OneToMany(mappedBy = "clinic")
@@ -36,9 +36,25 @@ public class ClinicEntity implements Serializable {
     @PrimaryKeyJoinColumn
     private ManagerEntity manager;
 
+    @OneToMany
+    @JoinColumn(name = "LabWorker_id")
+    private List<LabWorkerEntity> labWorkers;
 
 
-    public ClinicEntity(String name, String open, String close, String[] services,List<PatientEntity> Patients) {
+
+    public ClinicEntity(String name, String open, String close, String[] services,List<PatientEntity> Patients,List<NurseEntity> nurse, List<DoctorClinicEntity> doctor, List<LabWorkerEntity> labWorkers) {
+        this.name = name;
+        this.open = open;
+        this.close = close;
+        this.services = services;
+        this.nurseEntities=nurse;
+        this.Patients = Patients;
+        this.doctorClinicEntities=doctor;
+        //this.appointments = apps;
+        this.labWorkers = labWorkers;
+    }
+
+    public ClinicEntity(String name, String open, String close, String[] services) {
         this.name = name;
         this.open = open;
         this.close = close;
@@ -47,7 +63,7 @@ public class ClinicEntity implements Serializable {
         this.Patients=new ArrayList<PatientEntity>();
         this.nurseEntities=new ArrayList<NurseEntity>();
         this.doctorClinicEntities=new ArrayList<DoctorClinicEntity>();
-
+        this.labWorkers = new ArrayList<LabWorkerEntity>();
     }
 
 
@@ -60,6 +76,7 @@ public class ClinicEntity implements Serializable {
         this.nurseEntities= CE.nurseEntities;
         this.doctorClinicEntities=CE.doctorClinicEntities;
         this.manager=CE.manager;
+        this.labWorkers = CE.labWorkers;
     }
 
     public ClinicEntity() {
@@ -128,5 +145,13 @@ public class ClinicEntity implements Serializable {
     public void setManager(ManagerEntity manager) {
         this.manager = manager;
          manager.setClinic(this);
+    }
+
+    public List<LabWorkerEntity> getLabWorkers() {
+        return labWorkers;
+    }
+
+    public void setLabWorkers(List<LabWorkerEntity> labWorkers) {
+        this.labWorkers = labWorkers;
     }
 }
