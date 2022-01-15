@@ -4,6 +4,8 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
+
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -24,9 +26,48 @@ public class PrimaryController {
 	@FXML
 	private TextField ID;
 
+ 	@FXML // fx:id="otolaryngology_button"
+ 	private MenuItem otolaryngology_button; // Value injected by FXMLLoader
+
+ 	@FXML // fx:id="skin_button"
+ 	private MenuItem skin_button; // Value injected by FXMLLoader
+
+ 	@FXML // fx:id="specialized_button"
+ 	private MenuItem specialized_button; // Value injected by FXMLLoader
+
+ 	@FXML
+ 	void view_clinics(ActionEvent event){
+ 		try {
+ 			App.setRoot("secondary");
+ 		}catch (IOException e){
+ 			e.printStackTrace();
+ 		}
+ 	}
+ 	@FXML
+ 	void otolaryngology_handler(ActionEvent event) {
+
+ 	}
+
+ 	@FXML
+ 	void reserve_specialization_handler(ActionEvent event) {
+
+ 	}
+
+ 	@FXML
+ 	void skin_handler(ActionEvent event) {
+ 		try {
+			 SimpleClient.getClient().sendToServer("#getALLClinics");
+ 			App.setRoot("secondary");
+ 		}catch (IOException e){
+ 			e.printStackTrace();
+ 		}
+
+ 	}
+
 	@FXML
 	private PasswordField Password;
 
+  
 	@FXML
 	private Button NurseBtn;
 
