@@ -12,51 +12,52 @@ import org.hibernate.service.ServiceRegistry;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import java.io.IOException;
+import java.time.*;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
 public class SimpleServer extends AbstractServer {
     private static Session session;
     private static List<ClinicEntity> Clinics;
-    private static List<AppointmentEntity> apps; // ?????????
 
     public void initSesssion() {
         session = getSessionFactory().openSession();
         try {
             String[] service = new String[]{"aaa", "bbb", "ccc"};
-            String[] service1 = new String[]{"skin", "bbb", "ccc"};
-            ClinicEntity clinic1 = new ClinicEntity("Haifa clinic", "10:00", "20:00", service1);
+            ClinicEntity clinic1 = new ClinicEntity("Haifa clinic", "10:00", "20:00", service, new ArrayList<PatientEntity>());
             session.save(clinic1);
             service = new String[]{"bbb", "ddd", "ccc"};
-            ClinicEntity clinic2 = new ClinicEntity("Acre clinic", "12:00", "18:00", service);
+            ClinicEntity clinic2 = new ClinicEntity("Acre clinic", "12:00", "18:00", service, new ArrayList<PatientEntity>());
             session.save(clinic2);
             service = new String[]{"aaa", "eee", "ddd"};
-            ClinicEntity clinic3 = new ClinicEntity("Tel-Aviv clinic", "14:00", "22:00", service);
+            ClinicEntity clinic3 = new ClinicEntity("Tel-Aviv clinic", "14:00", "22:00", service, new ArrayList<PatientEntity>());
             session.save(clinic3);
             service = new String[]{"ww", "zz"};
-            ClinicEntity clinic4 = new ClinicEntity("Eilaboun clinic", "08:00", "12:00", service);
+            ClinicEntity clinic4 = new ClinicEntity("Eilaboun clinic", "08:00", "12:00", service, new ArrayList<PatientEntity>());
             session.save(clinic4);
-            PatientEntity pat1 = new PatientEntity(318588324,"Emad","Emad123","Emad@gmail.com","1234",23,clinic1);
+            PatientEntity pat1 = new PatientEntity(318588324,"Emad","daraw","Emad123@gmail.xom","Em12345",23,clinic1);
             session.save(pat1);
-            PatientEntity pat2 = new PatientEntity(318234732,"Khaled","sughayer","khaled@gmail.com","1998",23,clinic4);
+            PatientEntity pat2 = new PatientEntity(318234732,"Khaled","Sger","Khaled123@gmail.com","Kh12345",23,clinic4);
             session.save(pat2);
-            NurseEntity nurse1 = new NurseEntity(792596666,"Good","Nurse","nursegood@gmail.com","1367",clinic1);
+            NurseEntity nurse1 = new NurseEntity(792596666,"Good","Nurse","nursegood@gmail.com","Goo123",clinic1);
             session.save(nurse1);
             DoctorEntity doc1= new DoctorEntity(2113423,"dr","fischer","drfischer@gmail.com","111","Neurology");
             session.save(doc1);
-            AppointmentEntity app1= new AppointmentEntity("12:00","1/1/2021","12:00",clinic1,pat1,doc1,null,true,"20");
-            session.save(app1);
             ArrayList<String> times=new ArrayList<String>();
             times.add("15:00-17:00");
             times.add("15:00-17:00");
             times.add("15:00-17:00");
             times.add("15:00-17:00");
             times.add("15:00-17:00");
-            times.add("");
-            times.add("");
+            times.add("00:00-00:00");
+            times.add("00:00-00:00");
+
+
             DoctorClinicEntity doctorClinic= new DoctorClinicEntity(doc1,clinic3,times);
             session.save(doctorClinic);
+
+
             ManagerEntity manger = new ManagerEntity(doc1.getId(), doc1.getFirst_name(), doc1.getFamily_name(),
                     doc1.getMail(),"111",clinic2);
             session.save(manger);
@@ -67,6 +68,7 @@ public class SimpleServer extends AbstractServer {
             session.getTransaction().commit();
         } catch (Exception e) {
             if (session != null) {
+
                 session.getTransaction().rollback();
             }
         }
@@ -90,10 +92,10 @@ public class SimpleServer extends AbstractServer {
         configuration.addAnnotatedClass(NurseEntity.class);
         configuration.addAnnotatedClass(DoctorEntity.class);
         configuration.addAnnotatedClass(DoctorClinicEntity.class);
-        configuration.addAnnotatedClass(AppointmentEntity.class);
         configuration.addAnnotatedClass(ManagerEntity.class);
         configuration.addAnnotatedClass(DoctorPatientEntity.class);
         configuration.addAnnotatedClass(LabWorkerEntity.class);
+        configuration.addAnnotatedClass(AppointmentEntity.class);
 
 
 
@@ -118,6 +120,8 @@ public class SimpleServer extends AbstractServer {
             stopSession();
         } else if (msgString.equals("#GetAllClinics")) {
             try {
+                //UpdateAppointments();
+
                 List<ClinicEntity> clinics = getALLClinics();
                 Clinics = clinics;
                 client.sendToClient(clinics);
@@ -139,43 +143,7 @@ public class SimpleServer extends AbstractServer {
                     System.out.format("Updating all clinics on client %s\n", client.getInetAddress().getHostAddress());
                 }
             }
-        } else if (msgString.equals("#GeSkinClinics")) {
-            try {
-                List<ClinicEntity> clinics = getSkinClinics();
-                Clinics = clinics;
-                client.sendToClient(clinics);
-                System.out.format("Sent all clinics to client %s\n", client.getInetAddress().getHostAddress());
-            } catch (Exception e) {
-                if (session != null) {
-                    session.getTransaction().rollback();
-                }
-            }
-        }
-        else if (msgString.equals("#GetAllReservedAppointments")) { // for manager use // we need to add this to client
-            try {
-                List<AppointmentEntity> appoints = getALLReservedApps();
-                apps = appoints;
-                client.sendToClient(appoints);
-                System.out.format("Sent all appointments to client_manager %s\n", client.getInetAddress().getHostAddress());
-            } catch (Exception e) {
-                if (session != null) {
-                    session.getTransaction().rollback();
-                }
-            }
-        }
-        else if (msgString.equals("#GetAllFreeAppointments")) { // for client use // we need to add this to client
-            try {
-                List<AppointmentEntity> appoints = getALLFreeApps();
-                apps = appoints;  // we must build a new List above in the beginning
-                client.sendToClient(appoints);
-                System.out.format("Sent all free appointments to client %s\n", client.getInetAddress().getHostAddress());
-            } catch (Exception e) {
-                if (session != null) {
-                    session.getTransaction().rollback();
-                }
-            }
-        }
-        else if (msg.getClass().equals(UserEntity.class)){
+        } else if (msg.getClass().equals(UserEntity.class)){
             List<ManagerEntity> Mangers = getALLMangers();
            boolean flag_manager = checkPassword(Mangers,((UserEntity) msg),client);
             List<DoctorEntity> Doctors = getALLDoctors();
@@ -220,54 +188,82 @@ public class SimpleServer extends AbstractServer {
         }
         return  false;
     }
+    private static void UpdateAppointments(){
+        LocalDateTime now=LocalDateTime.now();
+        now.getDayOfWeek();
+        List<DoctorEntity> all_docs=getALLDoctors();
+        for (DoctorEntity doc:all_docs) {
+            List<DoctorClinicEntity> doc_clinics = doc.getDoctorClinicEntities();
+            List<AppointmentEntity> doc_appointments = doc.getAppointments();
+            for (AppointmentEntity app:doc_appointments) {
+
+                if(app.getDate().isBefore(now)) {
+                    doc_appointments.remove(app);
+                }
+            }
+            LocalDateTime latest_appointment;
+            if(doc_appointments.size()>0)
+            {
+                latest_appointment=doc_appointments.get(doc_appointments.size()-1).getDate();
+            }else{
+                latest_appointment = now;
+            }
+            for (int i = latest_appointment.getMonthValue() ; i <= (now.getMonthValue()+3); i++)
+            {
+                int year= now.getYear();
+                if(i>12){
+                    year++;
+                }
+               /* Calendar cal = Calendar.getInstance();
+                int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);*/
+                YearMonth yearMonthObject = YearMonth.of(year, i);
+                int daysInMonth = yearMonthObject.lengthOfMonth();
+                for (int j=1;j<=daysInMonth;j++){
+                    for(DoctorClinicEntity doc_clinic : doc_clinics){
+                        List<LocalTime> work_hours = doc_clinic.GetWorkingDateTime();
+                        LocalDate localDate=LocalDate.of(year,i,j);
+                        int day_of_week= getDayNumberNew(localDate);
+                        if(day_of_week==7){
+                            day_of_week=1;
+                        }else{
+                            day_of_week++;
+                        }
+                        LocalTime opening = work_hours.get(2*(day_of_week-1));
+                        LocalTime closing =work_hours.get(2*(day_of_week-1)+1);
+
+                        if(!opening.toString().equals("00:00") && !closing.toString().equals("00:00")){
+                            for(int hour=opening.getHour()*60;hour<=closing.getHour()*60;hour+=20) {
+
+                                LocalDateTime appointment_time = LocalDateTime.of(year, i % 12, j, hour / 60, hour % 60);
+                                if (!appointment_time.isBefore(now)) {
+                                    AppointmentEntity app = new AppointmentEntity(appointment_time, doc_clinic, 20);
+                                    System.out.println(app.getDate().toString());
+                                    doc.getAppointments().add(app);
+
+                                }
+                            }
+                        }
+
+
+
+                    }
+                }
+            }
+
+
+        }
+    }
+    public static int getDayNumberNew(LocalDate date) {
+        DayOfWeek day = date.getDayOfWeek();
+        return (day.getValue());
+    }
+
+
     private static List<ClinicEntity> getALLClinics() {
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<ClinicEntity> query = builder.createQuery(ClinicEntity.class);
         query.from(ClinicEntity.class);
         List<ClinicEntity> result = session.createQuery(query).getResultList();
-        return result;
-    }
-    private static List<ClinicEntity> getSkinClinics() {
-        CriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<ClinicEntity> query = builder.createQuery(ClinicEntity.class);
-        query.from(ClinicEntity.class);
-        List<ClinicEntity> result = session.createQuery(query).getResultList();
-        List<ClinicEntity> clinics_to_return = new ArrayList<ClinicEntity>();
-        for(ClinicEntity clinic : result)
-        {
-            for(String service : clinic.getServices())
-            {
-                if(service.toLowerCase(Locale.ROOT) == "skin")
-                    clinics_to_return.add(clinic);
-            }
-        }
-        return clinics_to_return;
-    }
-    private static List<AppointmentEntity> getALLReservedApps() {
-        CriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<AppointmentEntity> query = builder.createQuery(AppointmentEntity.class);
-        query.from(AppointmentEntity.class);
-        List<AppointmentEntity> before_result = session.createQuery(query).getResultList();
-        List<AppointmentEntity> result = new ArrayList<AppointmentEntity>();
-        for(AppointmentEntity app : before_result)
-        {
-            if(app.isReserved() == true) // add all reserved appointments to result
-                result.add(app);
-        }
-        return result;
-    }
-
-    private static List<AppointmentEntity> getALLFreeApps() {
-        CriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<AppointmentEntity> query = builder.createQuery(AppointmentEntity.class);
-        query.from(AppointmentEntity.class);
-        List<AppointmentEntity> before_result = session.createQuery(query).getResultList();
-        List<AppointmentEntity> result = new ArrayList<AppointmentEntity>();
-        for(AppointmentEntity app : before_result)
-        {
-            if(app.isReserved() == false) // add all available appointments to result
-                result.add(app);
-        }
         return result;
     }
 

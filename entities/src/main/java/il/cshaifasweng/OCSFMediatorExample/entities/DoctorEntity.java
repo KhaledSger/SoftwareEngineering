@@ -15,14 +15,7 @@ public class DoctorEntity extends UserEntity {
         this.doctorClinicEntities=new ArrayList<DoctorClinicEntity>();
         this.doctorPatientEntities=new ArrayList<DoctorPatientEntity>();
         this.appointments=new ArrayList<AppointmentEntity>();
-    }
 
-    public DoctorEntity(int id, String first_name, String family_name, String mail,String Password,String specialization,ArrayList<DoctorClinicEntity> doctor,ArrayList<DoctorPatientEntity> patient,ArrayList<AppointmentEntity> apps) throws NoSuchAlgorithmException {
-        super(id, first_name, family_name, mail,Password);
-        Specialization = specialization;
-        this.doctorClinicEntities=doctor;
-        this.doctorPatientEntities=patient;
-        this.appointments=apps;
     }
 
 
@@ -76,8 +69,6 @@ public class DoctorEntity extends UserEntity {
     public void setDoctorPatientEntities(List<DoctorPatientEntity> doctorPatientEntities) {
         this.doctorPatientEntities = doctorPatientEntities;
     }
-
-
     public List<AppointmentEntity> getAppointments() {
         return appointments;
     }
@@ -85,5 +76,5 @@ public class DoctorEntity extends UserEntity {
     public void setAppointments(List<AppointmentEntity> appointments) {
         this.appointments = appointments;
     }
-  
+
 }
