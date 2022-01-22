@@ -12,6 +12,7 @@ import org.hibernate.service.ServiceRegistry;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import java.io.IOException;
+import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,8 +49,8 @@ public class SimpleServer extends AbstractServer {
             times.add("15:00-17:00");
             times.add("15:00-17:00");
             times.add("15:00-17:00");
-            times.add("");
-            times.add("");
+            times.add("00:00-00:00");
+            times.add("00:00-00:00");
             DoctorClinicEntity doctorClinic= new DoctorClinicEntity(doc1,clinic3,times);
             session.save(doctorClinic);
             ManagerEntity manger = new ManagerEntity(doc1.getId(), doc1.getFirst_name(), doc1.getFamily_name(),
@@ -87,6 +88,8 @@ public class SimpleServer extends AbstractServer {
         configuration.addAnnotatedClass(DoctorClinicEntity.class);
         configuration.addAnnotatedClass(ManagerEntity.class);
         configuration.addAnnotatedClass(DoctorPatientEntity.class);
+        configuration.addAnnotatedClass(LabWorkerEntity.class);
+        configuration.addAnnotatedClass(AppointmentEntity.class);
 
 
 
@@ -111,6 +114,7 @@ public class SimpleServer extends AbstractServer {
             stopSession();
         } else if (msgString.equals("#GetAllClinics")) {
             try {
+                UpdateAppointments();
                 List<ClinicEntity> clinics = getALLClinics();
                 Clinics = clinics;
                 client.sendToClient(clinics);
@@ -177,6 +181,77 @@ public class SimpleServer extends AbstractServer {
         }
         return  false;
     }
+    private static void UpdateAppointments(){
+        LocalDateTime now=LocalDateTime.now();
+        now.getDayOfWeek();
+        List<DoctorEntity> all_docs=getALLDoctors();
+        for (DoctorEntity doc:all_docs) {
+            List<DoctorClinicEntity> doc_clinics = doc.getDoctorClinicEntities();
+            List<AppointmentEntity> doc_appointments = doc.getAppointments();
+            for (AppointmentEntity app:doc_appointments) {
+
+                if(app.getDate().isBefore(now)) {
+                    doc_appointments.remove(app);
+                }
+            }
+            LocalDateTime latest_appointment;
+            if(doc_appointments.size()>0)
+            {
+                latest_appointment=doc_appointments.get(doc_appointments.size()-1).getDate();
+            }else{
+                latest_appointment = now;
+            }
+            for (int i = latest_appointment.getMonthValue() ; i <= (now.getMonthValue()+3); i++)
+            {
+                int year= now.getYear();
+                if(i>12){
+                    year++;
+                }
+               /* Calendar cal = Calendar.getInstance();
+                int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);*/
+                YearMonth yearMonthObject = YearMonth.of(year, i);
+                int daysInMonth = yearMonthObject.lengthOfMonth();
+                for (int j=1;j<=daysInMonth;j++){
+                    for(DoctorClinicEntity doc_clinic : doc_clinics){
+                        List<LocalTime> work_hours = doc_clinic.GetWorkingDateTime();
+                        LocalDate localDate=LocalDate.of(year,i,j);
+                        int day_of_week= getDayNumberNew(localDate);
+                        if(day_of_week==7){
+                            day_of_week=1;
+                        }else{
+                            day_of_week++;
+                        }
+                        LocalTime opening = work_hours.get(2*(day_of_week-1));
+                        LocalTime closing =work_hours.get(2*(day_of_week-1)+1);
+
+                        if(!opening.toString().equals("00:00") && !closing.toString().equals("00:00")){
+                            for(int hour=opening.getHour()*60;hour<=closing.getHour()*60;hour+=20) {
+
+                                LocalDateTime appointment_time = LocalDateTime.of(year, i % 12, j, hour / 60, hour % 60);
+                                if (!appointment_time.isBefore(now)) {
+                                    AppointmentEntity app = new AppointmentEntity(appointment_time, doc_clinic, 20);
+                                    System.out.println(app.getDate().toString());
+                                    doc.getAppointments().add(app);
+
+                                }
+                            }
+                        }
+
+
+
+                    }
+                }
+            }
+
+
+        }
+    }
+    public static int getDayNumberNew(LocalDate date) {
+        DayOfWeek day = date.getDayOfWeek();
+        return (day.getValue());
+    }
+
+
     private static List<ClinicEntity> getALLClinics() {
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<ClinicEntity> query = builder.createQuery(ClinicEntity.class);
@@ -218,6 +293,13 @@ public class SimpleServer extends AbstractServer {
         CriteriaQuery<DoctorClinicEntity> query = builder.createQuery(DoctorClinicEntity.class);
         query.from(DoctorClinicEntity.class);
         List<DoctorClinicEntity> result = session.createQuery(query).getResultList();
+        return result;
+    }
+    private static List<LabWorkerEntity> getALLLabWorkers() {
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<LabWorkerEntity> query = builder.createQuery(LabWorkerEntity.class);
+        query.from(LabWorkerEntity.class);
+        List<LabWorkerEntity> result = session.createQuery(query).getResultList();
         return result;
     }
 }

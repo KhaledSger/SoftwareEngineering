@@ -1,12 +1,10 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
 
 
-
-
-
 import javax.persistence.*;
+import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 @Entity
 public class DoctorClinicEntity {
@@ -16,6 +14,7 @@ public class DoctorClinicEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "DoctorClinic_id")
     private int DoctorClinic_id;
+
     @ManyToOne
     @JoinColumn(name="doctor_id")
     DoctorEntity doctor;
@@ -30,9 +29,10 @@ public class DoctorClinicEntity {
 
 
     public DoctorClinicEntity(DoctorEntity doctor, ClinicEntity clinic, ArrayList<String> day_hour) {
-        this.doctor = doctor;
-        this.clinic = clinic;
+        this.doctor = doctor; // TO-DO change to setter
+        this.clinic = clinic; // TO-DO change to setter
         setDay_hours(day_hour);
+
 
     }
     public DoctorClinicEntity() {
@@ -52,9 +52,27 @@ public class DoctorClinicEntity {
         return day_hours;
     }
 
-    public ArrayList<String> getWorkingHours(){
+    public List<String> getWorkingHours(){
         String workingHours = getDay_hours();
-        return (ArrayList<String>) Arrays.stream(workingHours.split("@&%@")).toList();
+
+        return List.of(workingHours.split("@&%@"));
+    }
+    public ArrayList<LocalTime> GetWorkingDateTime() {
+       List<String> work_hours = getWorkingHours();
+        ArrayList<LocalTime> Dates = new ArrayList<LocalTime>();
+        for (int i = 0; i < work_hours.size(); i++) {
+           List<String> tmp = List.of(work_hours.get(i).split("-"));
+
+          /*  if (work_hours.get(i).length() == 0) {
+                Dates.add(LocalTime.parse("00:00"));
+                Dates.add(LocalTime.parse("00:00"));
+            } else {*/
+                Dates.add(LocalTime.parse(tmp.get(0)));
+                Dates.add(LocalTime.parse(tmp.get(1)));
+           /* }*/
+
+        }
+        return Dates;
     }
 
     public DoctorEntity getDoctor() {

@@ -111,8 +111,7 @@ public class SimpleClient extends AbstractClient {
         try {
             SimpleClient.getClient().sendToServer(thisUser);
         } catch (IOException e) {
-
-            System.out.println("EXCEPTION FROM HERE");
+            e.printStackTrace();
         }
     }
 }

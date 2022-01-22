@@ -11,9 +11,10 @@ import java.util.List;
 public class DoctorEntity extends UserEntity {
     public DoctorEntity(int id, String first_name, String family_name, String mail,String Password,String specialization) throws NoSuchAlgorithmException {
         super(id, first_name, family_name, mail,Password);
-        Specialization = specialization;
+        this.Specialization = specialization;
         this.doctorClinicEntities=new ArrayList<DoctorClinicEntity>();
         this.doctorPatientEntities=new ArrayList<DoctorPatientEntity>();
+        this.appointments=new ArrayList<AppointmentEntity>();
 
     }
 
@@ -29,6 +30,10 @@ public class DoctorEntity extends UserEntity {
 
     @OneToMany(mappedBy = "doctor")
     List<DoctorPatientEntity> doctorPatientEntities;
+
+    @OneToMany
+    @JoinColumn(name = "Appointment_id")
+    private List<AppointmentEntity> appointments;
 
     // TODO Add Many-to-many relation with clinic
     //TODO DataBase Connection
@@ -63,6 +68,13 @@ public class DoctorEntity extends UserEntity {
 
     public void setDoctorPatientEntities(List<DoctorPatientEntity> doctorPatientEntities) {
         this.doctorPatientEntities = doctorPatientEntities;
+    }
+    public List<AppointmentEntity> getAppointments() {
+        return appointments;
+    }
+
+    public void setAppointments(List<AppointmentEntity> appointments) {
+        this.appointments = appointments;
     }
 
 }
