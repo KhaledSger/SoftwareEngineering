@@ -29,6 +29,7 @@ public class AppointmentEntity implements Serializable {
     @JoinColumn(name = "Doctor_id")
     private DoctorEntity doctor;
 
+    //TODO add this relation
 //    @ManyToOne
 //    @JoinColumn(name = "Nurse_id")
 //    private NurseEntity Nurse;
@@ -40,9 +41,9 @@ public class AppointmentEntity implements Serializable {
     public AppointmentEntity(LocalDateTime actual_date, LocalDateTime date, ClinicEntity clinic,PatientEntity patient,DoctorEntity doctor,boolean valid,int duration)
     {
         this.date=date;
-        this.clinic = clinic;
-        this.patient = patient;
-        this.doctor = doctor;
+        this.clinic = clinic; // TODO change tp set
+        this.patient = patient; // TODO change tp set
+        this.doctor = doctor; // TODO change tp set
         this.actual_date=actual_date;
         this.reserved = valid;
         this.duration = duration;
@@ -50,17 +51,17 @@ public class AppointmentEntity implements Serializable {
     public AppointmentEntity(LocalDateTime date, DoctorClinicEntity doc_clinic,int duration)
     {
         this.date=date;
-        this.clinic = doc_clinic.clinic;
-        this.doctor = doc_clinic.doctor;
+        this.clinic = doc_clinic.clinic; // TODO change tp set
+        this.doctor = doc_clinic.doctor; // TODO change tp set
         this.reserved = false;
         this.duration = duration;
     }
     public AppointmentEntity(LocalDateTime actual_date,LocalDateTime date, ClinicEntity clinic,PatientEntity patient,NurseEntity nurse,boolean valid,int duration)
     {
         this.date=date;
-        this.clinic = clinic;
-        this.patient = patient;
-//        setNurse_app(nurse);
+        this.clinic = clinic; // TODO change tp set
+        this.patient = patient; // TODO change tp set
+//        setNurse_app(nurse); // TODO change tp set
         this.actual_date=actual_date;
         this.reserved = valid;
         this.duration = duration;
@@ -82,7 +83,7 @@ public class AppointmentEntity implements Serializable {
         doctor.getAppointments().add(this);
     }
 
-//    public void setNurse_app(NurseEntity Nurse) {
+//    public void setNurse_app(NurseEntity Nurse) { // TODO fix set
 //        this.Nurse=Nurse;
 //        Nurse.getAppointments().add(this);
 //    }
@@ -137,11 +138,11 @@ public class AppointmentEntity implements Serializable {
 
     }
 
-//    public NurseEntity getNurse() {
+//    public NurseEntity getNurse() { // TODO fix
 //        return Nurse;
 //    }
 
-//    public void setNurse(NurseEntity nurse) {
+//    public void setNurse(NurseEntity nurse) { // TODO fix
 //        Nurse = nurse;
 //    }
 

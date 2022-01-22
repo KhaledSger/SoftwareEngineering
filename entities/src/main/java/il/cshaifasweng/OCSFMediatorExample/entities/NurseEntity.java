@@ -8,18 +8,19 @@ import java.security.NoSuchAlgorithmException;
 public class NurseEntity extends UserEntity{
     public NurseEntity(int id, String employee_name, String family_name, String mail,String Password,ClinicEntity clinic) throws NoSuchAlgorithmException {
         super(id, employee_name, family_name, mail,Password);
-        this.clinic = clinic; // // TO-DO change to setter
+        this.clinic = clinic; // TODO change tp set
     }
 
      @ManyToOne(fetch=FetchType.LAZY)
      @JoinColumn(name="Clinic_id")
      private ClinicEntity clinic;
 
+    // TODO add this relation
 //    @OneToMany
 //    @JoinColumn(name = "Appointment_id")
 //    private List<AppointmentEntity> appointments;
 //
-//
+// // TODO check
 //    public NurseEntity(int id, String employee_name, String family_name, String mail,String Password,ClinicEntity clinic) throws NoSuchAlgorithmException {
 //        super(id, employee_name, family_name, mail,Password);
 //        setClinic(clinic);
@@ -40,11 +41,11 @@ public class NurseEntity extends UserEntity{
         clinic.getNurseEntities().add(this);
     }
 
-//    public List<AppointmentEntity> getAppointments() {
+//    public List<AppointmentEntity> getAppointments() { // TODO fix
 //        return appointments;
 //    }
 //
-//    public void setAppointments(List<AppointmentEntity> appointments) {
+//    public void setAppointments(List<AppointmentEntity> appointments) { // TODO fix
 //        this.appointments = appointments;
 //    }
 }
