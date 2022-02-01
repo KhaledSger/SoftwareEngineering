@@ -15,6 +15,7 @@ public class UserEntity implements Serializable {
     String mail;
     private String Password;
     private String Salt;
+    boolean active;
 
     public UserEntity(int id, String first_name, String family_name, String mail,String Password) throws NoSuchAlgorithmException {
         this.id = id;
@@ -23,9 +24,11 @@ public class UserEntity implements Serializable {
         this.mail = mail;
         this.Salt = setSalt();
         setPassword(Password);
+        active = false;
     }
 
     public UserEntity() {
+        active = false;
     }
 
     public int getId() {
@@ -103,5 +106,13 @@ public class UserEntity implements Serializable {
 
     public void setTmpSalt(String Salt){
         this.Salt = Salt;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }
