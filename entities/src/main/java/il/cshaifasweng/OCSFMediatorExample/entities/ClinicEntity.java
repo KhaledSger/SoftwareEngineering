@@ -15,30 +15,37 @@ public class ClinicEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Clinic_id")
     private int id;
-    private String name; // name of the clinic
-    private String open; //clinic opening hour
-    private String close; // clinic closing hour
-    private String[] services; // the services that the clinic provides
+    private String name;
+    private String open;
+    private String close;
+    private String[] services;
 
 
     @OneToMany
-    @JoinColumn(name = "Patient_id")
+    @JoinColumn(name = "Clinic_id")
     private List<PatientEntity> Patients;
 
     @OneToMany
-    @JoinColumn(name = "Nurse_id")
+    @JoinColumn(name = "Clinic_id")
     private List<NurseEntity> nurseEntities;
 
     @OneToMany(mappedBy = "clinic")
     private  List<DoctorClinicEntity> doctorClinicEntities;
 
+    @OneToOne(mappedBy = "clinic",cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private ManagerEntity manager;
+
+
     @OneToMany
     @JoinColumn(name = "Appointment_id")
     private List<AppointmentEntity> appointments;
 
+    @OneToMany
+    @JoinColumn(name = "LabWorker_id")
+    private List<LabWorkerEntity> labWorkers;
 
-
-    public ClinicEntity(String name, String open, String close, String[] services) {
+    public ClinicEntity(String name, String open, String close, String[] services,List<PatientEntity> Patients) {
         this.name = name;
         this.open = open;
         this.close = close;
@@ -47,20 +54,11 @@ public class ClinicEntity implements Serializable {
         this.Patients=new ArrayList<PatientEntity>();
         this.nurseEntities=new ArrayList<NurseEntity>();
         this.doctorClinicEntities=new ArrayList<DoctorClinicEntity>();
-        this.appointments = new ArrayList<AppointmentEntity>();
+        this.labWorkers = new ArrayList<LabWorkerEntity>();
+        this.appointments=new ArrayList<AppointmentEntity>();
+
     }
 
-    public ClinicEntity(String name, String open, String close, String[] services,List<PatientEntity> Patients,List<AppointmentEntity> apps,List<NurseEntity> nurse, List<DoctorClinicEntity> doctor) {
-        this.name = name;
-        this.open = open;
-        this.close = close;
-        this.services = services;
-
-        this.Patients=Patients;
-        this.nurseEntities=nurse;
-        this.doctorClinicEntities=doctor;
-        this.appointments = apps;
-    }
 
     public ClinicEntity(ClinicEntity CE) {
         this.name = CE.name;
@@ -70,7 +68,8 @@ public class ClinicEntity implements Serializable {
         this.Patients=CE.Patients;
         this.nurseEntities= CE.nurseEntities;
         this.doctorClinicEntities=CE.doctorClinicEntities;
-        this.appointments = CE.appointments;
+        this.manager=CE.manager;
+        this.labWorkers = CE.labWorkers;
     }
 
     public ClinicEntity() {
@@ -132,6 +131,21 @@ public class ClinicEntity implements Serializable {
         this.doctorClinicEntities = doctorClinicEntities;
     }
 
+    public ManagerEntity getManager() {
+        return manager;
+    }
+
+    public void setManager(ManagerEntity manager) {
+        this.manager = manager;
+         manager.setClinic(this);
+    }
+    public List<LabWorkerEntity> getLabWorkers() {
+        return labWorkers;
+    }
+
+    public void setLabWorkers(List<LabWorkerEntity> labWorkers) {
+        this.labWorkers = labWorkers;
+    }
     public List<AppointmentEntity> getAppointments() {
         return appointments;
     }
@@ -139,4 +153,5 @@ public class ClinicEntity implements Serializable {
     public void setAppointments(List<AppointmentEntity> appointments) {
         this.appointments = appointments;
     }
+
 }

@@ -28,7 +28,7 @@
       <Text fx:id="welcome_text" layoutX="104.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="text" wrappingWidth="118.93670654296875" />
       <ImageView fitHeight="33.0" fitWidth="39.0" layoutX="71.0" layoutY="34.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../../../Medical-Nurse-Female-Dark-icon.png" />
+            <Image url="@../../../../Medical-Nurse-Male-Light-icon.png" />
          </image>
       </ImageView>
       <Button fx:id="view_patients" layoutX="34.0" layoutY="133.0" mnemonicParsing="false" onAction="#view_patients_handler" prefHeight="72.0" prefWidth="130.0" text="View Your Patients" />

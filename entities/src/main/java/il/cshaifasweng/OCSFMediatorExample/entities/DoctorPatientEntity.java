@@ -7,6 +7,7 @@ public class DoctorPatientEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "DoctorPatient_id")
     private int DoctorPatient_id;
+
     @ManyToOne
     @JoinColumn(name="doctor_id")
     DoctorEntity doctor;

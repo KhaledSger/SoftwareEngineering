@@ -2,7 +2,7 @@ package il.cshaifasweng.OCSFMediatorExample.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "Appointments")
@@ -12,11 +12,11 @@ public class AppointmentEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY )
     @Column(name = "Appointment_id")
     private int id;
-    private String date; // date of the appointment
-    private String time; // time of the appointment   must be initialized by generated value of 15 minutes each between open and close hours of clinic
-    private String actual_date; // time of treatment
+    private LocalDateTime date; // date of the appointment
+    private LocalDateTime actual_date; // time of treatment
     private boolean reserved = false; // the appointment is not reserved by default
-    private String duration="0";
+    private int duration;
+
     @ManyToOne
     @JoinColumn(name = "Clinic_id")
     private ClinicEntity clinic;
@@ -29,26 +29,44 @@ public class AppointmentEntity implements Serializable {
     @JoinColumn(name = "Doctor_id")
     private DoctorEntity doctor;
 
-    @ManyToOne
-    @JoinColumn(name = "Nurse_id")
-    private NurseEntity Nurse;
+    //TODO add this relation
+//    @ManyToOne
+//    @JoinColumn(name = "Nurse_id")
+//    private NurseEntity Nurse;
 
     public AppointmentEntity() {
 
     }
 
-    public AppointmentEntity(String actual_date, String date,String time, ClinicEntity clinic,PatientEntity patient,DoctorEntity doctor,NurseEntity nurse,boolean valid,String duration)
+    public AppointmentEntity(LocalDateTime actual_date, LocalDateTime date, ClinicEntity clinic,PatientEntity patient,DoctorEntity doctor,boolean valid,int duration)
     {
         this.date=date;
-        this.time=time;
-        setClinic_app(clinic);
-        setPatient_app(patient);
-        setDoctor_app(doctor);
-        setNurse_app(nurse);
+        this.clinic = clinic; // TODO change tp set
+        this.patient = patient; // TODO change tp set
+        this.doctor = doctor; // TODO change tp set
         this.actual_date=actual_date;
         this.reserved = valid;
         this.duration = duration;
     }
+    public AppointmentEntity(LocalDateTime date, DoctorClinicEntity doc_clinic,int duration)
+    {
+        this.date=date;
+        this.clinic = doc_clinic.clinic; // TODO change tp set
+        this.doctor = doc_clinic.doctor; // TODO change tp set
+        this.reserved = false;
+        this.duration = duration;
+    }
+    public AppointmentEntity(LocalDateTime actual_date,LocalDateTime date, ClinicEntity clinic,PatientEntity patient,NurseEntity nurse,boolean valid,int duration)
+    {
+        this.date=date;
+        this.clinic = clinic; // TODO change tp set
+        this.patient = patient; // TODO change tp set
+//        setNurse_app(nurse); // TODO change tp set
+        this.actual_date=actual_date;
+        this.reserved = valid;
+        this.duration = duration;
+    }
+
 
     public void setClinic_app(ClinicEntity clinic) {
         this.clinic = clinic;
@@ -65,10 +83,10 @@ public class AppointmentEntity implements Serializable {
         doctor.getAppointments().add(this);
     }
 
-    public void setNurse_app(NurseEntity Nurse) {
-        this.Nurse=Nurse;
-        Nurse.getAppointments().add(this);
-    }
+//    public void setNurse_app(NurseEntity Nurse) { // TODO fix set
+//        this.Nurse=Nurse;
+//        Nurse.getAppointments().add(this);
+//    }
 
     public int getId() {
         return id;
@@ -78,21 +96,14 @@ public class AppointmentEntity implements Serializable {
         this.id = id;
     }
 
-    public String getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
 
     public ClinicEntity getClinic() {
         return clinic;
@@ -110,11 +121,11 @@ public class AppointmentEntity implements Serializable {
         this.patient = patient;
     }
 
-    public String getActual_date() {
+    public LocalDateTime getActual_date() {
         return actual_date;
     }
 
-    public void setActual_date(String actual_date) {
+    public void setActual_date(LocalDateTime actual_date) {
         this.actual_date = actual_date;
     }
 
@@ -124,15 +135,16 @@ public class AppointmentEntity implements Serializable {
 
     public void setDoctor(DoctorEntity doctor) {
         this.doctor = doctor;
+
     }
 
-    public NurseEntity getNurse() {
-        return Nurse;
-    }
+//    public NurseEntity getNurse() { // TODO fix
+//        return Nurse;
+//    }
 
-    public void setNurse(NurseEntity nurse) {
-        Nurse = nurse;
-    }
+//    public void setNurse(NurseEntity nurse) { // TODO fix
+//        Nurse = nurse;
+//    }
 
     public boolean isReserved() {
         return reserved;
@@ -142,11 +154,11 @@ public class AppointmentEntity implements Serializable {
         this.reserved = reserved;
     }
 
-    public String getDuration() {
+    public int getDuration() {
         return duration;
     }
 
-    public void setDuration(String duration) {
+    public void setDuration(int duration) {
         this.duration = duration;
     }
 }
