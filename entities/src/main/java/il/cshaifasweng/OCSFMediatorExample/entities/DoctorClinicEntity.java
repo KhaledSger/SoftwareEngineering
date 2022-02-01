@@ -1,15 +1,9 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
 
 
-
-
-
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Entity
@@ -35,8 +29,8 @@ public class DoctorClinicEntity {
 
 
     public DoctorClinicEntity(DoctorEntity doctor, ClinicEntity clinic, ArrayList<String> day_hour) {
-        setDoctor(doctor);
-        setClinic(clinic);
+        this.doctor = doctor; // TODO change tp set
+        this.clinic = clinic; // TODO change tp set
         setDay_hours(day_hour);
 
 
@@ -99,11 +93,11 @@ public class DoctorClinicEntity {
         clinic.getDoctorClinicEntities().add(this);
     }
 
-//    public Map<Integer, String> getDay_hours() {
+//    public Map<Integer, String> getDay_hours() { // TODO check
 //        return day_hours;
 //    }
 
-//    public void setDay_hours(Map<Integer, String> day_hours) {
+//    public void setDay_hours(Map<Integer, String> day_hours) { // TODO check
 //        this.day_hours = day_hours;
 //    }
 

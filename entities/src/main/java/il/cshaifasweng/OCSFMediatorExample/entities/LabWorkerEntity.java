@@ -2,7 +2,6 @@ package il.cshaifasweng.OCSFMediatorExample.entities;
 
 import javax.persistence.*;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 
 @Entity
 @Table(name="LabWorker")

@@ -67,44 +67,43 @@ public class PrimaryController {
 
 	@FXML
 	public void Login(javafx.event.ActionEvent actionEvent) throws IOException {
-		App.setRoot("patient");
-//		String regex = "[0-9]+";
-//		Pattern p = Pattern.compile(regex);
-//		Matcher m = p.matcher(ID.getText());
-//		if (m.matches()) {
-//			SimpleClient.getClient().LogIn(Integer.parseInt(ID.getText()), Password.getText());
-//			while (SimpleClient.getClient().logInFlag == -1) { // bug in simple client .. log in flag needs to change and not be equal -1 when manager login
-//				ProgressBar pb = new ProgressBar(0.6);
-//				ProgressBar pi = new ProgressBar(0.6);
-//			}
-//			if (SimpleClient.getClient().logInFlag == 1) {
-//				 if(SimpleClient.getClient().getAvailableUsers() < 1){ // error in available users
-//				 	SimpleClient.getClient().logInFlag = -1;
-//				 }else if(SimpleClient.getClient().getAvailableUsers() == 1){
-//				 	App.setRoot("patient");
-//					 SimpleClient.getClient().setCurrentUser(0);
-//				 }else{
-//				 	App.setRoot("login");
-//				 }
-//			} else {
-//				Password.setText("");
-//				SimpleClient.getClient().logInFlag = -1;
-//				Platform.runLater(() -> {
-//					Alert alert = new Alert(Alert.AlertType.ERROR,
-//							String.format("Incorrect Id or Password, try again")
-//					);
-//					alert.show();
-//				});
-//			}
-//		} else {
-//			ID.setText("");
-//			Password.setText("");
-//			Platform.runLater(() -> {
-//				Alert alert = new Alert(Alert.AlertType.ERROR,
-//						String.format("ID should contain only numbers, try again")
-//				);
-//				alert.show();
-//			});
-//		}
+		String regex = "[0-9]+";
+		Pattern p = Pattern.compile(regex);
+		Matcher m = p.matcher(ID.getText());
+		if (m.matches()) {
+			SimpleClient.getClient().LogIn(Integer.parseInt(ID.getText()), Password.getText());
+			while (SimpleClient.getClient().logInFlag == -1) { // bug in simple client .. log in flag needs to change and not be equal -1 when manager login
+				ProgressBar pb = new ProgressBar(0.6);
+				ProgressBar pi = new ProgressBar(0.6);
+			}
+			if (SimpleClient.getClient().logInFlag == 1) {
+				 if(SimpleClient.getClient().getAvailableUsers() < 1){ // error in available users
+				 	SimpleClient.getClient().logInFlag = -1;
+				 }else if(SimpleClient.getClient().getAvailableUsers() == 1){
+				 	App.setRoot("patient");
+					 SimpleClient.getClient().setCurrentUser(0);
+				 }else{
+				 	App.setRoot("login");
+				 }
+			} else {
+				Password.setText("");
+				SimpleClient.getClient().logInFlag = -1;
+				Platform.runLater(() -> {
+					Alert alert = new Alert(Alert.AlertType.ERROR,
+							String.format("Incorrect Id or Password, try again")
+					);
+					alert.show();
+				});
+			}
+		} else {
+			ID.setText("");
+			Password.setText("");
+			Platform.runLater(() -> {
+				Alert alert = new Alert(Alert.AlertType.ERROR,
+						String.format("ID should contain only numbers, try again")
+				);
+				alert.show();
+			});
+		}
 	}
 }

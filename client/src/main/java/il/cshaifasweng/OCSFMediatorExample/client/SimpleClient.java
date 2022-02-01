@@ -55,9 +55,7 @@ public class SimpleClient extends AbstractClient {
         } else if (msg.getClass().equals(String.class)) {
             if (((String) msg).equals("#Login Success")) {
                 logInFlag = 1;
-            }else if (((String) msg).equals("#Login Active")) {
-                logInFlag = 3;
-            }else if ((((String) msg).equals("#Login Failure")) && logInFlag != 3) {
+            } else if (((String) msg).equals("#Login Failure")) {
                 logInFlag = 2;
             }
         }
@@ -113,7 +111,7 @@ public class SimpleClient extends AbstractClient {
         try {
             SimpleClient.getClient().sendToServer(thisUser);
         } catch (IOException e) {
-            System.out.println("EXCEPTION FROM HERE");
+            e.printStackTrace();
         }
     }
 }

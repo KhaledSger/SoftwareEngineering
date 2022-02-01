@@ -31,7 +31,7 @@ public class PatientEntity extends UserEntity {
     public PatientEntity(int id, String first_name,String family_name,String mail ,String Password,int age,ClinicEntity clinic) throws NoSuchAlgorithmException {
         super(id, first_name, family_name, mail,Password);
         this.age = age;
-        setClinic(clinic);
+        this.clinic = clinic; // TODO change tp set
         this.doctorPatientEntities=new ArrayList<DoctorPatientEntity>();
         this.appointments=new ArrayList<AppointmentEntity>();
     }

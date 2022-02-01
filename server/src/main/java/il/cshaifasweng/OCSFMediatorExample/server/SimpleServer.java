@@ -14,7 +14,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import java.io.IOException;
 import java.time.*;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class SimpleServer extends AbstractServer {
@@ -52,12 +51,8 @@ public class SimpleServer extends AbstractServer {
             times.add("15:00-17:00");
             times.add("00:00-00:00");
             times.add("00:00-00:00");
-
-
             DoctorClinicEntity doctorClinic= new DoctorClinicEntity(doc1,clinic3,times);
             session.save(doctorClinic);
-
-
             ManagerEntity manger = new ManagerEntity(doc1.getId(), doc1.getFirst_name(), doc1.getFamily_name(),
                     doc1.getMail(),"111",clinic2);
             session.save(manger);
@@ -68,7 +63,6 @@ public class SimpleServer extends AbstractServer {
             session.getTransaction().commit();
         } catch (Exception e) {
             if (session != null) {
-
                 session.getTransaction().rollback();
             }
         }
@@ -120,8 +114,7 @@ public class SimpleServer extends AbstractServer {
             stopSession();
         } else if (msgString.equals("#GetAllClinics")) {
             try {
-                //UpdateAppointments();
-
+                UpdateAppointments();
                 List<ClinicEntity> clinics = getALLClinics();
                 Clinics = clinics;
                 client.sendToClient(clinics);
@@ -174,14 +167,8 @@ public class SimpleServer extends AbstractServer {
             if(user.getId() == Users.get(i).getId()){
                 if(Users.get(i).comparePassword(user.getPassword())) {
                     try {
-                        if(Users.get(i).isActive() == false) {
-      //                      Users.get(i).setActive(true); // TO-DO move to client(after handling users in server) and set false when closing the client
-                            client.sendToClient(Users.get(i));
-                            return true;
-                        }else {
-                            client.sendToClient("#Login Active");
-                            return false;
-                        }
+                        client.sendToClient(Users.get(i));
+                        return true;
                     } catch (IOException e) {
                         if (session != null) {
                             session.getTransaction().rollback();
