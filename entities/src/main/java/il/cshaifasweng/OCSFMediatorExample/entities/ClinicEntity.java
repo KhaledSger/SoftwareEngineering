@@ -137,7 +137,7 @@ public class ClinicEntity implements Serializable {
 
     public void setManager(ManagerEntity manager) {
         this.manager = manager;
-         manager.setClinic(this);
+        manager.setClinic(this);
     }
     public List<LabWorkerEntity> getLabWorkers() {
         return labWorkers;
@@ -151,7 +151,5 @@ public class ClinicEntity implements Serializable {
     }
 
     public void setAppointments(List<AppointmentEntity> appointments) {
-        this.appointments = appointments;
-    }
-
+        this.appointments = appointments;}
 }

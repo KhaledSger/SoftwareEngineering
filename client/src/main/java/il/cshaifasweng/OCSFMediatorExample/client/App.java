@@ -7,10 +7,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+
+import javax.swing.plaf.metal.MetalTheme;
 import java.io.IOException;
 
 /**
@@ -27,7 +30,9 @@ public class App extends Application {
     	client = SimpleClient.getClient();
     	client.openConnection();
         SimpleClient.getClient().sendToServer("#GetAllClinics");
-        scene = new Scene(loadFXML("primary"), 640, 480);
+        stage.setTitle("Health Care");
+        scene = new Scene(loadFXML("primary"), 800, 600);
+        // scene.setUserAgentStylesheet(STYLESHEET_CASPIAN); ----> setting a different theme
         stage.setScene(scene);
         stage.show();
     }
@@ -36,7 +41,7 @@ public class App extends Application {
         scene.setRoot(loadFXML(fxml));
     }
 
-    private static Parent loadFXML(String fxml) throws IOException {
+    public static Parent loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
         return fxmlLoader.load();
     }

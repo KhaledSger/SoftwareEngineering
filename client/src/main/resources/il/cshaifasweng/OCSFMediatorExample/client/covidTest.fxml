@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.CovidTestController">
+   <children>
+      <Text layoutX="288.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Covid-19 Diagnostic Form" underline="true">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="14.0" layoutX="361.0" layoutY="422.0" stroke="WHITE" strokeType="INSIDE" width="140.0" />
+      <Text layoutX="44.0" layoutY="100.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Please answer the following questions:" underline="true">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Text>
+      <TextArea editable="false" layoutX="31.0" layoutY="112.0" prefHeight="135.0" prefWidth="379.0" text="Do you have any of these life-threatening symptoms?&#10; - Trouble breathing&#10; - Persistent pain or pressure in the chest&#10; - New confusion&#10; - Pale, gray, or blue-colored skin, lips, or nail beds, depending on skin tone." wrapText="true">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </TextArea>
+      <ToggleButton fx:id="first_yes" alignment="CENTER_LEFT" layoutX="31.0" layoutY="254.0" mnemonicParsing="false" onAction="#first_yes_action" prefHeight="26.0" prefWidth="140.0" text="YES">
+         <toggleGroup>
+            <ToggleGroup fx:id="buttons1" />
+         </toggleGroup>
+      </ToggleButton>
+      <ToggleButton fx:id="first_no" alignment="CENTER_LEFT" layoutX="31.0" layoutY="280.0" mnemonicParsing="false" onAction="#first_no_action" prefHeight="26.0" prefWidth="140.0" text="NO" toggleGroup="$buttons1" />
+      <TextArea layoutX="23.0" layoutY="351.0" prefHeight="70.0" prefWidth="379.0" text="In the last two weeks, have you been in close contact with someone who has COVID-19?" wrapText="true" />
+      <ToggleButton fx:id="second_yes" alignment="CENTER_LEFT" layoutX="23.0" layoutY="429.0" mnemonicParsing="false" onAction="#second_yes_action" prefHeight="26.0" prefWidth="140.0" text="YES">
+         <toggleGroup>
+            <ToggleGroup fx:id="buttons2" />
+         </toggleGroup>
+      </ToggleButton>
+      <ToggleButton fx:id="second_no" alignment="CENTER_LEFT" layoutX="23.0" layoutY="455.0" mnemonicParsing="false" onAction="#second_no_action" prefHeight="26.0" prefWidth="140.0" text="NO" toggleGroup="$buttons2" />
+      <TextArea editable="false" layoutX="440.0" layoutY="112.0" prefHeight="46.0" prefWidth="326.0" text="in the last 10 days, have you experienced any of the symptoms listed below? " wrapText="true" />
+      <Separator layoutX="416.0" layoutY="112.0" orientation="VERTICAL" prefHeight="200.0" />
+      <Separator layoutX="416.0" layoutY="307.0" orientation="VERTICAL" prefHeight="200.0" />
+      <CheckBox layoutX="440.0" layoutY="180.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="338.0" text="Fever or feeling feverish (such as chills, sweating)">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </CheckBox>
+      <CheckBox layoutX="440.0" layoutY="212.0" mnemonicParsing="false" text="Cough">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </CheckBox>
+      <CheckBox layoutX="440.0" layoutY="244.0" mnemonicParsing="false" text="Sore throat">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </CheckBox>
+      <CheckBox layoutX="440.0" layoutY="278.0" mnemonicParsing="false" text="Muscle aches or body aches">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </CheckBox>
+      <CheckBox layoutX="440.0" layoutY="312.0" mnemonicParsing="false" text="Unusual fatigue">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </CheckBox>
+      <CheckBox layoutX="440.0" layoutY="345.0" mnemonicParsing="false" text="Headache">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </CheckBox>
+      <CheckBox layoutX="440.0" layoutY="376.0" mnemonicParsing="false" text="Nausea or vomiting">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </CheckBox>
+      <CheckBox layoutX="440.0" layoutY="410.0" mnemonicParsing="false" text="Diarrhea">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </CheckBox>
+      <Button fx:id="submit_btn" layoutX="648.0" layoutY="531.0" mnemonicParsing="false" onAction="#submit_handler" prefHeight="54.0" prefWidth="130.0" text="Submit">
+         <font>
+            <Font name="System Bold Italic" size="15.0" />
+         </font>
+      </Button>
+      <Button fx:id="backBtn" ellipsisString="" layoutX="13.0" layoutY="27.0" mnemonicParsing="false" onAction="#backBtnAction" prefHeight="26.0" prefWidth="39.0" text="back" underline="true">
+         <font>
+            <Font size="10.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <ImageView fitHeight="23.0" fitWidth="26.0" layoutX="60.0" layoutY="29.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../User-blue-icon.png" />
+         </image>
+      </ImageView>
+      <Text fx:id="welcome_text" layoutX="92.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="text" wrappingWidth="118.93670654296875" />
+      <ImageView blendMode="DARKEN" fitHeight="87.0" fitWidth="101.0" layoutX="676.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../logo.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>

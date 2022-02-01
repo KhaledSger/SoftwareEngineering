@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane fx:id="anchor" prefHeight="480.0" prefWidth="492.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.GreenPassController">
+   <children>
+      <ImageView fitHeight="522.0" fitWidth="550.0" layoutX="7.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../TAV-YAROK.jpg" />
+         </image>
+         <viewport>
+            <Rectangle2D />
+         </viewport>
+      </ImageView>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="31.0" layoutX="332.0" layoutY="135.0" stroke="WHITE" strokeType="INSIDE" width="82.0" />
+      <Text fx:id="id_text" fill="#817f7f" layoutX="344.0" layoutY="164.0" strokeType="OUTSIDE" strokeWidth="0.0" text="text" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="31.0" layoutX="219.0" layoutY="136.0" stroke="WHITE" strokeType="INSIDE" width="82.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="31.0" layoutX="90.0" layoutY="136.0" stroke="WHITE" strokeType="INSIDE" width="91.0" />
+      <Text fx:id="effective_date" fill="#817f7f" layoutX="226.0" layoutY="164.0" strokeType="OUTSIDE" strokeWidth="0.0" text="text" />
+      <Text fx:id="expiration_date" fill="#817f7f" layoutX="136.0" layoutY="164.0" strokeType="OUTSIDE" strokeWidth="0.0" text="text" />
+   </children>
+</AnchorPane>
