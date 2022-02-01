@@ -13,8 +13,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.text.*;
 
-public class DoctorController {
-    // add doctor's name in initialize()
+public class LabWorkerController {
+    // add lab worker's name in initialize()
 
     @FXML // ResourceBundle that was given to the FXMLLoader
     private ResourceBundle resources;
@@ -64,7 +64,7 @@ public class DoctorController {
         assert welcome_text != null : "fx:id=\"welcome_text\" was not injected: check your FXML file 'doctor.fxml'.";
         assert apps_area != null : "fx:id=\"apps_area\" was not injected: check your FXML file 'doctor.fxml'.";
         assert patients_area != null : "fx:id=\"patients_area\" was not injected: check your FXML file 'doctor.fxml'.";
-        //  welcome_text.setText();   add doctor's name here
+        //  welcome_text.setText();   add lab worker's name here
     }
 
 }
