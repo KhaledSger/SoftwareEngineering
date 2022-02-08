@@ -4,12 +4,9 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
-import javax.print.attribute.standard.Media;
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -76,7 +73,7 @@ public class PrimaryController {
 				ProgressBar pb = new ProgressBar(0.6);
 				ProgressBar pi = new ProgressBar(0.6);
 			}
-			if (SimpleClient.getClient().logInFlag == 1) {
+			if (SimpleClient.getClient().logInFlag == 1 && ID.getText().length() < 10) { // TODO change to == 9
 				 if(SimpleClient.getClient().getAvailableUsers() < 1){ // error in available users
 				 	SimpleClient.getClient().logInFlag = -1;
 				 }else if(SimpleClient.getClient().getAvailableUsers() == 1){
