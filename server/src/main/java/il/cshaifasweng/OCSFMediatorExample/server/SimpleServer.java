@@ -230,7 +230,6 @@ public class SimpleServer extends AbstractServer {
                                 LocalDateTime appointment_time = LocalDateTime.of(year, i % 12, j, hour / 60, hour % 60);
                                 if (!appointment_time.isBefore(now)) {
                                     AppointmentEntity app = new AppointmentEntity(appointment_time, doc_clinic, 20);
-                                    System.out.println(app.getDate().toString());
                                     doc.getAppointments().add(app);
 
                                 }
