@@ -32,5 +32,9 @@ public class NurseClient  extends AbstractClient {
         return client;
     }
 
+    public String getName()
+    {
+        return (this.Nurse.getFirst_name() + " " + this.Nurse.getFamily_name());
+    }
 
 }

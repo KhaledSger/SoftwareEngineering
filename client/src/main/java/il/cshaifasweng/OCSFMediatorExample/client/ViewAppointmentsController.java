@@ -52,7 +52,7 @@ public class ViewAppointmentsController {
         assert cancelAppBtn != null : "fx:id=\"cancelAppBtn\" was not injected: check your FXML file 'ViewAppointments.fxml'.";
         assert pane != null : "fx:id=\"pane\" was not injected: check your FXML file 'ViewAppointments.fxml'.";
         assert welcome_text != null : "fx:id=\"welcome_text\" was not injected: check your FXML file 'ViewAppointments.fxml'.";
-
+        welcome_text.setText(SimpleClient.getPatientClient().getName());   // patient's name here
     }
 
 }

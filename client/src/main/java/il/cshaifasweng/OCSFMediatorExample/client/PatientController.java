@@ -9,7 +9,11 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import com.mysql.cj.xdevapi.Client;
+import il.cshaifasweng.OCSFMediatorExample.entities.ClinicEntity;
+import il.cshaifasweng.OCSFMediatorExample.entities.DoctorClinicEntity;
+import il.cshaifasweng.OCSFMediatorExample.entities.DoctorEntity;
 import javafx.event.ActionEvent;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -83,7 +87,7 @@ public class PatientController {
     private Text welcome_text; // Value injected by FXMLLoader
 
     @FXML
-    private VBox vBox;
+    private ListView vBox;
 
     @FXML
     void CovidTestAction(ActionEvent event) throws IOException{
@@ -98,7 +102,7 @@ public class PatientController {
 
     @FXML
     void Flu_vaccine_action(ActionEvent event) {
-
+        datePickerBtn.show();
     }
 
     @FXML
@@ -114,12 +118,12 @@ public class PatientController {
 
     @FXML
     void LabTestAction(ActionEvent event) {
-
+        datePickerBtn.show();
     }
 
     @FXML
     void NurseAppAction(ActionEvent event) {
-
+        datePickerBtn.show();
     }
 
     @FXML
@@ -128,18 +132,14 @@ public class PatientController {
     }
 
     @FXML
-    void backBtnAction(ActionEvent event) { // go back to the previous page
-      try{  App.setRoot("primary"); }
-      catch (IOException e) {
-          e.printStackTrace();
-      }
-
-
+    void backBtnAction(ActionEvent event) throws IOException { // go back to the previous page
+        App.setRoot("primary");
+        SimpleClient.resetClient();
     }
 
     @FXML
     void covid_vaccine_action(ActionEvent event) {
-
+        datePickerBtn.show();
     }
 
     @FXML
@@ -149,7 +149,7 @@ public class PatientController {
 
     @FXML
     void vaccineAction(ActionEvent event) {
-
+        datePickerBtn.show();
     }
 
     @FXML
@@ -173,7 +173,30 @@ public class PatientController {
         assert viewAppsBtn != null : "fx:id=\"viewAppsBtn\" was not injected: check your FXML file 'patient.fxml'.";
         assert welcome_text != null : "fx:id=\"welcome_text\" was not injected: check your FXML file 'patient.fxml'.";
         assert vBox != null : "fx:id=\"vBox\" was not injected: check your FXML file 'patient.fxml'.";
-      //  welcome_text.setText("name");  // add patient's name here
+        welcome_text.setText(SimpleClient.patientClient.getName());  // add patient's name here
+        for(ClinicEntity clinic : SimpleClient.getClinicList())
+        {
+            for(DoctorClinicEntity doc_clinic : clinic.getDoctorClinicEntities())
+            {
+                if(!SpecializedDoctorMenuBtn.getItems().contains(doc_clinic.getDoctor().getSpecialization())) {
+                    SpecializedDoctorMenuBtn.getItems().add(new MenuItem(doc_clinic.getDoctor().getSpecialization()));
+                }
+
+            }
+        }
+        for(MenuItem item : SpecializedDoctorMenuBtn.getItems())
+        {
+            item.setOnAction(actionEvent -> {
+                datePickerBtn.show();
+                System.out.println("aa");
+            }
+            );
+        }
+        for(int i=0; i<20 ;i++)
+        {
+            vBox.getItems().add(new Button(Integer.toString(i)));
+        }
     }
+
 
 }

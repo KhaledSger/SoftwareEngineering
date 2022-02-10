@@ -53,7 +53,7 @@ public class SpecializedDocController {
         assert welcome_text != null : "fx:id=\"welcome_text\" was not injected: check your FXML file 'specializedDoc.fxml'.";
         assert clinics_vbox != null : "fx:id=\"clinics_vbox\" was not injected: check your FXML file 'specializedDoc.fxml'.";
         assert hours_vbox != null : "fx:id=\"hours_vbox\" was not injected: check your FXML file 'specializedDoc.fxml'.";
-        //  welcome_text.setText();   add patient's name here
+        welcome_text.setText(SimpleClient.getPatientClient().getName());   // patient's name here
     }
 
 }

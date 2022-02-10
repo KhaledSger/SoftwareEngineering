@@ -3,6 +3,7 @@ package il.cshaifasweng.OCSFMediatorExample.client;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -27,12 +28,18 @@ public class LogInController {
     @FXML
     private Button Nursebtn;
 
+    @FXML // fx:id="back_btn"
+    private Button back_btn; // Value injected by FXMLLoader
+
+
+
     @FXML
     void initialize() {
         assert DoctorBtn != null : "fx:id=\"DoctorBtn\" was not injected: check your FXML file 'login.fxml'.";
         assert PatientBtn != null : "fx:id=\"PatientBtn\" was not injected: check your FXML file 'login.fxml'.";
         assert ManagerBtn != null : "fx:id=\"ManagerBtn\" was not injected: check your FXML file 'login.fxml'.";
         assert Nursebtn != null : "fx:id=\"Nursebtn\" was not injected: check your FXML file 'login.fxml'.";
+        assert back_btn != null : "fx:id=\"back_btn\" was not injected: check your FXML file 'login.fxml'.";
         if(SimpleClient.getNurseClient() == null){
             Nursebtn.setDisable(true);
         }
@@ -65,5 +72,10 @@ public class LogInController {
     public void ManagerA(javafx.event.ActionEvent actionEvent) throws IOException {
         App.setRoot("manager");
         SimpleClient.getClient().setCurrentUser(3);
+    }
+
+    public void back_btn_action(javafx.event.ActionEvent actionEvent) throws IOException {
+        App.setRoot("primary");
+        SimpleClient.resetClient();
     }
 }

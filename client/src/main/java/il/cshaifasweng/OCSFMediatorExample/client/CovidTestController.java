@@ -79,7 +79,7 @@ public class CovidTestController {
         assert second_yes != null : "fx:id=\"second_yes\" was not injected: check your FXML file 'covidTest.fxml'.";
         assert submit_btn != null : "fx:id=\"submit_btn\" was not injected: check your FXML file 'covidTest.fxml'.";
         assert welcome_text != null : "fx:id=\"welcome_text\" was not injected: check your FXML file 'covidTest.fxml'.";
-        //  welcome_text.setText();   add patient's name here
+        welcome_text.setText(SimpleClient.patientClient.getName());   //patient's name here
     }
 
 }

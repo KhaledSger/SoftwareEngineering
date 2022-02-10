@@ -61,7 +61,7 @@ public class CovidTestAppsController {
         assert datePickerBtn != null : "fx:id=\"datePickerBtn\" was not injected: check your FXML file 'covidTestApps.fxml'.";
         assert vBox != null : "fx:id=\"vBox\" was not injected: check your FXML file 'covidTestApps.fxml'.";
         assert welcome_text != null : "fx:id=\"welcome_text\" was not injected: check your FXML file 'covidTestApps.fxml'.";
-        //  welcome_text.setText();   add patient's name here
+        welcome_text.setText(SimpleClient.patientClient.getName());
     }
 
 }

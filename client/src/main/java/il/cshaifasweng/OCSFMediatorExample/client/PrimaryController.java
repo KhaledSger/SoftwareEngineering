@@ -1,21 +1,22 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
+import com.sun.prism.MediaFrame;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-
 import javax.print.attribute.standard.Media;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 public class PrimaryController {
 
 	@FXML
@@ -40,15 +41,6 @@ public class PrimaryController {
 	private VBox vBox;
 
 
-// 	@FXML
-// 	void view_clinics(ActionEvent event){
-// 		try {
-// 			App.setRoot("secondary");
-// 		}catch (IOException e){
-// 			e.printStackTrace();
-// 		}
-// 	}
-
 	@FXML
 	private PasswordField Password;
 
@@ -63,6 +55,9 @@ public class PrimaryController {
 		assert Password != null : "fx:id=\"Password\" was not injected: check your FXML file 'primary.fxml'.";
 		assert anchor_pane != null : "fx:id=\"anchor_pane\" was not injected: check your FXML file 'primary.fxml'.";
 		assert vBox != null : "fx:id=\"vBox\" was not injected: check your FXML file 'primary.fxml'.";
+//		String Vurl= "file:\\C:\\Users\\hakee\\JavaProjects\\SoftwareEngineering\\client\\src\\main\\resources\\My-Video.mp4";
+//		Media media = new Media(Vurl);
+
 	}
 
 	@FXML
@@ -72,13 +67,12 @@ public class PrimaryController {
 		Matcher m = p.matcher(ID.getText());
 		if (m.matches()) {
 			SimpleClient.getClient().LogIn(Integer.parseInt(ID.getText()), Password.getText());
-			while (SimpleClient.getClient().logInFlag == -1) {
-				// bug in simple client .. log in flag needs to change and not be equal -1 when manager login
+			while (SimpleClient.getClient().logInFlag == -1) { // bug in simple client .. log in flag needs to change and not be equal -1 when manager login
 				ProgressBar pb = new ProgressBar(0.6);
 				ProgressBar pi = new ProgressBar(0.6);
 			}
-			if (SimpleClient.getClient().logInFlag == 1) {
-				 if(SimpleClient.getClient().getAvailableUsers() < 1){
+			if (SimpleClient.getClient().logInFlag == 1 && ID.getText().length() < 10) { // TODO change to == 9
+				 if(SimpleClient.getClient().getAvailableUsers() < 1){ // error in available users
 				 	SimpleClient.getClient().logInFlag = -1;
 				 }else if(SimpleClient.getClient().getAvailableUsers() == 1){
 				 	App.setRoot("patient");

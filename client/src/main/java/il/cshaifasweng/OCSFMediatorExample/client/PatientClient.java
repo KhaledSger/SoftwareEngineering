@@ -34,5 +34,14 @@ public class PatientClient  extends AbstractClient {
         return client;
     }
 
+    public String getName()
+    {
+        return (this.Patient.getFirst_name() + " " + this.Patient.getFamily_name());
+    }
+
+    public int getId()
+    {
+        return this.Patient.getId();
+    }
 
 }
