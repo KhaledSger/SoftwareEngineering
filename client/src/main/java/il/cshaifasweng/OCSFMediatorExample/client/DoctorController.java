@@ -64,7 +64,7 @@ public class DoctorController {
         assert welcome_text != null : "fx:id=\"welcome_text\" was not injected: check your FXML file 'doctor.fxml'.";
         assert apps_area != null : "fx:id=\"apps_area\" was not injected: check your FXML file 'doctor.fxml'.";
         assert patients_area != null : "fx:id=\"patients_area\" was not injected: check your FXML file 'doctor.fxml'.";
-        //  welcome_text.setText();   add doctor's name here
+        welcome_text.setText(SimpleClient.doctorClient.getName());   // doctor's name here
     }
 
 }

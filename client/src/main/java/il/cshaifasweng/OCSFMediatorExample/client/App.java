@@ -2,6 +2,7 @@ package il.cshaifasweng.OCSFMediatorExample.client;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.css.Styleable;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -9,11 +10,14 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import org.dom4j.rule.Stylesheet;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import javafx.css.Stylesheet.*;
 
 
 import javax.swing.plaf.metal.MetalTheme;
+import javax.swing.text.StyledEditorKit;
 import java.io.IOException;
 
 /**
@@ -23,6 +27,7 @@ public class App extends Application {
 
     private static Scene scene;
     private SimpleClient client;
+    private Object Styleable;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -32,7 +37,7 @@ public class App extends Application {
         SimpleClient.getClient().sendToServer("#GetAllClinics");
         stage.setTitle("Health Care");
         scene = new Scene(loadFXML("primary"), 800, 600);
-        // scene.setUserAgentStylesheet(STYLESHEET_CASPIAN); ----> setting a different theme
+        //scene.setUserAgentStylesheet(); //----> setting a different theme
         stage.setScene(scene);
         stage.show();
     }

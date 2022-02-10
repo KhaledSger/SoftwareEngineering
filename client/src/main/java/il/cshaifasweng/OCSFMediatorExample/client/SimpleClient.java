@@ -17,9 +17,10 @@ public class SimpleClient extends AbstractClient {
     public static DoctorClient doctorClient = null;
     public static NurseClient nurseClient = null;
     public static ManagerClient managerClient = null;
-    public int logInFlag = -1;
-    public int availableUsers = 0;
-    public int currentUser = -1;
+    public static LabWorkerClient labWorkerClient = null;
+    public static int logInFlag = -1;
+    public static int availableUsers = 0;
+    public static int currentUser = -1;
 
 
     private SimpleClient(String host, int port) {
@@ -59,6 +60,17 @@ public class SimpleClient extends AbstractClient {
                 logInFlag = 2;
             }
         }
+    }
+
+    public static void resetClient()
+    {
+        availableUsers = 0;
+        logInFlag = -1;
+        currentUser = -1;
+         patientClient = null;
+         doctorClient = null;
+         nurseClient = null;
+         managerClient = null;
     }
 
     public static SimpleClient getClient() {

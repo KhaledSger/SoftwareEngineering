@@ -4,15 +4,28 @@
 
 package il.cshaifasweng.OCSFMediatorExample.client;
 
+import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
+
+import il.cshaifasweng.OCSFMediatorExample.entities.ClinicEntity;
+import il.cshaifasweng.OCSFMediatorExample.entities.DoctorClinicEntity;
+import il.cshaifasweng.OCSFMediatorExample.entities.DoctorEntity;
+import il.cshaifasweng.OCSFMediatorExample.entities.Warning;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import org.greenrobot.eventbus.EventBus;
+import org.w3c.dom.css.CSSStyleSheet;
+
+import javax.print.Doc;
 
 public class ManagerController {
     // set manager's name in initialize()
@@ -21,6 +34,8 @@ public class ManagerController {
         // choose_doctor_menu.getItems().add(new MenuItem("doctor's name"));
     */
 
+    private ClinicEntity choosen_clinic ;
+    private DoctorClinicEntity choosen_doctor_clinic;
 
     @FXML // ResourceBundle that was given to the FXMLLoader
     private ResourceBundle resources;
@@ -107,7 +122,8 @@ public class ManagerController {
     private Text welcome_text; // Value injected by FXMLLoader
 
     @FXML
-    void backBtnAction(ActionEvent event) {
+    void backBtnAction(ActionEvent event) throws IOException {
+        App.setRoot("login");
 
     }
 
@@ -132,8 +148,20 @@ public class ManagerController {
     }
 
     @FXML
-    void update_clinics_handler(ActionEvent event) {
-
+    void update_clinics_handler(ActionEvent event) throws IOException {
+        if(!clinic_open_txt.getText().equals(""))
+            choosen_clinic.setOpen(clinic_open_txt.getText());
+        if(!clinic_close_txt.getText().equals(""))
+            choosen_clinic.setClose(clinic_close_txt.getText());
+        clinic_current_hours.setText(choosen_clinic.getOpen() + "-" + choosen_clinic.getClose());
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                    String.format("updated successfully!")
+            );
+            alert.show();
+        });
+        clinic_open_txt.setText("");
+        clinic_close_txt.setText("");
     }
 
     @FXML
@@ -143,7 +171,22 @@ public class ManagerController {
 
     @FXML
     void update_doctors_handler(ActionEvent event) {
-
+//        ArrayList<String> day_hours = new ArrayList<String>();
+//        for(int i=0 ; i<5;i++)
+//        {
+//            if(!doctor_open_txt.getText().equals("") && !doctor_close_txt.getText().equals(""))
+//                day_hours.set(i,doctor_open_txt.getText()+"-"+doctor_close_txt.getText()+"@&%@");
+//            else if(doctor_open_txt.getText().equals("") && !doctor_close_txt.getText().equals(""))
+//        }
+//        for(int i=5;i<7;i++)
+//            day_hours.set(i,"00:00-00:00@&%@");
+//        doctor_current_hours.setText(choosen_doctor_clinic.getDay_hours());
+//        Platform.runLater(() -> {
+//            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+//                    String.format("updated successfully!")
+//            );
+//            alert.show();
+//        });
     }
 
     @FXML
@@ -155,6 +198,7 @@ public class ManagerController {
     void waiting_time_report_handler(ActionEvent event) {
 
     }
+
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
@@ -184,7 +228,45 @@ public class ManagerController {
         assert vaccine_open_txt != null : "fx:id=\"vaccine_open_txt\" was not injected: check your FXML file 'manager.fxml'.";
         assert waiting_time_report_btn != null : "fx:id=\"waiting_time_report_btn\" was not injected: check your FXML file 'manager.fxml'.";
         assert welcome_text != null : "fx:id=\"welcome_text\" was not injected: check your FXML file 'manager.fxml'.";
-        //  welcome_text.setText("name");  // add manager's name here
+        welcome_text.setText(SimpleClient.managerClient.getName());  // add manager's name here
+       // covid_test_current_hours.setText();
+        for(ClinicEntity clinic : SimpleClient.getClinicList())  // adding the clinics and doctors to the menus
+        {
+            if(!choose_clinic_menu.getItems().contains(clinic.getName()))
+                choose_clinic_menu.getItems().add(new MenuItem(clinic.getName()));
+            for(DoctorClinicEntity doc_clinic : clinic.getDoctorClinicEntities())
+            {
+                if(!(choose_doctor_menu.getItems().contains(doc_clinic.getDoctor().getFirst_name() + " " +doc_clinic.getDoctor().getFamily_name())))
+                choose_doctor_menu.getItems().add(new MenuItem(doc_clinic.getDoctor().getFirst_name() + " " +doc_clinic.getDoctor().getFamily_name()));
+            }
+        }
+        for(MenuItem item : choose_clinic_menu.getItems())
+        {
+            item.setOnAction(actionEvent -> {
+                for(ClinicEntity clinic : SimpleClient.getClinicList())
+                    if(clinic.getName().equals(item.getText()))
+                    {
+                        clinic_current_hours.setText(clinic.getOpen() + "-" + clinic.getClose());
+                        choosen_clinic=clinic;
+                        choose_clinic_menu.setText(clinic.getName());
+                    }
+            });
+        }
+        for(MenuItem item : choose_doctor_menu.getItems())
+        {
+            item.setOnAction(actionEvent -> {
+                for(ClinicEntity clinic : SimpleClient.getClinicList())
+                {
+                    for(DoctorClinicEntity doc_clinic : clinic.getDoctorClinicEntities())
+                    {
+                        if((doc_clinic.getDoctor().getFirst_name() +" "+ doc_clinic.getDoctor().getFamily_name()).equals(item.getText()))
+                            doctor_current_hours.setText(doc_clinic.getDay_hours());
+                            choosen_doctor_clinic = doc_clinic;
+                            choose_doctor_menu.setText(doc_clinic.getDoctor().getFirst_name()+" "+ doc_clinic.getDoctor().getFamily_name());
+                    }
+                }
+            });
+        }
     }
 
 }

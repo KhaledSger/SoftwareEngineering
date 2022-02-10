@@ -59,7 +59,6 @@ public class SimpleServer extends AbstractServer {
                     doc1.getMail(),"111",clinic2);
             session.save(manger);
             DoctorPatientEntity docpat=new DoctorPatientEntity(doc1,pat1);
-
             session.save(docpat);
             session.flush();
             session.getTransaction().commit();
