@@ -58,7 +58,6 @@ public class SimpleServer extends AbstractServer {
             session.save(manger);
             DoctorPatientEntity docpat=new DoctorPatientEntity(doc1,pat1);
             session.save(docpat);
-
             session.flush();
             session.getTransaction().commit();
         } catch (Exception e) {
@@ -232,7 +231,6 @@ public class SimpleServer extends AbstractServer {
                                     AppointmentEntity app = new AppointmentEntity(appointment_time, doc_clinic, 20);
                                     System.out.println(app.getDate().toString());
                                     doc.getAppointments().add(app);
-
                                 }
                             }
                         }

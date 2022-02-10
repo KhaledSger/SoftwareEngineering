@@ -2,12 +2,13 @@ package il.cshaifasweng.OCSFMediatorExample.entities;
 
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class DoctorClinicEntity {
+public class DoctorClinicEntity implements Serializable {
 
 
     @Id
@@ -29,11 +30,11 @@ public class DoctorClinicEntity {
 
 
     public DoctorClinicEntity(DoctorEntity doctor, ClinicEntity clinic, ArrayList<String> day_hour) {
-        this.doctor = doctor; // TODO change tp set
-        this.clinic = clinic; // TODO change tp set
+//        this.doctor = doctor; // TODO change tp set
+//        this.clinic = clinic; // TODO change tp set
+        setDoctor(doctor);
+        setClinic(clinic);
         setDay_hours(day_hour);
-
-
     }
     public DoctorClinicEntity() {
     }
@@ -76,7 +77,7 @@ public class DoctorClinicEntity {
     }
 
     public DoctorEntity getDoctor() {
-        return doctor;
+        return this.doctor;
     }
 
     public void setDoctor(DoctorEntity doctor) {

@@ -34,5 +34,9 @@ public class ManagerClient  extends AbstractClient {
         return client;
     }
 
+    public String getName()
+    {
+        return (this.Manager.getFirst_name() + " " + this.Manager.getFamily_name());
+    }
 
 }
