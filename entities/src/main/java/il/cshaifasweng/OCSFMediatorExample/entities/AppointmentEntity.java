@@ -51,8 +51,8 @@ public class AppointmentEntity implements Serializable {
     public AppointmentEntity(LocalDateTime date, DoctorClinicEntity doc_clinic,int duration)
     {
         this.date=date;
-        this.clinic = doc_clinic.clinic; // TODO change tp set
-        this.doctor = doc_clinic.doctor; // TODO change tp set
+        setClinic_app(doc_clinic.clinic);// TODO change tp set
+        setDoctor_app(doc_clinic.doctor); // TODO change tp set
         this.reserved = false;
         this.duration = duration;
     }

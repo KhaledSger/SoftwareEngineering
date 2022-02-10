@@ -7,7 +7,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javax.print.attribute.standard.Media;
@@ -72,8 +71,8 @@ public class PrimaryController {
 				ProgressBar pb = new ProgressBar(0.6);
 				ProgressBar pi = new ProgressBar(0.6);
 			}
-			if (SimpleClient.getClient().logInFlag == 1 && ID.getText().length()==9) {
-				 if(SimpleClient.getClient().getAvailableUsers() < 1) {
+			if (SimpleClient.getClient().logInFlag == 1 && ID.getText().length() < 10) { // TODO change to == 9
+				 if(SimpleClient.getClient().getAvailableUsers() < 1){ // error in available users
 				 	SimpleClient.getClient().logInFlag = -1;
 				 }else if(SimpleClient.getClient().getAvailableUsers() == 1){
 				 	App.setRoot("patient");
