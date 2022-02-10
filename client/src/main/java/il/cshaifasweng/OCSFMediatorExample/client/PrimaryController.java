@@ -72,12 +72,13 @@ public class PrimaryController {
 		Matcher m = p.matcher(ID.getText());
 		if (m.matches()) {
 			SimpleClient.getClient().LogIn(Integer.parseInt(ID.getText()), Password.getText());
-			while (SimpleClient.getClient().logInFlag == -1) { // bug in simple client .. log in flag needs to change and not be equal -1 when manager login
+			while (SimpleClient.getClient().logInFlag == -1) {
+				// bug in simple client .. log in flag needs to change and not be equal -1 when manager login
 				ProgressBar pb = new ProgressBar(0.6);
 				ProgressBar pi = new ProgressBar(0.6);
 			}
 			if (SimpleClient.getClient().logInFlag == 1) {
-				 if(SimpleClient.getClient().getAvailableUsers() < 1){ // error in available users
+				 if(SimpleClient.getClient().getAvailableUsers() < 1){
 				 	SimpleClient.getClient().logInFlag = -1;
 				 }else if(SimpleClient.getClient().getAvailableUsers() == 1){
 				 	App.setRoot("patient");

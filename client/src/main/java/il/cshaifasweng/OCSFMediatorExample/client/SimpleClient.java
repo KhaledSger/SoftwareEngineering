@@ -28,6 +28,8 @@ public class SimpleClient extends AbstractClient {
 
     @Override
     protected void handleMessageFromServer(Object msg) {
+        System.out.println(msg.getClass().toString());
+        System.out.println(currentUser);
         if (msg.getClass().equals(Warning.class)) {
             EventBus.getDefault().post(new WarningEvent((Warning) msg));
         } else if (msg.getClass().equals(ArrayList.class)) {
@@ -54,6 +56,7 @@ public class SimpleClient extends AbstractClient {
             availableUsers++;
         } else if (msg.getClass().equals(String.class)) {
             if (((String) msg).equals("#Login Success")) {
+                System.out.println("here Success");
                 logInFlag = 1;
             } else if (((String) msg).equals("#Login Failure")) {
                 logInFlag = 2;

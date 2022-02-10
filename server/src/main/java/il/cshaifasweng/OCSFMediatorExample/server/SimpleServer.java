@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
 
 public class SimpleServer extends AbstractServer {
     private static Session session;
@@ -57,8 +59,8 @@ public class SimpleServer extends AbstractServer {
                     doc1.getMail(),"111",clinic2);
             session.save(manger);
             DoctorPatientEntity docpat=new DoctorPatientEntity(doc1,pat1);
-            session.save(docpat);
 
+            session.save(docpat);
             session.flush();
             session.getTransaction().commit();
         } catch (Exception e) {
@@ -115,8 +117,11 @@ public class SimpleServer extends AbstractServer {
         } else if (msgString.equals("#GetAllClinics")) {
             try {
                 UpdateAppointments();
+
                 List<ClinicEntity> clinics = getALLClinics();
                 Clinics = clinics;
+
+
                 client.sendToClient(clinics);
                 System.out.format("Sent all clinics to client %s\n", client.getInetAddress().getHostAddress());
             } catch (Exception e) {
@@ -137,21 +142,30 @@ public class SimpleServer extends AbstractServer {
                 }
             }
         } else if (msg.getClass().equals(UserEntity.class)){
+            System.out.println(msg.toString());
+            System.out.println(msg.getClass().toString());
             List<ManagerEntity> Mangers = getALLMangers();
            boolean flag_manager = checkPassword(Mangers,((UserEntity) msg),client);
+            System.out.println("Flag Manager = " + flag_manager);
             List<DoctorEntity> Doctors = getALLDoctors();
+            System.out.println("Size docs = "+ Doctors.size());
             boolean flag_doctor = checkPassword(Doctors,((UserEntity) msg),client);
+            System.out.println("Flag Doctor = " + flag_doctor);
             List<NurseEntity> Nurses = getALLNurses();
             boolean flag_nurse = checkPassword(Nurses,((UserEntity) msg),client);
+            System.out.println("Flag Nurse = " + flag_nurse);
             List<PatientEntity> Patients = getALLPatients();
             boolean flag_patient = checkPassword(Patients,((UserEntity) msg),client);
+            System.out.println("Flag Patient = " + flag_patient);
             String stringResult="";
             if(flag_manager||flag_doctor||flag_patient||flag_nurse){
+                System.out.println("flags ok");
                 stringResult="#Login Success";
             }else{
                 stringResult="#Login Failure";
             }
             try {
+
                 client.sendToClient(stringResult);
 
             }catch (Exception e) {
@@ -170,11 +184,13 @@ public class SimpleServer extends AbstractServer {
                         client.sendToClient(Users.get(i));
                         return true;
                     } catch (IOException e) {
+                        e.printStackTrace();
                         if (session != null) {
                             session.getTransaction().rollback();
                         }
                     }
                 }else{
+
                     return false;
                 }
             }
@@ -182,12 +198,14 @@ public class SimpleServer extends AbstractServer {
         return  false;
     }
     private static void UpdateAppointments(){
+        System.out.println("Update App");
         LocalDateTime now=LocalDateTime.now();
         now.getDayOfWeek();
         List<DoctorEntity> all_docs=getALLDoctors();
         for (DoctorEntity doc:all_docs) {
             List<DoctorClinicEntity> doc_clinics = doc.getDoctorClinicEntities();
-            List<AppointmentEntity> doc_appointments = doc.getAppointments();
+            System.out.println(doc_clinics.size());
+            Set<AppointmentEntity> doc_appointments = doc.getAppointments();
             for (AppointmentEntity app:doc_appointments) {
 
                 if(app.getDate().isBefore(now)) {
@@ -197,7 +215,7 @@ public class SimpleServer extends AbstractServer {
             LocalDateTime latest_appointment;
             if(doc_appointments.size()>0)
             {
-                latest_appointment=doc_appointments.get(doc_appointments.size()-1).getDate();
+                latest_appointment=doc_appointments.stream().toList().get(doc_appointments.size()-1).getDate();
             }else{
                 latest_appointment = now;
             }
@@ -226,15 +244,17 @@ public class SimpleServer extends AbstractServer {
 
                         if(!opening.toString().equals("00:00") && !closing.toString().equals("00:00")){
                             for(int hour=opening.getHour()*60;hour<=closing.getHour()*60;hour+=20) {
-
                                 LocalDateTime appointment_time = LocalDateTime.of(year, i % 12, j, hour / 60, hour % 60);
                                 if (!appointment_time.isBefore(now)) {
+
                                     AppointmentEntity app = new AppointmentEntity(appointment_time, doc_clinic, 20);
                                     System.out.println(app.getDate().toString());
                                     doc.getAppointments().add(app);
-
+                                    session.save(app);
                                 }
                             }
+
+
                         }
 
 
@@ -302,4 +322,5 @@ public class SimpleServer extends AbstractServer {
         List<LabWorkerEntity> result = session.createQuery(query).getResultList();
         return result;
     }
+
 }

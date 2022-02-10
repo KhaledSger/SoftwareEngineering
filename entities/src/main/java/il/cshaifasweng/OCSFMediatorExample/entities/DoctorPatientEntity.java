@@ -1,8 +1,10 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
+
 @Entity
-public class DoctorPatientEntity {
+public class DoctorPatientEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "DoctorPatient_id")
@@ -18,8 +20,8 @@ public class DoctorPatientEntity {
 
 
     public DoctorPatientEntity(DoctorEntity doctor, PatientEntity patient) {
-        this.doctor = doctor;
-        this.patient = patient;
+        setDoctor(doctor);
+        setPatient(patient);
     }
     public DoctorPatientEntity() {
     }
@@ -35,6 +37,7 @@ public class DoctorPatientEntity {
     public void setDoctor(DoctorEntity doctor) {
         this.doctor = doctor;
         doctor.getDoctorPatientEntities().add(this);
+
     }
 
     public PatientEntity getPatient() {
@@ -43,7 +46,7 @@ public class DoctorPatientEntity {
 
     public void setPatient(PatientEntity patient) {
         this.patient = patient;
-        patient.getDoctorPatientEntities().add(this);
+        this.patient.getDoctorPatientEntities().add(this);
     }
 
 

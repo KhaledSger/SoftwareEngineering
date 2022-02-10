@@ -1,6 +1,7 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
 
 import javax.persistence.*;
+import javax.sound.midi.Soundbank;
 import java.io.Serializable;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -96,8 +97,10 @@ public class UserEntity implements Serializable {
     public void setPassword(String password) { this.Password = getSecurePassword(password,this.Salt);}
     
     public boolean comparePassword(String inputPassword){
+
         String pass = getSecurePassword(inputPassword,this.Salt);
-        return pass.equals(getPassword());
+        boolean res = pass.compareTo(this.getPassword())==0;
+        return res;
     }
 
     public void setTmpPassword(String Password){
