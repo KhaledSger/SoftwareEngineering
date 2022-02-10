@@ -3,7 +3,9 @@ package il.cshaifasweng.OCSFMediatorExample.entities;
 import javax.persistence.*;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "doctor_entity")
@@ -14,7 +16,7 @@ public class DoctorEntity extends UserEntity {
         this.Specialization = specialization;
         this.doctorClinicEntities=new ArrayList<DoctorClinicEntity>();
         this.doctorPatientEntities=new ArrayList<DoctorPatientEntity>();
-        this.appointments=new ArrayList<AppointmentEntity>();
+        this.appointments=new HashSet<AppointmentEntity>();
 
     }
 
@@ -33,7 +35,7 @@ public class DoctorEntity extends UserEntity {
 
     @OneToMany
     @JoinColumn(name = "Appointment_id")
-    private List<AppointmentEntity> appointments;
+    private Set<AppointmentEntity> appointments;
 
     // TODO Add Many-to-many relation with clinic
     //TODO DataBase Connection
@@ -69,11 +71,11 @@ public class DoctorEntity extends UserEntity {
     public void setDoctorPatientEntities(List<DoctorPatientEntity> doctorPatientEntities) {
         this.doctorPatientEntities = doctorPatientEntities;
     }
-    public List<AppointmentEntity> getAppointments() {
+    public Set<AppointmentEntity> getAppointments() {
         return appointments;
     }
 
-    public void setAppointments(List<AppointmentEntity> appointments) {
+    public void setAppointments(Set<AppointmentEntity> appointments) {
         this.appointments = appointments;
     }
 

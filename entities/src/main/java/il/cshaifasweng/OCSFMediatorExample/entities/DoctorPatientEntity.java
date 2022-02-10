@@ -20,8 +20,6 @@ public class DoctorPatientEntity implements Serializable {
 
 
     public DoctorPatientEntity(DoctorEntity doctor, PatientEntity patient) {
-//        this.doctor = doctor;
-//        this.patient = patient;
         setDoctor(doctor);
         setPatient(patient);
     }
