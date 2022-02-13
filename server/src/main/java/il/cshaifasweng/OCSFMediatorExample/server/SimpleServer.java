@@ -59,7 +59,10 @@ public class SimpleServer extends AbstractServer {
                     doc1.getMail(),"111",clinic2);
             session.save(manger);
             DoctorPatientEntity docpat=new DoctorPatientEntity(doc1,pat1);
+<<<<<<<<< Temporary merge branch 1
 
+=========
+>>>>>>>>> Temporary merge branch 2
             session.save(docpat);
             session.flush();
             session.getTransaction().commit();
@@ -249,7 +252,10 @@ public class SimpleServer extends AbstractServer {
 
                                     AppointmentEntity app = new AppointmentEntity(appointment_time, doc_clinic, 20);
                                     doc.getAppointments().add(app);
+<<<<<<<<< Temporary merge branch 1
                                     session.save(app);
+=========
+>>>>>>>>> Temporary merge branch 2
                                 }
                             }
 

@@ -9,7 +9,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-
 import javax.print.attribute.standard.Media;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -41,15 +40,6 @@ public class PrimaryController {
 	@FXML
 	private VBox vBox;
 
-
-// 	@FXML
-// 	void view_clinics(ActionEvent event){
-// 		try {
-// 			App.setRoot("secondary");
-// 		}catch (IOException e){
-// 			e.printStackTrace();
-// 		}
-// 	}
 
 	@FXML
 	private PasswordField Password;
