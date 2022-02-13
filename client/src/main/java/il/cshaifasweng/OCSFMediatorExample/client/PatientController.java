@@ -203,7 +203,6 @@ public class PatientController {
                 System.out.println(" here print list doctor entity !!");
                 //System.out.println(item.getText());
                 specialation_of_doctor=item.getText();
-                //insert **
                         //// find doctor name and doctor clinic by specialization
                         for(ClinicEntity clinic : SimpleClient.getClinicList()) {
                             for (DoctorClinicEntity doc_clinic : clinic.getDoctorClinicEntities()) {
@@ -216,7 +215,6 @@ public class PatientController {
                             appointments.sort(Comparator.comparing(o -> o.getDate())); // sorting the appointment list by date
                             for (AppointmentEntity app : appointments)
                             {
-                                //System.out.println(app.getDate());
                                 if (app.getDoctor().getSpecialization().equals(specialation_of_doctor))
                                 {
                                     vBox.getItems().add(new Button(app.getDoctor().getFirst_name() + " "+ app.getDoctor().getFamily_name() + "-" + app.getClinic().getName()));
@@ -240,7 +238,6 @@ public class PatientController {
                                 {
                                     chosen_doctor_name=bt.getText();
                                    chosen_doctor_array= chosen_doctor_name.split("-");
-                                    //System.out.println(chosen_doctor_array[0]);
                                     for(ClinicEntity clinic1 : SimpleClient.getClinicList())
                                     {
                                         for(DoctorClinicEntity doc_clinic1 : clinic1.getDoctorClinicEntities())
