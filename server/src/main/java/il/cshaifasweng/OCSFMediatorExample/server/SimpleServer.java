@@ -348,26 +348,15 @@ public class SimpleServer extends AbstractServer {
     }
     private static AppointmentEntity get_app_with_id(int id)
     {
-        //Session session = hibernate.properties.getHibernateSession();
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<AppointmentEntity> query = builder.createQuery(AppointmentEntity.class);
         Root<AppointmentEntity> tmp=query.from(AppointmentEntity.class);
         query.select(tmp);
-        query.where(builder.equal(tmp.get("Appointment_id"),id));
+        query.where(builder.equal(tmp.get("id"),id));
         TypedQuery<AppointmentEntity> q = session.createQuery(query);
-        //System.out.println(q+"print the q");
         AppointmentEntity app = q.getSingleResult();
         return app;
-        /*
-        Session session = HibernateUtil.getHibernateSession();
-        CriteriaBuilder cb = session.getCriteriaBuilder();
-        CriteriaQuery<Item> cr = cb.createQuery(Item.class);
-        Root<Item> root = cr.from(Item.class);
-        cr.select(root);
 
-Query<Item> query = session.createQuery(cr);
-List<Item> results = query.getResultList();
-         */
     }
 
 }
