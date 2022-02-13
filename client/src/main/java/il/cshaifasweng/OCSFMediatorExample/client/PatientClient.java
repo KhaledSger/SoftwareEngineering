@@ -33,6 +33,11 @@ public class PatientClient  extends AbstractClient {
         }
         return client;
     }
+    public List<DoctorPatientEntity> getDoctorPatientEntities()
+    {
+        return Patient.getDoctorPatientEntities();
+    }
+
 
     public String getName()
     {
@@ -42,6 +47,16 @@ public class PatientClient  extends AbstractClient {
     public int getId()
     {
         return this.Patient.getId();
+    }
+
+    public List<AppointmentEntity> getAppointments()
+    {
+        return Patient.getAppointments();
+    }
+
+    public PatientEntity getPatient()
+    {
+        return  this.Patient;
     }
 
 }
