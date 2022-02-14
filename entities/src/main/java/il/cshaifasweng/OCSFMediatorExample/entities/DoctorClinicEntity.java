@@ -75,7 +75,7 @@ public class DoctorClinicEntity implements Serializable {
     }
 
     public DoctorEntity getDoctor() {
-        return this.doctor;
+        return doctor;
     }
 
     public void setDoctor(DoctorEntity doctor) {

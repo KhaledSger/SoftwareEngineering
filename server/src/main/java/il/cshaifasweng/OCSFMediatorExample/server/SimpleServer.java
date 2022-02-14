@@ -145,17 +145,15 @@ public class SimpleServer extends AbstractServer {
         }
         else if (msg.getClass().equals(AppointmentEntity.class))
         {
-            System.out.println("in appointment change");
+            //need to change the app and check if reserved
             System.out.println(((AppointmentEntity) msg).getId());
             AppointmentEntity app=get_app_with_id(((AppointmentEntity) msg).getId());
-            System.out.println(app);
-            //need to change the app and check if reserved
-            //session.beginTransaction()
-            //session.save(app);
-            //session.flush();
-            // session.getTransaction().commit();
-
-
+            app.setReserved(true);
+            app.setPatient(((AppointmentEntity) msg).getPatient());
+            session.beginTransaction();
+            session.save(app);
+            session.flush();
+            session.getTransaction().commit();
         }
         else if (msg.getClass().equals(UserEntity.class)){
             System.out.println(msg.toString());
@@ -271,6 +269,7 @@ public class SimpleServer extends AbstractServer {
 
                                     AppointmentEntity app = new AppointmentEntity(appointment_time, doc_clinic, 20);
                                     doc.getAppointments().add(app);
+
                                     session.save(app);
                                 }
                             }
