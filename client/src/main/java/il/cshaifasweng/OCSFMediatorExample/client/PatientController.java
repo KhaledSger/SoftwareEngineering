@@ -294,6 +294,12 @@ public class PatientController {
                                                     for (AppointmentEntity app1 : chosen_doctor.getAppointments()) {
                                                         if (app1.getDate().toString().equals(button.getText())) {
                                                             app1.setReserved(true);
+                                                            app1.setPatient(SimpleClient.patientClient.getPatient());
+                                                            try {
+                                                                SimpleClient.getClient().sendToServer(app1);
+                                                            } catch (IOException e) {
+                                                                e.printStackTrace();
+                                                            }
                                                             Platform.runLater(() -> {
                                                                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
                                                                         String.format("Please confirm your reservation!")

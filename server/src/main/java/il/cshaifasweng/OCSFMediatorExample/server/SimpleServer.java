@@ -24,9 +24,15 @@ public class SimpleServer extends AbstractServer {
     private static Session session;
     private static List<ClinicEntity> Clinics;
 
+    public Session getSession()
+    {
+        return session;
+    }
+
     public void initSesssion() {
         session = getSessionFactory().openSession();
         try {
+
             String[] service = new String[]{"aaa", "bbb", "ccc"};
             ClinicEntity clinic1 = new ClinicEntity("Haifa clinic", "10:00", "20:00", service, new ArrayList<PatientEntity>());
             session.save(clinic1);
@@ -74,6 +80,8 @@ public class SimpleServer extends AbstractServer {
     public SimpleServer(int port) {
         super(port);
         initSesssion();
+        MyThread myThread = new MyThread();
+        myThread.start();
     }
 
     public void stopSession() {
@@ -147,13 +155,17 @@ public class SimpleServer extends AbstractServer {
         {
             //need to change the app and check if reserved
             System.out.println(((AppointmentEntity) msg).getId());
-            AppointmentEntity app=get_app_with_id(((AppointmentEntity) msg).getId());
-            app.setReserved(true);
-            app.setPatient(((AppointmentEntity) msg).getPatient());
+            //AppointmentEntity app=get_app_with_id(((AppointmentEntity) msg).getId());
+            //app.setReserved(true);
+            //app.setPatient(((AppointmentEntity) msg).getPatient());
+            AppointmentEntity app=(AppointmentEntity) msg;
             session.beginTransaction();
-            session.save(app);
+            session.merge(app);
+            //session.evict(app);
+            //session.saveOrUpdate(app);
             session.flush();
             session.getTransaction().commit();
+            //session.flush();
         }
         else if (msg.getClass().equals(UserEntity.class)){
             System.out.println(msg.toString());
@@ -342,6 +354,14 @@ public class SimpleServer extends AbstractServer {
         List<LabWorkerEntity> result = session.createQuery(query).getResultList();
         return result;
     }
+    public static List<AppointmentEntity> GetAllAppointments() {
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<AppointmentEntity> query = builder.createQuery(AppointmentEntity.class);
+        query.from(AppointmentEntity.class);
+        List<AppointmentEntity> result = session.createQuery(query).getResultList();
+        return result;
+    }
+
     static <T> Predicate equal(CriteriaBuilder cb, Expression<T> left, T right) {
         return cb.equal(left, right);
     }
