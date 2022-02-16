@@ -38,10 +38,19 @@ public class PatientClient  extends AbstractClient {
         return Patient.getDoctorPatientEntities();
     }
 
+    public ClinicEntity getClinic()
+    {
+        return this.Patient.getClinic();
+    }
 
     public String getName()
     {
         return (this.Patient.getFirst_name() + " " + this.Patient.getFamily_name());
+    }
+
+    public int getAge()
+    {
+        return this.Patient.getAge();
     }
 
     public int getId()

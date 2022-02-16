@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.List;
 
+import com.sun.jdi.connect.spi.TransportService;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -105,22 +106,28 @@ public class PatientController {
     @FXML
     void FamilyDocAction(ActionEvent event) throws InterruptedException
     {
-            for (DoctorPatientEntity doc_patient : SimpleClient.patientClient.getDoctorPatientEntities()) {
-                if (doc_patient.getDoctor().getSpecialization().equals("Family Doctor")) {
-                    chosen_family_doctor = doc_patient.getDoctor();
-                    for (AppointmentEntity app : doc_patient.getDoctor().getAppointments()) {
-                        if (!(app.getDate().isAfter(LocalDateTime.now().plusWeeks(4)))) // adding the appointments fot the next four weeks
-                            vBox.getItems().add(new Button(app.getDate().toString()));
-                        vBox.getItems().sort(Comparator.comparing(o -> o.getText()));
-                    }
+        String specialization ;
+        if(SimpleClient.patientClient.getAge() >= 18) // decide which doctor needs to treat the patient according to his age
+            specialization = "Family Doctor";
+        else
+            specialization = "Children Doctor";
+        for (DoctorClinicEntity doc_patient : SimpleClient.patientClient.getClinic().getDoctorClinicEntities()) { // we search for the family doctor or children doctor in the clinic of the patient
+            if (doc_patient.getDoctor().getSpecialization().equals(specialization)) {
+                chosen_family_doctor = doc_patient.getDoctor();
+                for (AppointmentEntity app : doc_patient.getDoctor().getAppointments()) {
+                    if (!(app.getDate().isAfter(LocalDateTime.now().plusWeeks(4)))) // adding the appointments fot the next four weeks
+                        vBox.getItems().add(new Button(app.getDate().toString()));
+                    vBox.getItems().sort(Comparator.comparing(o -> o.getText()));
                 }
             }
+        }
             for (Button button : vBox.getItems()) {
                 button.setOnAction(ActionEvent ->
                 {
                     for (AppointmentEntity app1 : chosen_family_doctor.getAppointments()) {
                         if (app1.getDate().toString().equals(button.getText())) {
                             app1.setReserved(true);
+                            //send to server
                             Platform.runLater(() -> {
                                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
                                         String.format("Please confirm your reservation!")
@@ -128,11 +135,18 @@ public class PatientController {
                                 Optional<ButtonType> result = alert.showAndWait();
                                 if (result.get() == ButtonType.OK) {
                                     app1.setPatient(SimpleClient.patientClient.getPatient());
-                                    try {
-                                        SimpleClient.getClient().sendToServer(app1);
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
+                                    Platform.runLater(() -> {
+                                        Alert alert1 = new Alert(Alert.AlertType.INFORMATION,
+                                                String.format("choose info receiving method:"), new ButtonType("email"), new ButtonType("phone")
+                                        );
+                                        Optional<ButtonType> method_result = alert1.showAndWait();
+                                        try {
+                                            SimpleClient.getClient().sendToServer(app1);
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    });
+
                                 } else if (result.get() == ButtonType.CANCEL) {
                                     app1.setReserved(false);
                                 }
@@ -197,8 +211,12 @@ public class PatientController {
     }
 
     @FXML
-    void viewAppsAction(ActionEvent event) {
+    void viewAppsAction(ActionEvent event) { // view my appointments
+        for(AppointmentEntity app : SimpleClient.patientClient.getAppointments())
+        {
+            vBox.getItems().clear();
 
+        }
     }
 
     @FXML
@@ -293,7 +311,11 @@ public class PatientController {
                                                 {
                                                     for (AppointmentEntity app1 : chosen_doctor.getAppointments()) {
                                                         if (app1.getDate().toString().equals(button.getText())) {
-                                                            app1.setReserved(true);
+                                                            try {
+                                                                SimpleClient.getClient().sendToServer(app1); // sending to server so that it updates the Reserved field to true
+                                                            } catch (IOException e) {
+                                                                e.printStackTrace();
+                                                            }
                                                             Platform.runLater(() -> {
                                                                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
                                                                         String.format("Please confirm your reservation!")
@@ -301,16 +323,34 @@ public class PatientController {
                                                                 Optional<ButtonType> result = alert.showAndWait();
                                                                 if (result.get() == ButtonType.OK) {
                                                                     app1.setPatient(SimpleClient.patientClient.getPatient());
+                                                                    Platform.runLater(() -> {
+                                                                        Alert alert1 = new Alert(Alert.AlertType.INFORMATION,
+                                                                                String.format("choose info receiving method:"), new ButtonType("email"), new ButtonType("phone")
+                                                                        );
+                                                                        Optional<ButtonType> method_result = alert1.showAndWait();
+                                                                        if(method_result.equals("email")) { // we need to send the info to phone number
+                                                                            try {
+                                                                                SimpleClient.getClient().sendToServer("#send email");
+                                                                            } catch (IOException e1){
+                                                                                e1.printStackTrace();
+                                                                            }
+                                                                        }
+                                                                        try {
+                                                                            app1.setReserved(true);
+                                                                            SimpleClient.getClient().sendToServer(app1);
+                                                                        } catch (IOException e) {
+                                                                            e.printStackTrace();
+                                                                        }
+                                                                    });
+                                                                }
+                                                                else if (result.get() == ButtonType.CANCEL) {
+                                                                    app1.setReserved(false);
                                                                     try {
                                                                         SimpleClient.getClient().sendToServer(app1);
                                                                     } catch (IOException e) {
                                                                         e.printStackTrace();
                                                                     }
-                                                                } else if (result.get() == ButtonType.CANCEL) {
-                                                                    app1.setReserved(false);
                                                                 }
-
-
                                                             });
                                                         }
                                                     }

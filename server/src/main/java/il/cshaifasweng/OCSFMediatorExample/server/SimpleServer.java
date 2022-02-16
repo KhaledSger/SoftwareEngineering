@@ -3,6 +3,7 @@ package il.cshaifasweng.OCSFMediatorExample.server;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.AbstractServer;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -143,16 +144,53 @@ public class SimpleServer extends AbstractServer {
                 }
             }
         }
+//        else if (msg.getClass().equals(AppointmentEntity.class))
+//        {
+//            //need to change the app and check if reserved
+//            System.out.println(((AppointmentEntity) msg).getId());
+//            AppointmentEntity app=get_app_with_id(((AppointmentEntity) msg).getId()); // get the appointment from the data base
+//            if(((AppointmentEntity) msg).isReserved()==false) // the client has pressed on app but not confirmed the reservation yet
+//            {
+//                app.setReserved(true);
+//            }
+//            else { // the client has confirmed the reservation
+//                app.setPatient(((AppointmentEntity) msg).getPatient());
+//            }
+//            CriteriaBuilder builder = session.getCriteriaBuilder();
+//         //   CriteriaQuery<AppointmentEntity> query = builder.createQuery(AppointmentEntity.class);
+//            CriteriaUpdate<AppointmentEntity> query2 = builder.createCriteriaUpdate(AppointmentEntity.class);
+//            Root<AppointmentEntity> tmp=query2.from(AppointmentEntity.class);
+//            query2.set("reserved",1);
+//            query2.set("Patient_id",((AppointmentEntity) msg).getPatient().getId());
+//            query2.where(builder.equal(tmp.get("id"),((AppointmentEntity) msg).getId()));
+//            session.createQuery(query2).executeUpdate();
+//           // AppointmentEntity app = q.getSingleResult();
+////            session.beginTransaction();
+////            session.(app);
+////            session.flush();
+////            session.getTransaction().commit();
+//        }
         else if (msg.getClass().equals(AppointmentEntity.class))
         {
-            //need to change the app and check if reserved
-            System.out.println(((AppointmentEntity) msg).getId());
-            AppointmentEntity app=get_app_with_id(((AppointmentEntity) msg).getId());
-            app.setReserved(true);
-            app.setPatient(((AppointmentEntity) msg).getPatient());
-            session.beginTransaction();
-            session.save(app);
-            session.flush();
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+            CriteriaUpdate<AppointmentEntity> update = builder.createCriteriaUpdate(AppointmentEntity.class);
+            Root<AppointmentEntity> root = update.from(AppointmentEntity.class);
+            update.set("reserved",true).where(builder.equal(root.get("id"),((AppointmentEntity) msg).getId()));
+          //  "id",((AppointmentEntity) msg).getId()
+//            System.out.println("msg id "+((AppointmentEntity) msg).getId());
+//            AppointmentEntity app=get_app_with_id(((AppointmentEntity) msg).getDate());
+//            //System.out.println(app.getDate());
+//            if(!((AppointmentEntity) msg).isReserved()) // the client has pressed on app but not confirmed the reservation yet
+//            {
+//                app.setReserved(true);
+//
+//            }
+//            else { // the client has confirmed the reservation
+//                app.setPatient(((AppointmentEntity) msg).getPatient());
+//            }
+         //   session.beginTransaction();
+//            session.saveOrUpdate(app);
+//            session.flush();
             session.getTransaction().commit();
         }
         else if (msg.getClass().equals(UserEntity.class)){
@@ -189,6 +227,7 @@ public class SimpleServer extends AbstractServer {
             }
 
         }
+
     }
     <T extends UserEntity> boolean checkPassword(List<T> Users,UserEntity user,ConnectionToClient client){
         for (int i = 0 ; i < Users.size(); i++){
@@ -211,6 +250,8 @@ public class SimpleServer extends AbstractServer {
         }
         return  false;
     }
+
+
     private static void UpdateAppointments(){
         System.out.println("Update App");
         LocalDateTime now=LocalDateTime.now();
@@ -219,6 +260,7 @@ public class SimpleServer extends AbstractServer {
         for (DoctorEntity doc:all_docs) {
             List<DoctorClinicEntity> doc_clinics = doc.getDoctorClinicEntities();
             System.out.println(doc_clinics.size());
+            System.out.println(doc.getAppointments()+"doc_appointment");
             Set<AppointmentEntity> doc_appointments = doc.getAppointments();
             for (AppointmentEntity app:doc_appointments) {
 
@@ -273,17 +315,10 @@ public class SimpleServer extends AbstractServer {
                                     session.save(app);
                                 }
                             }
-
-
                         }
-
-
-
                     }
                 }
             }
-
-
         }
     }
     public static int getDayNumberNew(LocalDate date) {
@@ -342,20 +377,53 @@ public class SimpleServer extends AbstractServer {
         List<LabWorkerEntity> result = session.createQuery(query).getResultList();
         return result;
     }
+    public static List<AppointmentEntity> GetAllAppointments() {
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<AppointmentEntity> query = builder.createQuery(AppointmentEntity.class);
+        query.from(AppointmentEntity.class);
+        List<AppointmentEntity> result = session.createQuery(query).getResultList();
+        return result;
+    }
+
     static <T> Predicate equal(CriteriaBuilder cb, Expression<T> left, T right) {
         return cb.equal(left, right);
     }
-    private static AppointmentEntity get_app_with_id(int id)
+//    private static AppointmentEntity get_app_with_id(int id)
+//    {
+//        CriteriaBuilder builder = session.getCriteriaBuilder();
+//        CriteriaQuery<AppointmentEntity> query = builder.createQuery(AppointmentEntity.class);
+//        Root<AppointmentEntity> tmp=query.from(AppointmentEntity.class);
+//        query.select(tmp);
+//        query.where(builder.equal(tmp.get("id"),id));
+//        TypedQuery<AppointmentEntity> q = session.createQuery(query);
+//        AppointmentEntity app = q.getSingleResult();
+//        return app;
+//
+//    }
+
+    private static AppointmentEntity get_app_with_id(LocalDateTime date)
     {
-        CriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<AppointmentEntity> query = builder.createQuery(AppointmentEntity.class);
-        Root<AppointmentEntity> tmp=query.from(AppointmentEntity.class);
-        query.select(tmp);
-        query.where(builder.equal(tmp.get("id"),id));
-        TypedQuery<AppointmentEntity> q = session.createQuery(query);
-        AppointmentEntity app = q.getSingleResult();
-        return app;
-
+        try {
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+            System.out.println("1");
+            CriteriaQuery<AppointmentEntity> query = builder.createQuery(AppointmentEntity.class);
+            System.out.println("2");
+            Root<AppointmentEntity> tmp = query.from(AppointmentEntity.class);
+            System.out.println("3");
+            query.select(tmp);
+            System.out.println("4");
+            query.where(builder.equal(tmp.get("date"), date));
+            System.out.println("5");
+            TypedQuery<AppointmentEntity> q = session.createQuery(query);
+            System.out.println("6");
+            AppointmentEntity app = q.getSingleResult(); //getSingleResult();
+            System.out.println("7");
+            System.out.println("app in func = " + app.getId());
+            return app;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
-
 }
