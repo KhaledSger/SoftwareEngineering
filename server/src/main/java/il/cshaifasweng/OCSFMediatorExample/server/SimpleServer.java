@@ -9,13 +9,15 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.*;
 import java.io.IOException;
+import java.sql.Connection;
 import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
 
 
 public class SimpleServer extends AbstractServer {
@@ -141,7 +143,20 @@ public class SimpleServer extends AbstractServer {
                     System.out.format("Updating all clinics on client %s\n", client.getInetAddress().getHostAddress());
                 }
             }
-        } else if (msg.getClass().equals(UserEntity.class)){
+        }
+        else if (msg.getClass().equals(AppointmentEntity.class))
+        {
+            //need to change the app and check if reserved
+            System.out.println(((AppointmentEntity) msg).getId());
+            AppointmentEntity app=get_app_with_id(((AppointmentEntity) msg).getId());
+            app.setReserved(true);
+            app.setPatient(((AppointmentEntity) msg).getPatient());
+            session.beginTransaction();
+            session.save(app);
+            session.flush();
+            session.getTransaction().commit();
+        }
+        else if (msg.getClass().equals(UserEntity.class)){
             System.out.println(msg.toString());
             System.out.println(msg.getClass().toString());
             List<ManagerEntity> Mangers = getALLMangers();
@@ -215,7 +230,13 @@ public class SimpleServer extends AbstractServer {
             LocalDateTime latest_appointment;
             if(doc_appointments.size()>0)
             {
-                latest_appointment=doc_appointments.stream().toList().get(doc_appointments.size()-1).getDate();
+                //latest_appointment=doc_appointments.stream().toList().get(doc_appointments.size()-1).getDate();
+
+
+                ArrayList<AppointmentEntity> allapps = null;
+                allapps.addAll(doc_appointments);
+                latest_appointment=allapps.get(doc_appointments.size()-1).getDate();
+
             }else{
                 latest_appointment = now;
             }
@@ -250,6 +271,7 @@ public class SimpleServer extends AbstractServer {
                                     AppointmentEntity app = new AppointmentEntity(appointment_time, doc_clinic, 20);
                                     System.out.println(app.getDate().toString());
                                     doc.getAppointments().add(app);
+
                                     session.save(app);
                                 }
                             }
@@ -321,6 +343,21 @@ public class SimpleServer extends AbstractServer {
         query.from(LabWorkerEntity.class);
         List<LabWorkerEntity> result = session.createQuery(query).getResultList();
         return result;
+    }
+    static <T> Predicate equal(CriteriaBuilder cb, Expression<T> left, T right) {
+        return cb.equal(left, right);
+    }
+    private static AppointmentEntity get_app_with_id(int id)
+    {
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<AppointmentEntity> query = builder.createQuery(AppointmentEntity.class);
+        Root<AppointmentEntity> tmp=query.from(AppointmentEntity.class);
+        query.select(tmp);
+        query.where(builder.equal(tmp.get("id"),id));
+        TypedQuery<AppointmentEntity> q = session.createQuery(query);
+        AppointmentEntity app = q.getSingleResult();
+        return app;
+
     }
 
 }
