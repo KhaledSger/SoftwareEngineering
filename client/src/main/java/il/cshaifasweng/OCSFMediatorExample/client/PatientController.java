@@ -291,16 +291,28 @@ public class PatientController {
                                             for (Button button : vBox.getItems()) {
                                                 button.setOnAction(ActionEvent ->
                                                 {
-                                                    for (AppointmentEntity app1 : chosen_doctor.getAppointments()) {
-                                                        if (app1.getDate().toString().equals(button.getText())) {
-                                                            app1.setReserved(true);
-                                                            app1.setPatient(SimpleClient.patientClient.getPatient());
+                                                    doctor_appointments=chosen_doctor.getAppointments();
+                                                    Iterator<AppointmentEntity> itr=doctor_appointments.iterator();
+                                                    //for (AppointmentEntity app1 : doctor_appointments)
+                                                    while(itr.hasNext())
+                                                    {
+                                                        //if (app1.getDate().toString().equals(button.getText()))
+
+                                                        if (itr.next().getDate().toString().equals(button.getText()))
+                                                        {
+
+
+                                                            //app1.setReserved(true);
+                                                            itr.next().setReserved(true);
+                                                            //app1.setPatient(SimpleClient.patientClient.getPatient());
                                                             try {
-                                                                SimpleClient.getClient().sendToServer(app1);
+                                                                //SimpleClient.getClient().sendToServer(app1);
+                                                                System.out.println(doctor_appointments.getClass()+"doctor_appointments.getClass()");
+                                                                SimpleClient.getClient().sendToServer(doctor_appointments);
                                                             } catch (IOException e) {
                                                                 e.printStackTrace();
                                                             }
-                                                            Platform.runLater(() -> {
+                                                            /*Platform.runLater(() -> {
                                                                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
                                                                         String.format("Please confirm your reservation!")
                                                                 );
@@ -317,7 +329,7 @@ public class PatientController {
                                                                 }
 
 
-                                                            });
+                                                            });*/
                                                         }
                                                     }
                                                 });

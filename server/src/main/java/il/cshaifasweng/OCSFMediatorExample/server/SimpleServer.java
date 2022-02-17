@@ -7,6 +7,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.collection.internal.PersistentSet;
 import org.hibernate.service.ServiceRegistry;
 
 import javax.persistence.TypedQuery;
@@ -15,14 +16,17 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.time.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
+import java.util.stream.Stream;
 
 
 public class SimpleServer extends AbstractServer {
     private static Session session;
     private static List<ClinicEntity> Clinics;
+    private static Set<AppointmentEntity> DoctorApps;
+    //private Object AppointmentEntity;
 
     public Session getSession()
     {
@@ -151,20 +155,59 @@ public class SimpleServer extends AbstractServer {
                 }
             }
         }
-        else if (msg.getClass().equals(AppointmentEntity.class))
+        else if (msg.getClass().equals(PersistentSet.class))
         {
+            System.out.println("iam in the handler in the set");
+            DoctorApps=((Set<AppointmentEntity>) msg);
             //need to change the app and check if reserved
-            System.out.println(((AppointmentEntity) msg).getId());
-            //AppointmentEntity app=get_app_with_id(((AppointmentEntity) msg).getId());
+            //System.out.println(((AppointmentEntity) msg).getId());
+            //AppointmentEntity app1=get_app_with_id(((AppointmentEntity) msg).getId());
+            Iterator<AppointmentEntity> itr=DoctorApps.iterator();
+            //for(AppointmentEntity app: DoctorApps)
+            while(itr.hasNext())
+            {
+                //AppointmentEntity app=(AppointmentEntity) msg;
+                AppointmentEntity app= itr.next();
+                if ((app.isReserved()) && (app.getPatient() == null)) {
+                   // AppointmentEntity app=itr.next();
+                    System.out.println("itr id "+app.getId());
+                    System.out.println("itr isreservd "+app.isReserved());
+                    session.beginTransaction();
+                    //AppointmentEntity app1 = get_app_with_id(((AppointmentEntity) msg).getId());
+                    //app.setReserved(true);
+
+                    //AppointmentEntity app=itr.next();
+                    //Stream<AppointmentEntity> d_a=DoctorApps.stream().filter(AppointmentEntity::isReserved);
+                    //System.out.println(d_a.findFirst()+"d_a");
+                    AppointmentEntity app2= (AppointmentEntity) session.merge(app);
+                    //AppointmentEntity app2=session.get("id");
+                    session.persist(app2);
+                    //session.save(app2);
+                    session.joinTransaction();
+                    //session.flush();
+
+                    session.getTransaction().commit();
+
+                    //session.merge(itr);
+                    //session.getTransaction().commit();
+                    //session.saveOrUpdate(app2);
+                    //session.joinTransaction();
+                    //session.flush();
+
+                    //session.getTransaction().commit();
+
+
+                }
+            }
             //app.setReserved(true);
             //app.setPatient(((AppointmentEntity) msg).getPatient());
-            AppointmentEntity app=(AppointmentEntity) msg;
-            session.beginTransaction();
-            session.merge(app);
+            //session.beginTransaction();
+            //AppointmentEntity app=(AppointmentEntity) msg;
+           // session.saveOrUpdate(app);
             //session.evict(app);
             //session.saveOrUpdate(app);
-            session.flush();
-            session.getTransaction().commit();
+            //session.flush();
+            //session.getTransaction().commit();
             //session.flush();
         }
         else if (msg.getClass().equals(UserEntity.class)){

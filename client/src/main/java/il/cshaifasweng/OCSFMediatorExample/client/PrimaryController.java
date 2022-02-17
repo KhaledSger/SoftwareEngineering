@@ -64,9 +64,12 @@ public class PrimaryController {
 	public void Login(javafx.event.ActionEvent actionEvent) throws IOException {
 		String regex = "[0-9]+";
 		Pattern p = Pattern.compile(regex);
-		Matcher m = p.matcher(ID.getText());
+
+		//Matcher m = p.matcher(ID.getText());
+		Matcher m = p.matcher("318588324");
 		if (m.matches()) {
-			SimpleClient.getClient().LogIn(Integer.parseInt(ID.getText()), Password.getText());
+			//SimpleClient.getClient().LogIn(Integer.parseInt(ID.getText()), Password.getText());
+			SimpleClient.getClient().LogIn(Integer.parseInt("318588324"), "Em12345");
 			while (SimpleClient.getClient().logInFlag == -1) { // bug in simple client .. log in flag needs to change and not be equal -1 when manager login
 				ProgressBar pb = new ProgressBar(0.6);
 				ProgressBar pi = new ProgressBar(0.6);
