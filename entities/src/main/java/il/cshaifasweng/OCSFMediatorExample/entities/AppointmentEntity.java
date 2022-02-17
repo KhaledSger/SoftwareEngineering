@@ -9,24 +9,24 @@ import java.time.LocalDateTime;
 public class AppointmentEntity implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY )
-    @Column(name = "Appointment_id")
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "appointment_id")
+    private long id;
     private LocalDateTime date; // date of the appointment
     private LocalDateTime actual_date; // time of treatment
     private boolean reserved = false; // the appointment is not reserved by default
     private int duration;
 
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.EAGER)
     @JoinColumn(name = "Clinic_id")
     private ClinicEntity clinic;
 
-    @ManyToOne
+    @ManyToOne ( fetch = FetchType.EAGER)
     @JoinColumn(name = "Patient_id")
     private PatientEntity patient;
 
-    @ManyToOne
-    @JoinColumn(name = "Doctor_id")
+    @ManyToOne (cascade = CascadeType.ALL ,fetch = FetchType.EAGER)
+    @JoinColumn(name = "doctor_id")
     private DoctorEntity doctor;
 
     //TODO add this relation
@@ -88,7 +88,7 @@ public class AppointmentEntity implements Serializable {
 //        Nurse.getAppointments().add(this);
 //    }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

@@ -75,6 +75,8 @@ public class SimpleServer extends AbstractServer {
     public SimpleServer(int port) {
         super(port);
         initSesssion();
+        MyThread myThread = new MyThread();
+        myThread.start();
     }
 
     public void stopSession() {
@@ -144,54 +146,23 @@ public class SimpleServer extends AbstractServer {
                 }
             }
         }
-//        else if (msg.getClass().equals(AppointmentEntity.class))
-//        {
-//            //need to change the app and check if reserved
-//            System.out.println(((AppointmentEntity) msg).getId());
-//            AppointmentEntity app=get_app_with_id(((AppointmentEntity) msg).getId()); // get the appointment from the data base
-//            if(((AppointmentEntity) msg).isReserved()==false) // the client has pressed on app but not confirmed the reservation yet
-//            {
-//                app.setReserved(true);
-//            }
-//            else { // the client has confirmed the reservation
-//                app.setPatient(((AppointmentEntity) msg).getPatient());
-//            }
-//            CriteriaBuilder builder = session.getCriteriaBuilder();
-//         //   CriteriaQuery<AppointmentEntity> query = builder.createQuery(AppointmentEntity.class);
-//            CriteriaUpdate<AppointmentEntity> query2 = builder.createCriteriaUpdate(AppointmentEntity.class);
-//            Root<AppointmentEntity> tmp=query2.from(AppointmentEntity.class);
-//            query2.set("reserved",1);
-//            query2.set("Patient_id",((AppointmentEntity) msg).getPatient().getId());
-//            query2.where(builder.equal(tmp.get("id"),((AppointmentEntity) msg).getId()));
-//            session.createQuery(query2).executeUpdate();
-//           // AppointmentEntity app = q.getSingleResult();
-////            session.beginTransaction();
-////            session.(app);
-////            session.flush();
-////            session.getTransaction().commit();
-//        }
         else if (msg.getClass().equals(AppointmentEntity.class))
         {
-            CriteriaBuilder builder = session.getCriteriaBuilder();
-            CriteriaUpdate<AppointmentEntity> update = builder.createCriteriaUpdate(AppointmentEntity.class);
-            Root<AppointmentEntity> root = update.from(AppointmentEntity.class);
-            update.set("reserved",true).where(builder.equal(root.get("id"),((AppointmentEntity) msg).getId()));
-          //  "id",((AppointmentEntity) msg).getId()
-//            System.out.println("msg id "+((AppointmentEntity) msg).getId());
-//            AppointmentEntity app=get_app_with_id(((AppointmentEntity) msg).getDate());
-//            //System.out.println(app.getDate());
-//            if(!((AppointmentEntity) msg).isReserved()) // the client has pressed on app but not confirmed the reservation yet
-//            {
-//                app.setReserved(true);
-//
-//            }
-//            else { // the client has confirmed the reservation
-//                app.setPatient(((AppointmentEntity) msg).getPatient());
-//            }
-         //   session.beginTransaction();
-//            session.saveOrUpdate(app);
-//            session.flush();
-            session.getTransaction().commit();
+            System.out.println("msg id "+((AppointmentEntity) msg).getId());
+            AppointmentEntity app=get_app_with_id(((AppointmentEntity) msg).getDate());
+            System.out.println(app.getDate());
+            if(!((AppointmentEntity) msg).isReserved()) // the client has pressed on app but not confirmed the reservation yet
+            {
+                app.setReserved(true);
+
+            }
+            else { // the client has confirmed the reservation
+                app.setPatient(((AppointmentEntity) msg).getPatient());
+            }
+            session.beginTransaction();
+            session.saveOrUpdate(app);
+            session.flush();
+           session.getTransaction().commit();
         }
         else if (msg.getClass().equals(UserEntity.class)){
             System.out.println(msg.toString());
@@ -405,19 +376,12 @@ public class SimpleServer extends AbstractServer {
     {
         try {
             CriteriaBuilder builder = session.getCriteriaBuilder();
-            System.out.println("1");
             CriteriaQuery<AppointmentEntity> query = builder.createQuery(AppointmentEntity.class);
-            System.out.println("2");
             Root<AppointmentEntity> tmp = query.from(AppointmentEntity.class);
-            System.out.println("3");
             query.select(tmp);
-            System.out.println("4");
             query.where(builder.equal(tmp.get("date"), date));
-            System.out.println("5");
             TypedQuery<AppointmentEntity> q = session.createQuery(query);
-            System.out.println("6");
             AppointmentEntity app = q.getSingleResult(); //getSingleResult();
-            System.out.println("7");
             System.out.println("app in func = " + app.getId());
             return app;
         }

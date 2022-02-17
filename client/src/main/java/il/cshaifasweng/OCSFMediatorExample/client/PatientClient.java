@@ -19,9 +19,11 @@ public class PatientClient  extends AbstractClient {
     protected void handleMessageFromServer(Object msg) {
         if (msg.getClass().equals(Warning.class)) {
             EventBus.getDefault().post(new WarningEvent((Warning) msg));
-        } else if (msg.getClass().equals(PatientEntity.class)){
+        }
+        else if (msg.getClass().equals(PatientEntity.class)){
            Patient = (PatientEntity) msg;
-        }else if(msg.getClass().equals(String.class))
+        }
+        else if(msg.getClass().equals(String.class))
         {
             System.out.println("PatientClient string");
         }
