@@ -19,9 +19,11 @@ public class PatientClient  extends AbstractClient {
     protected void handleMessageFromServer(Object msg) {
         if (msg.getClass().equals(Warning.class)) {
             EventBus.getDefault().post(new WarningEvent((Warning) msg));
-        } else if (msg.getClass().equals(PatientEntity.class)){
+        }
+        else if (msg.getClass().equals(PatientEntity.class)){
            Patient = (PatientEntity) msg;
-        }else if(msg.getClass().equals(String.class))
+        }
+        else if(msg.getClass().equals(String.class))
         {
             System.out.println("PatientClient string");
         }
@@ -38,10 +40,19 @@ public class PatientClient  extends AbstractClient {
         return Patient.getDoctorPatientEntities();
     }
 
+    public ClinicEntity getClinic()
+    {
+        return this.Patient.getClinic();
+    }
 
     public String getName()
     {
         return (this.Patient.getFirst_name() + " " + this.Patient.getFamily_name());
+    }
+
+    public int getAge()
+    {
+        return this.Patient.getAge();
     }
 
     public int getId()

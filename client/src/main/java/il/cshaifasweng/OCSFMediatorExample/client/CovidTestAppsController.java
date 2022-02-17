@@ -11,6 +11,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
@@ -40,8 +41,9 @@ public class CovidTestAppsController {
     @FXML // fx:id="datePickerBtn"
     private DatePicker datePickerBtn; // Value injected by FXMLLoader
 
-    @FXML // fx:id="vBox"
-    private VBox vBox; // Value injected by FXMLLoader
+    @FXML // fx:id="list_view"
+    private ListView<Button> list_view; // Value injected by FXMLLoader
+
 
     @FXML // fx:id="welcome_text"
     private Text welcome_text; // Value injected by FXMLLoader
@@ -59,7 +61,7 @@ public class CovidTestAppsController {
     void initialize() {
         assert backBtn != null : "fx:id=\"backBtn\" was not injected: check your FXML file 'covidTestApps.fxml'.";
         assert datePickerBtn != null : "fx:id=\"datePickerBtn\" was not injected: check your FXML file 'covidTestApps.fxml'.";
-        assert vBox != null : "fx:id=\"vBox\" was not injected: check your FXML file 'covidTestApps.fxml'.";
+        assert list_view != null : "fx:id=\"list_view\" was not injected: check your FXML file 'covidTestApps.fxml'.";
         assert welcome_text != null : "fx:id=\"welcome_text\" was not injected: check your FXML file 'covidTestApps.fxml'.";
         welcome_text.setText(SimpleClient.patientClient.getName());
     }

@@ -37,17 +37,13 @@ public class MyThread extends Thread {
                 }
             }
             try {
-                //sleep(300000);
+                //sleep(300000); 5 minutes
                 sleep(30000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
 
 
             }
-
-
         }
-
     }
 }
-
