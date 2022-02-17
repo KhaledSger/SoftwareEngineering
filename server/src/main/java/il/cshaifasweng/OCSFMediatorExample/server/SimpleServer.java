@@ -3,6 +3,7 @@ package il.cshaifasweng.OCSFMediatorExample.server;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.AbstractServer;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -74,6 +75,8 @@ public class SimpleServer extends AbstractServer {
     public SimpleServer(int port) {
         super(port);
         initSesssion();
+        MyThread myThread = new MyThread();
+        myThread.start();
     }
 
     public void stopSession() {
@@ -145,15 +148,21 @@ public class SimpleServer extends AbstractServer {
         }
         else if (msg.getClass().equals(AppointmentEntity.class))
         {
-            //need to change the app and check if reserved
-            System.out.println(((AppointmentEntity) msg).getId());
-            AppointmentEntity app=get_app_with_id(((AppointmentEntity) msg).getId());
-            app.setReserved(true);
-            app.setPatient(((AppointmentEntity) msg).getPatient());
+            System.out.println("msg id "+((AppointmentEntity) msg).getId());
+            AppointmentEntity app=get_app_with_id(((AppointmentEntity) msg).getDate());
+            System.out.println(app.getDate());
+            if(!((AppointmentEntity) msg).isReserved()) // the client has pressed on app but not confirmed the reservation yet
+            {
+                app.setReserved(true);
+
+            }
+            else { // the client has confirmed the reservation
+                app.setPatient(((AppointmentEntity) msg).getPatient());
+            }
             session.beginTransaction();
-            session.save(app);
+            session.saveOrUpdate(app);
             session.flush();
-            session.getTransaction().commit();
+           session.getTransaction().commit();
         }
         else if (msg.getClass().equals(UserEntity.class)){
             System.out.println(msg.toString());
@@ -189,6 +198,7 @@ public class SimpleServer extends AbstractServer {
             }
 
         }
+
     }
     <T extends UserEntity> boolean checkPassword(List<T> Users,UserEntity user,ConnectionToClient client){
         for (int i = 0 ; i < Users.size(); i++){
@@ -211,6 +221,8 @@ public class SimpleServer extends AbstractServer {
         }
         return  false;
     }
+
+
     private static void UpdateAppointments(){
         System.out.println("Update App");
         LocalDateTime now=LocalDateTime.now();
@@ -219,6 +231,7 @@ public class SimpleServer extends AbstractServer {
         for (DoctorEntity doc:all_docs) {
             List<DoctorClinicEntity> doc_clinics = doc.getDoctorClinicEntities();
             System.out.println(doc_clinics.size());
+            System.out.println(doc.getAppointments()+"doc_appointment");
             Set<AppointmentEntity> doc_appointments = doc.getAppointments();
             for (AppointmentEntity app:doc_appointments) {
 
@@ -273,17 +286,10 @@ public class SimpleServer extends AbstractServer {
                                     session.save(app);
                                 }
                             }
-
-
                         }
-
-
-
                     }
                 }
             }
-
-
         }
     }
     public static int getDayNumberNew(LocalDate date) {
@@ -342,20 +348,46 @@ public class SimpleServer extends AbstractServer {
         List<LabWorkerEntity> result = session.createQuery(query).getResultList();
         return result;
     }
+    public static List<AppointmentEntity> GetAllAppointments() {
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<AppointmentEntity> query = builder.createQuery(AppointmentEntity.class);
+        query.from(AppointmentEntity.class);
+        List<AppointmentEntity> result = session.createQuery(query).getResultList();
+        return result;
+    }
+
     static <T> Predicate equal(CriteriaBuilder cb, Expression<T> left, T right) {
         return cb.equal(left, right);
     }
-    private static AppointmentEntity get_app_with_id(int id)
+//    private static AppointmentEntity get_app_with_id(int id)
+//    {
+//        CriteriaBuilder builder = session.getCriteriaBuilder();
+//        CriteriaQuery<AppointmentEntity> query = builder.createQuery(AppointmentEntity.class);
+//        Root<AppointmentEntity> tmp=query.from(AppointmentEntity.class);
+//        query.select(tmp);
+//        query.where(builder.equal(tmp.get("id"),id));
+//        TypedQuery<AppointmentEntity> q = session.createQuery(query);
+//        AppointmentEntity app = q.getSingleResult();
+//        return app;
+//
+//    }
+
+    private static AppointmentEntity get_app_with_id(LocalDateTime date)
     {
-        CriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<AppointmentEntity> query = builder.createQuery(AppointmentEntity.class);
-        Root<AppointmentEntity> tmp=query.from(AppointmentEntity.class);
-        query.select(tmp);
-        query.where(builder.equal(tmp.get("id"),id));
-        TypedQuery<AppointmentEntity> q = session.createQuery(query);
-        AppointmentEntity app = q.getSingleResult();
-        return app;
-
+        try {
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+            CriteriaQuery<AppointmentEntity> query = builder.createQuery(AppointmentEntity.class);
+            Root<AppointmentEntity> tmp = query.from(AppointmentEntity.class);
+            query.select(tmp);
+            query.where(builder.equal(tmp.get("date"), date));
+            TypedQuery<AppointmentEntity> q = session.createQuery(query);
+            AppointmentEntity app = q.getSingleResult(); //getSingleResult();
+            System.out.println("app in func = " + app.getId());
+            return app;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
-
 }

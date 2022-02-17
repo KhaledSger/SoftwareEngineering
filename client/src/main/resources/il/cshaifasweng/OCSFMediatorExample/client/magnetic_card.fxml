@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<AnchorPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: white;" stylesheets="@../../../../application.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="il.cshaifasweng.OCSFMediatorExample.client.MagnericCardController">
+   <children>
+      <ImageView fitHeight="600.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../healthcare.jpg" />
+         </image>
+      </ImageView>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="13.0" layoutX="336.0" layoutY="392.0" stroke="WHITE" strokeType="INSIDE" width="129.0" />
+      <Button fx:id="backBtn" ellipsisString="" layoutX="13.0" layoutY="27.0" mnemonicParsing="false" onAction="#backBtnAction" prefHeight="26.0" prefWidth="39.0" styleClass="button3" text="back" underline="true">
+         <font>
+            <Font size="10.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <ImageView fitHeight="23.0" fitWidth="26.0" layoutX="60.0" layoutY="29.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../User-blue-icon.png" />
+         </image>
+      </ImageView>
+      <Text fx:id="welcome_text" layoutX="92.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-field" text="text" wrappingWidth="118.93670654296875" />
+      <Button layoutX="18.0" layoutY="106.0" mnemonicParsing="false" prefHeight="64.0" prefWidth="130.0" text="Doctor Appointment" />
+      <TextArea layoutX="14.0" layoutY="185.0" prefHeight="200.0" prefWidth="200.0" />
+      <Button layoutX="586.0" layoutY="106.0" mnemonicParsing="false" prefHeight="64.0" prefWidth="130.0" text="nurse / lab appointment" wrapText="true" />
+      <TextArea layoutX="563.0" layoutY="185.0" prefHeight="200.0" prefWidth="200.0" />
+      <TextArea layoutX="259.0" layoutY="446.0" prefHeight="111.0" prefWidth="267.0" />
+      <Text layoutX="327.0" layoutY="432.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Next Appointment :">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Text>
+   </children>
+</AnchorPane>

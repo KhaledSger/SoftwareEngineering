@@ -14,9 +14,7 @@ public class DoctorEntity extends UserEntity {
     public DoctorEntity(int id, String first_name, String family_name, String mail,String Password,String specialization) throws NoSuchAlgorithmException {
         super(id, first_name, family_name, mail,Password);
         this.Specialization = specialization;
-        this.doctorClinicEntities=new ArrayList<DoctorClinicEntity>();
-        this.doctorPatientEntities=new ArrayList<DoctorPatientEntity>();
-        this.appointments=new HashSet<AppointmentEntity>();
+        initListsAndSets();
 
     }
 
@@ -33,13 +31,19 @@ public class DoctorEntity extends UserEntity {
     @OneToMany(mappedBy = "doctor")
     List<DoctorPatientEntity> doctorPatientEntities;
 
-    @OneToMany
-    @JoinColumn(name = "Appointment_id")
+    @OneToMany (fetch = FetchType.LAZY, mappedBy = "doctor")
     private Set<AppointmentEntity> appointments;
+
+    private void initListsAndSets() {
+        this.doctorClinicEntities=new ArrayList<DoctorClinicEntity>();
+        this.doctorPatientEntities=new ArrayList<DoctorPatientEntity>();
+        this.appointments=new HashSet<AppointmentEntity>();
+    }
 
     // TODO Add Many-to-many relation with clinic
     //TODO DataBase Connection
     public DoctorEntity() {
+        initListsAndSets();
     }
 
 

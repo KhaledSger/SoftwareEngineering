@@ -160,6 +160,7 @@ public class ManagerController {
             );
             alert.show();
         });
+        SimpleClient.getClient().sendToServer(choosen_clinic);
         clinic_open_txt.setText("");
         clinic_close_txt.setText("");
     }
