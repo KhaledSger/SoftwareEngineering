@@ -1,5 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.server;
 
+import com.mysql.cj.xdevapi.Client;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.AbstractServer;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
@@ -24,6 +25,10 @@ import java.util.Set;
 public class SimpleServer extends AbstractServer {
     private static Session session;
     private static List<ClinicEntity> Clinics;
+    private static List<PatientEntity> Patients ;
+    private static List<ManagerEntity> managers;
+  //  public static List<AppointmentEntity> Appointments;
+
 
     public void initSesssion() {
         session = getSessionFactory().openSession();
@@ -40,7 +45,7 @@ public class SimpleServer extends AbstractServer {
             service = new String[]{"ww", "zz"};
             ClinicEntity clinic4 = new ClinicEntity("Eilaboun clinic", "08:00", "12:00", service, new ArrayList<PatientEntity>());
             session.save(clinic4);
-            PatientEntity pat1 = new PatientEntity(318588324,"Emad","daraw","Emad123@gmail.xom","Em12345",23,clinic1);
+            PatientEntity pat1 = new PatientEntity(318588324,"Emad","daraw","Emad123@gmail.com","Em12345",23,clinic3);
             session.save(pat1);
             PatientEntity pat2 = new PatientEntity(318234732,"Khaled","Sger","Khaled123@gmail.com","Kh12345",23,clinic4);
             session.save(pat2);
@@ -59,12 +64,15 @@ public class SimpleServer extends AbstractServer {
             DoctorClinicEntity doctorClinic= new DoctorClinicEntity(doc1,clinic3,times);
             session.save(doctorClinic);
             ManagerEntity manger = new ManagerEntity(doc1.getId(), doc1.getFirst_name(), doc1.getFamily_name(),
-                    doc1.getMail(),"111",clinic2);
+                    doc1.getMail(),"111",clinic3);
             session.save(manger);
             DoctorPatientEntity docpat=new DoctorPatientEntity(doc1,pat1);
             session.save(docpat);
             session.flush();
             session.getTransaction().commit();
+            UpdateAppointments();
+           // Appointments = GetAllAppointments();
+           // myThread.start();
         } catch (Exception e) {
             if (session != null) {
                 session.getTransaction().rollback();
@@ -75,8 +83,8 @@ public class SimpleServer extends AbstractServer {
     public SimpleServer(int port) {
         super(port);
         initSesssion();
-        MyThread myThread = new MyThread();
-        myThread.start();
+//        MyThread myThread = new MyThread();
+//        myThread.start();
     }
 
     public void stopSession() {
@@ -118,14 +126,33 @@ public class SimpleServer extends AbstractServer {
             }
         } else if (msgString.startsWith("#CloseSession")) {
             stopSession();
-        } else if (msgString.equals("#GetAllClinics")) {
+        }
+        else if(msgString.equals("#getAllPatients"))
+        {
+            List<PatientEntity> patients = getALLPatients();
+            Patients = patients;
+            System.out.println("pateint-size= " + Patients.size());
+            try {
+                client.sendToClient(Patients);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else if(msgString.equals("#getAllManagers"))
+        {
+            managers = getALLMangers();
+            try {
+                client.sendToClient(managers);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else if (msgString.equals("#GetAllClinics")) {
             try {
                 UpdateAppointments();
 
                 List<ClinicEntity> clinics = getALLClinics();
                 Clinics = clinics;
-
-
                 client.sendToClient(clinics);
                 System.out.format("Sent all clinics to client %s\n", client.getInetAddress().getHostAddress());
             } catch (Exception e) {
@@ -149,20 +176,32 @@ public class SimpleServer extends AbstractServer {
         else if (msg.getClass().equals(AppointmentEntity.class))
         {
             System.out.println("msg id "+((AppointmentEntity) msg).getId());
-            AppointmentEntity app=get_app_with_id(((AppointmentEntity) msg).getDate());
+            AppointmentEntity app=get_app_with_id(((AppointmentEntity) msg).getId());
             System.out.println(app.getDate());
             if(!((AppointmentEntity) msg).isReserved()) // the client has pressed on app but not confirmed the reservation yet
             {
                 app.setReserved(true);
 
             }
-            else { // the client has confirmed the reservation
+            else if((app.getPatient()==null)) { // the client has confirmed the reservation
                 app.setPatient(((AppointmentEntity) msg).getPatient());
+                try {
+                    client.sendToClient("reservation done!");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            else {
+                try {
+                    client.sendToClient("failed to reserve the appointment!");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
             session.beginTransaction();
             session.saveOrUpdate(app);
             session.flush();
-           session.getTransaction().commit();
+            session.getTransaction().commit();
         }
         else if (msg.getClass().equals(UserEntity.class)){
             System.out.println(msg.toString());
@@ -372,18 +411,35 @@ public class SimpleServer extends AbstractServer {
 //
 //    }
 
-    private static AppointmentEntity get_app_with_id(LocalDateTime date)
+    private static AppointmentEntity get_app_with_id(int id)
     {
         try {
             CriteriaBuilder builder = session.getCriteriaBuilder();
             CriteriaQuery<AppointmentEntity> query = builder.createQuery(AppointmentEntity.class);
             Root<AppointmentEntity> tmp = query.from(AppointmentEntity.class);
             query.select(tmp);
-            query.where(builder.equal(tmp.get("date"), date));
+            query.where(builder.equal(tmp.get("id"),id));
             TypedQuery<AppointmentEntity> q = session.createQuery(query);
             AppointmentEntity app = q.getSingleResult(); //getSingleResult();
-            System.out.println("app in func = " + app.getId());
             return app;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private static ManagerEntity get_manager_with_id(int id)
+    {
+        try {
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+            CriteriaQuery<ManagerEntity> query = builder.createQuery(ManagerEntity.class);
+            Root<ManagerEntity> tmp = query.from(ManagerEntity.class);
+            query.select(tmp);
+            query.where(builder.equal(tmp.get("manager_id"),id));
+            TypedQuery<ManagerEntity> q = session.createQuery(query);
+            ManagerEntity manager = q.getSingleResult(); //getSingleResult();
+            return manager;
         }
         catch (Exception e){
             e.printStackTrace();

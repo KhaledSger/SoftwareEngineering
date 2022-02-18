@@ -48,6 +48,9 @@ public class PrimaryController {
 	@FXML
 	private Button NurseBtn;
 
+	@FXML // fx:id="control_station_btn"
+	private Button control_station_btn; // Value injected by FXMLLoader
+
 	@FXML
 	void initialize() {
 		assert LoginBtn != null : "fx:id=\"LoginBtn\" was not injected: check your FXML file 'primary.fxml'.";
@@ -55,6 +58,7 @@ public class PrimaryController {
 		assert Password != null : "fx:id=\"Password\" was not injected: check your FXML file 'primary.fxml'.";
 		assert anchor_pane != null : "fx:id=\"anchor_pane\" was not injected: check your FXML file 'primary.fxml'.";
 		assert vBox != null : "fx:id=\"vBox\" was not injected: check your FXML file 'primary.fxml'.";
+		assert control_station_btn != null : "fx:id=\"control_station_btn\" was not injected: check your FXML file 'primary.fxml'.";
 //		String Vurl= "file:\\C:\\Users\\hakee\\JavaProjects\\SoftwareEngineering\\client\\src\\main\\resources\\My-Video.mp4";
 //		Media media = new Media(Vurl);
 
@@ -67,7 +71,7 @@ public class PrimaryController {
 		Matcher m = p.matcher(ID.getText());
 		if (m.matches()) {
 			SimpleClient.getClient().LogIn(Integer.parseInt(ID.getText()), Password.getText());
-			while (SimpleClient.getClient().logInFlag == -1) { // bug in simple client .. log in flag needs to change and not be equal -1 when manager login
+			while (SimpleClient.getClient().logInFlag == -1) {
 				ProgressBar pb = new ProgressBar(0.6);
 				ProgressBar pi = new ProgressBar(0.6);
 			}
@@ -100,5 +104,10 @@ public class PrimaryController {
 				alert.show();
 			});
 		}
+	}
+
+	@FXML
+	public void control_station_action(javafx.event.ActionEvent actionEvent) throws IOException{
+		App.setRoot("magnetic_card_Login");
 	}
 }
