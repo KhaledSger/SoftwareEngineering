@@ -10,6 +10,7 @@ import java.util.List;
 public class PatientClient  extends AbstractClient {
     private static PatientClient client = null;
     public static PatientEntity Patient = null;
+    public int appointment_flag= -1 ;
 
     public PatientClient(String host, int port,PatientEntity patient) {
         super(host, port);
@@ -25,7 +26,17 @@ public class PatientClient  extends AbstractClient {
         }
         else if(msg.getClass().equals(String.class))
         {
-            System.out.println("PatientClient string");
+            if(((String)msg).equals("reservation done!"))
+            {
+                appointment_flag=1;
+            }
+            else if(((String)msg).equals("failed to reserve the appointment!"))
+            {
+                appointment_flag=0;
+            }
+            else{
+                System.out.println("PatientClient string");
+            }
         }
     }
 

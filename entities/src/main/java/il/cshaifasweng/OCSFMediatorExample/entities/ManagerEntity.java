@@ -36,8 +36,9 @@ public class ManagerEntity extends UserEntity{
         return clinic;
     }
 
-    public void setClinic(ClinicEntity clinic) {
-        this.clinic = clinic;
+    public void setClinic(ClinicEntity clinic1) {
+        this.clinic = clinic1;
+        clinic1.updateManager(this);
     }
 }
 

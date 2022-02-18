@@ -1,5 +1,6 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
+import com.mysql.cj.xdevapi.Client;
 import il.cshaifasweng.OCSFMediatorExample.client.ocsf.AbstractClient;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import org.greenrobot.eventbus.EventBus;
@@ -13,14 +14,21 @@ public class SimpleClient extends AbstractClient {
 
     private static SimpleClient client = null;
     public static List<ClinicEntity> ClinicList;
+    public static List<PatientEntity> Patients ;
+    public static List<ManagerEntity> Managers;
     public static PatientClient patientClient = null;
     public static DoctorClient doctorClient = null;
     public static NurseClient nurseClient = null;
     public static ManagerClient managerClient = null;
     public static LabWorkerClient labWorkerClient = null;
+    public static ArrayList<Integer> nurse_patients; // for magnetic card use
     public static int logInFlag = -1;
     public static int availableUsers = 0;
     public static int currentUser = -1;
+    public static int cliniclistflag = 0;
+    public static int patientlistflag = 0;
+    public static long next_nurse_appointment=0;
+    public static long next_lab_appointment=0;
 
 
     private SimpleClient(String host, int port) {
@@ -29,11 +37,39 @@ public class SimpleClient extends AbstractClient {
 
     @Override
     protected void handleMessageFromServer(Object msg) {
+        System.out.println(msg.getClass().toString());
         if (msg.getClass().equals(Warning.class)) {
             EventBus.getDefault().post(new WarningEvent((Warning) msg));
-        } else if (msg.getClass().equals(ArrayList.class)) {
-            ClinicList = ((List<ClinicEntity>) msg);
-        } else if(currentUser == 0){
+        } else if (msg.getClass().equals(ArrayList.class) && cliniclistflag == 0) {
+                ClinicList = ((List<ClinicEntity>) msg);
+            System.out.println("Clinic List :" + ClinicList.size());
+                cliniclistflag = 1;
+            try {
+                client.sendToServer("#getAllPatients");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else if(msg.getClass().equals(ArrayList.class) && patientlistflag == 0)
+        {
+            Patients = ((List<PatientEntity>) msg);
+            patientlistflag=1;
+            cliniclistflag =2;
+            try {
+                client.sendToServer("#getAllManagers");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.println("Patient List : "+ Patients.size());
+        }
+        else if(msg.getClass().equals(ArrayList.class))
+        {
+            Managers=((List<ManagerEntity>)msg) ;
+            System.out.println("manager list= " + Managers.size());
+            System.out.println(Managers.get(0).getClinic().getName());
+            patientlistflag=2;
+        }
+        else if(currentUser == 0){
             patientClient.handleMessageFromServer(msg);
         } else if(currentUser == 1){
             nurseClient.handleMessageFromServer(msg);
