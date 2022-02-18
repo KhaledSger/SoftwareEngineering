@@ -135,6 +135,11 @@ public class ClinicEntity implements Serializable {
         this.manager = manager;
          manager.setClinic(this);
     }
+
+    public void updateManager(ManagerEntity manager)
+    {
+        this.manager= manager;
+    }
     public List<LabWorkerEntity> getLabWorkers() {
         return labWorkers;
     }

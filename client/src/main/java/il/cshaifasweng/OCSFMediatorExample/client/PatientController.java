@@ -38,6 +38,7 @@ public class PatientController {
         add menu items to specialized doctor menu dynamically like this:
         // SpecializedDoctorMenuBtn.getItems().add(new MenuItem("specialization"));
     */
+
     public String specialation_of_doctor;
     public String chosen_doctor_name;
     public String[] chosen_doctor_array;
@@ -47,7 +48,6 @@ public class PatientController {
     public Set<AppointmentEntity> doctor_appointments;
     private AppointmentEntity chosen_appointment;
     private DoctorEntity chosen_family_doctor;
-    Thread thread = new Thread();
 
     @FXML // ResourceBundle that was given to the FXMLLoader
     private ResourceBundle resources;
@@ -328,16 +328,33 @@ public class PatientController {
                                                                                 String.format("choose info receiving method:"), new ButtonType("email"), new ButtonType("phone")
                                                                         );
                                                                         Optional<ButtonType> method_result = alert1.showAndWait();
-                                                                        if(method_result.equals("email")) { // we need to send the info to phone number
-                                                                            try {
-                                                                                SimpleClient.getClient().sendToServer("#send email");
-                                                                            } catch (IOException e1){
-                                                                                e1.printStackTrace();
-                                                                            }
-                                                                        }
                                                                         try {
                                                                             app1.setReserved(true);
                                                                             SimpleClient.getClient().sendToServer(app1);
+                                                                            while(SimpleClient.patientClient.appointment_flag ==-1)
+                                                                            {
+                                                                               ProgressBar pb = new ProgressBar(0.6);
+                                                                               ProgressBar pi = new ProgressBar(0.6);
+                                                                            }
+                                                                            if(SimpleClient.patientClient.appointment_flag ==1)
+                                                                            {
+                                                                                Platform.runLater(() -> {
+                                                                                    Alert alert3 = new Alert(Alert.AlertType.CONFIRMATION,
+                                                                                            String.format("reserved successfully!")
+                                                                                    );
+                                                                                    alert3.show();
+                                                                                });
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                Platform.runLater(() -> {
+                                                                                    Alert alert4 = new Alert(Alert.AlertType.ERROR,
+                                                                                            String.format("failed to reserve the appointment!")
+                                                                                    );
+                                                                                    alert4.show();
+                                                                                });
+                                                                            }
+                                                                            SimpleClient.patientClient.appointment_flag=-1;
                                                                         } catch (IOException e) {
                                                                             e.printStackTrace();
                                                                         }

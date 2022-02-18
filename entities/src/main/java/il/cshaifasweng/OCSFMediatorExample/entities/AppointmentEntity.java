@@ -11,7 +11,7 @@ public class AppointmentEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "appointment_id")
-    private long id;
+    private int id;
     private LocalDateTime date; // date of the appointment
     private LocalDateTime actual_date; // time of treatment
     private boolean reserved = false; // the appointment is not reserved by default
@@ -88,7 +88,7 @@ public class AppointmentEntity implements Serializable {
 //        Nurse.getAppointments().add(this);
 //    }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
