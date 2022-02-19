@@ -64,6 +64,7 @@ public class MagneticCardLoginController {
                 for(ClinicEntity clinic : SimpleClient.getClinicList()) {
                     if (clinic.getName().equals(item.getText())) {
                         chosen_clinic = clinic;
+                        chosen_clinic.setManager(clinic.getManager());
 //                        if(!chosen_clinic.getManager().equals(null)) {
 //                            list_view.getItems().add(new Button(chosen_clinic.getManager().getFirst_name() + "-" + chosen_clinic.getManager().getId()));
 //                        }
@@ -74,47 +75,50 @@ public class MagneticCardLoginController {
                                 list_view.getItems().add(new Button(chosen_clinic.getManager().getFirst_name() + "-" + chosen_clinic.getManager().getId()));
                             }
                         }
-                    }
-                }
-            });
-        }
-        for(PatientEntity patient : SimpleClient.Patients)
-        {
-            if(!list_view.getItems().contains(patient.getFirst_name()+ "-" + patient.getId())) {
-                list_view.getItems().add(new Button(patient.getFirst_name() + "-" + patient.getId()));
-            }
-        }
-        for(Button client : list_view.getItems())
-        {
-            client.setOnAction(ActionEvent -> {
-                if((chosen_clinic.getManager().getFirst_name() + "-" + chosen_clinic.getManager().getId()).equals(client.getText()))
-                {
-                    chosen_manager=chosen_clinic.getManager();
-//                    try {
-//                        App.setRoot("magnetic_card_manager");
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-                }
-                else {
-                    for(PatientEntity patient : SimpleClient.Patients )
-                    {
-                        if((patient.getFirst_name()+ "-" + patient.getId()).equals(client.getText()))
+                        for(PatientEntity patient : SimpleClient.Patients)
                         {
-                            chosen_patient = patient;
+                            if(!list_view.getItems().contains(patient.getFirst_name()+ "-" + patient.getId())) {
+                                list_view.getItems().add(new Button(patient.getFirst_name() + "-" + patient.getId()));
+                            }
+                        }
+                        for(Button client : list_view.getItems())
+                        {
+                            client.setOnAction(ActionEvent -> {
+                                System.out.println("manager= "+chosen_clinic.getManager().getFirst_name() + "-" + chosen_clinic.getManager().getId());
+                                if((chosen_clinic.getManager().getFirst_name() + "-" + chosen_clinic.getManager().getId()).equals(client.getText()))
+                                {
+                                    chosen_manager=chosen_clinic.getManager();
+                                    System.out.println("aaaaa");
+                                    try {
+                                        App.setRoot("magneticCardManager");
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                else {
+                                    for(PatientEntity patient : SimpleClient.Patients )
+                                    {
+                                        if((patient.getFirst_name()+ "-" + patient.getId()).equals(client.getText()))
+                                        {
+                                            chosen_patient = patient;
+                                        }
+                                    }
+                                    ID.setText(Integer.toString(chosen_patient.getId()));
+                                    Password.setText("*********");
+                                    try {
+                                        App.setRoot("magnetic_card");
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+
                         }
                     }
-                    ID.setText(Integer.toString(chosen_patient.getId()));
-                    Password.setText("*********");
-                    try {
-                        App.setRoot("magnetic_card");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                 }
             });
-
         }
+
     }
 
 }

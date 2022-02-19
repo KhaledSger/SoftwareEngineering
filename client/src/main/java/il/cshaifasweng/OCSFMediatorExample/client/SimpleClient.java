@@ -21,7 +21,7 @@ public class SimpleClient extends AbstractClient {
     public static NurseClient nurseClient = null;
     public static ManagerClient managerClient = null;
     public static LabWorkerClient labWorkerClient = null;
-    public static ArrayList<Integer> nurse_patients; // for magnetic card use
+    public static ArrayList<Integer> nurse_patients=new ArrayList<Integer>(); // for magnetic card use
     public static int logInFlag = -1;
     public static int availableUsers = 0;
     public static int currentUser = -1;
@@ -29,6 +29,7 @@ public class SimpleClient extends AbstractClient {
     public static int patientlistflag = 0;
     public static long next_nurse_appointment=0;
     public static long next_lab_appointment=0;
+    public static long next_doc_appointment=0;
 
 
     private SimpleClient(String host, int port) {

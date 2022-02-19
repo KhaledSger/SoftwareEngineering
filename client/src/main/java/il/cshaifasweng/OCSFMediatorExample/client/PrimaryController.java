@@ -17,6 +17,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 public class PrimaryController {
 
 	@FXML
@@ -49,7 +50,17 @@ public class PrimaryController {
 	private Button NurseBtn;
 
 	@FXML // fx:id="control_station_btn"
-	private Button control_station_btn; // Value injected by FXMLLoader
+	private static Button control_station_btn; // Value injected by FXMLLoader
+
+	public static void DisableControl_station_btn()
+	{
+		control_station_btn.setDisable(true);
+	}
+	public static void EnableControl_station_btn()
+	{
+		control_station_btn.setDisable(false);
+	}
+
 
 	@FXML
 	void initialize() {
@@ -59,6 +70,7 @@ public class PrimaryController {
 		assert anchor_pane != null : "fx:id=\"anchor_pane\" was not injected: check your FXML file 'primary.fxml'.";
 		assert vBox != null : "fx:id=\"vBox\" was not injected: check your FXML file 'primary.fxml'.";
 		assert control_station_btn != null : "fx:id=\"control_station_btn\" was not injected: check your FXML file 'primary.fxml'.";
+		control_station_btn.setDisable(false);
 //		String Vurl= "file:\\C:\\Users\\hakee\\JavaProjects\\SoftwareEngineering\\client\\src\\main\\resources\\My-Video.mp4";
 //		Media media = new Media(Vurl);
 

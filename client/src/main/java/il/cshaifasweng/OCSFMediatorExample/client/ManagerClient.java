@@ -2,6 +2,7 @@ package il.cshaifasweng.OCSFMediatorExample.client;
 
 
 import il.cshaifasweng.OCSFMediatorExample.client.ocsf.AbstractClient;
+import il.cshaifasweng.OCSFMediatorExample.entities.ClinicEntity;
 import il.cshaifasweng.OCSFMediatorExample.entities.ManagerEntity;
 import il.cshaifasweng.OCSFMediatorExample.entities.Warning;
 import org.greenrobot.eventbus.EventBus;
@@ -37,6 +38,11 @@ public class ManagerClient  extends AbstractClient {
     public String getName()
     {
         return (this.Manager.getFirst_name() + " " + this.Manager.getFamily_name());
+    }
+
+    public ClinicEntity getClinic()
+    {
+        return this.Manager.getClinic();
     }
 
 }

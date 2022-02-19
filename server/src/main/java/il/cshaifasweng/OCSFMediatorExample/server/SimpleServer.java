@@ -183,7 +183,7 @@ public class SimpleServer extends AbstractServer {
                 app.setReserved(true);
 
             }
-            else if((app.getPatient()==null)) { // the client has confirmed the reservation
+            else if((app.getPatient()==null) ) { // the client has confirmed the reservation
                 app.setPatient(((AppointmentEntity) msg).getPatient());
                 try {
                     client.sendToClient("reservation done!");
@@ -191,13 +191,23 @@ public class SimpleServer extends AbstractServer {
                     e.printStackTrace();
                 }
             }
-            else {
+            else  // isReserved=true and patient != null so we need to cancel the appointment
+            {
+                app.setReserved(false);
+                app.setPatient(null);
                 try {
-                    client.sendToClient("failed to reserve the appointment!");
+                    client.sendToClient("reservation done!");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
+//            else {
+//                try {
+//                    client.sendToClient("failed to reserve the appointment!");
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
             session.beginTransaction();
             session.saveOrUpdate(app);
             session.flush();
@@ -398,18 +408,6 @@ public class SimpleServer extends AbstractServer {
     static <T> Predicate equal(CriteriaBuilder cb, Expression<T> left, T right) {
         return cb.equal(left, right);
     }
-//    private static AppointmentEntity get_app_with_id(int id)
-//    {
-//        CriteriaBuilder builder = session.getCriteriaBuilder();
-//        CriteriaQuery<AppointmentEntity> query = builder.createQuery(AppointmentEntity.class);
-//        Root<AppointmentEntity> tmp=query.from(AppointmentEntity.class);
-//        query.select(tmp);
-//        query.where(builder.equal(tmp.get("id"),id));
-//        TypedQuery<AppointmentEntity> q = session.createQuery(query);
-//        AppointmentEntity app = q.getSingleResult();
-//        return app;
-//
-//    }
 
     private static AppointmentEntity get_app_with_id(int id)
     {
