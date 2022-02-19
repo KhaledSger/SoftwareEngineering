@@ -23,16 +23,17 @@ import java.util.Set;
 
 
 public class SimpleServer extends AbstractServer {
-    private static Session session;
+    public static Session session;
     private static List<ClinicEntity> Clinics;
     private static List<PatientEntity> Patients ;
     private static List<ManagerEntity> managers;
-  //  public static List<AppointmentEntity> Appointments;
+    public static ArrayList<AppointmentEntity> Appointments=new ArrayList<AppointmentEntity>();
 
 
     public void initSesssion() {
         session = getSessionFactory().openSession();
         try {
+            session.getTransaction().begin();
             String[] service = new String[]{"aaa", "bbb", "ccc"};
             ClinicEntity clinic1 = new ClinicEntity("Haifa clinic", "10:00", "20:00", service, new ArrayList<PatientEntity>());
             session.save(clinic1);
@@ -62,6 +63,7 @@ public class SimpleServer extends AbstractServer {
             times.add("00:00-00:00");
             times.add("00:00-00:00");
             DoctorClinicEntity doctorClinic= new DoctorClinicEntity(doc1,clinic3,times);
+
             session.save(doctorClinic);
             ManagerEntity manger = new ManagerEntity(doc1.getId(), doc1.getFirst_name(), doc1.getFamily_name(),
                     doc1.getMail(),"111",clinic3);
@@ -71,20 +73,22 @@ public class SimpleServer extends AbstractServer {
             session.flush();
             session.getTransaction().commit();
             UpdateAppointments();
-           // Appointments = GetAllAppointments();
+            Appointments = (ArrayList<AppointmentEntity>) GetAllAppointments();
+            System.out.println("appointments size"+Appointments.size());
            // myThread.start();
         } catch (Exception e) {
             if (session != null) {
                 session.getTransaction().rollback();
             }
         }
+        //Appointments = (ArrayList<AppointmentEntity>) GetAllAppointments();
     }
 
     public SimpleServer(int port) {
         super(port);
         initSesssion();
-//        MyThread myThread = new MyThread();
-//        myThread.start();
+        MyThread myThread = new MyThread();
+        myThread.start();
     }
 
     public void stopSession() {
@@ -116,6 +120,7 @@ public class SimpleServer extends AbstractServer {
     @Override
     protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
         String msgString = msg.toString();
+        System.out.println("msg: "+msgString);
         if (msgString.startsWith("#warning")) {
             Warning warning = new Warning("Warning from server!");
             try {
@@ -149,10 +154,11 @@ public class SimpleServer extends AbstractServer {
         }
         else if (msgString.equals("#GetAllClinics")) {
             try {
-                UpdateAppointments();
+                //UpdateAppointments();
 
                 List<ClinicEntity> clinics = getALLClinics();
                 Clinics = clinics;
+                System.out.println("clinics size in server "+clinics.size());
                 client.sendToClient(clinics);
                 System.out.format("Sent all clinics to client %s\n", client.getInetAddress().getHostAddress());
             } catch (Exception e) {
@@ -273,6 +279,7 @@ public class SimpleServer extends AbstractServer {
 
 
     private static void UpdateAppointments(){
+        //session.getTransaction().begin();
         System.out.println("Update App");
         LocalDateTime now=LocalDateTime.now();
         now.getDayOfWeek();
@@ -294,7 +301,7 @@ public class SimpleServer extends AbstractServer {
                 //latest_appointment=doc_appointments.stream().toList().get(doc_appointments.size()-1).getDate();
 
 
-                ArrayList<AppointmentEntity> allapps = null;
+                ArrayList<AppointmentEntity> allapps = new ArrayList<AppointmentEntity>();
                 allapps.addAll(doc_appointments);
                 latest_appointment=allapps.get(doc_appointments.size()-1).getDate();
 
@@ -332,14 +339,21 @@ public class SimpleServer extends AbstractServer {
                                     AppointmentEntity app = new AppointmentEntity(appointment_time, doc_clinic, 20);
                                     doc.getAppointments().add(app);
 
-                                    session.save(app);
+                                    session.getTransaction().begin();
+                                    session.saveOrUpdate(app);
+                                    session.flush();
+                                    session.getTransaction().commit();
+
                                 }
                             }
                         }
                     }
+                    //session.flush();
+
                 }
             }
         }
+        //session.getTransaction().commit();
     }
     public static int getDayNumberNew(LocalDate date) {
         DayOfWeek day = date.getDayOfWeek();
@@ -398,6 +412,7 @@ public class SimpleServer extends AbstractServer {
         return result;
     }
     public static List<AppointmentEntity> GetAllAppointments() {
+        UpdateAppointments();
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<AppointmentEntity> query = builder.createQuery(AppointmentEntity.class);
         query.from(AppointmentEntity.class);

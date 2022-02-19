@@ -43,7 +43,7 @@ public class SimpleClient extends AbstractClient {
             EventBus.getDefault().post(new WarningEvent((Warning) msg));
         } else if (msg.getClass().equals(ArrayList.class) && cliniclistflag == 0) {
                 ClinicList = ((List<ClinicEntity>) msg);
-            System.out.println("Clinic List :" + ClinicList.size());
+            System.out.println("Clinic List  :" + ClinicList.size());
                 cliniclistflag = 1;
             try {
                 client.sendToServer("#getAllPatients");
