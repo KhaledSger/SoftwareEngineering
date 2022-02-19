@@ -38,6 +38,9 @@ public class ClinicEntity implements Serializable {
     @OneToMany (fetch=FetchType.LAZY , mappedBy = "clinic")
     private List<AppointmentEntity> appointments;
 
+    @OneToMany (fetch=FetchType.LAZY , mappedBy = "clinic")
+    private List<VaccineAppointmentEntity> vac_appointments;
+
     @OneToMany (mappedBy = "clinic")
     private List<LabWorkerEntity> labWorkers;
 
@@ -52,6 +55,7 @@ public class ClinicEntity implements Serializable {
         this.doctorClinicEntities=new ArrayList<DoctorClinicEntity>();
         this.labWorkers = new ArrayList<LabWorkerEntity>();
         this.appointments=new ArrayList<AppointmentEntity>();
+        this.vac_appointments = new ArrayList<VaccineAppointmentEntity>();
 
     }
 
@@ -155,4 +159,11 @@ public class ClinicEntity implements Serializable {
         this.appointments = appointments;
     }
 
+    public List<VaccineAppointmentEntity> getVac_appointments() {
+        return vac_appointments;
+    }
+
+    public void setVac_appointments(List<VaccineAppointmentEntity> vac_appointments) {
+        this.vac_appointments = vac_appointments;
+    }
 }

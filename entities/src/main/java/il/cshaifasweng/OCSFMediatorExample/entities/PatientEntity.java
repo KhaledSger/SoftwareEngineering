@@ -26,6 +26,8 @@ public class PatientEntity extends UserEntity {
     @OneToMany (fetch = FetchType.LAZY, mappedBy = "patient")
     private List<AppointmentEntity> appointments;
 
+    @OneToMany (fetch = FetchType.LAZY, mappedBy = "patient")
+    private List<VaccineAppointmentEntity> vac_appointments;
 
     public PatientEntity(int id, String first_name,String family_name,String mail ,String Password,int age,ClinicEntity clinic) throws NoSuchAlgorithmException {
         super(id, first_name, family_name, mail,Password);
@@ -33,6 +35,7 @@ public class PatientEntity extends UserEntity {
         this.clinic = clinic; // TODO change tp set
         this.doctorPatientEntities=new ArrayList<DoctorPatientEntity>();
         this.appointments=new ArrayList<AppointmentEntity>();
+        this.vac_appointments = new ArrayList<VaccineAppointmentEntity>();
     }
 
     public PatientEntity() {
@@ -73,5 +76,13 @@ public class PatientEntity extends UserEntity {
     public int getPatientId()
     {
         return this.patient_id;
+    }
+
+    public List<VaccineAppointmentEntity> getVac_appointments() {
+        return vac_appointments;
+    }
+
+    public void setVac_appointments(List<VaccineAppointmentEntity> vac_appointments) {
+        this.vac_appointments = vac_appointments;
     }
 }
