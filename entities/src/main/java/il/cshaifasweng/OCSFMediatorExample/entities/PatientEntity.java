@@ -23,8 +23,7 @@ public class PatientEntity extends UserEntity {
     @OneToMany(mappedBy = "patient")
     List<DoctorPatientEntity> doctorPatientEntities;
 
-    @OneToMany
-    @JoinColumn(name = "Appointment_id")
+    @OneToMany (fetch = FetchType.LAZY, mappedBy = "patient")
     private List<AppointmentEntity> appointments;
 
 

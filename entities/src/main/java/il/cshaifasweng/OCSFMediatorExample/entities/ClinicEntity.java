@@ -21,12 +21,10 @@ public class ClinicEntity implements Serializable {
     private String[] services;
 
 
-    @OneToMany
-    @JoinColumn(name = "Clinic_id")
+    @OneToMany (mappedBy = "clinic")
     private List<PatientEntity> Patients;
 
-    @OneToMany
-    @JoinColumn(name = "Clinic_id")
+    @OneToMany (mappedBy = "clinic")
     private List<NurseEntity> nurseEntities;
 
     @OneToMany(mappedBy = "clinic")
@@ -37,12 +35,10 @@ public class ClinicEntity implements Serializable {
     private ManagerEntity manager;
 
 
-    @OneToMany
-    @JoinColumn(name = "Appointment_id")
+    @OneToMany (fetch=FetchType.LAZY , mappedBy = "clinic")
     private List<AppointmentEntity> appointments;
 
-    @OneToMany
-    @JoinColumn(name = "LabWorker_id")
+    @OneToMany (mappedBy = "clinic")
     private List<LabWorkerEntity> labWorkers;
 
     public ClinicEntity(String name, String open, String close, String[] services,List<PatientEntity> Patients) {
@@ -138,6 +134,11 @@ public class ClinicEntity implements Serializable {
     public void setManager(ManagerEntity manager) {
         this.manager = manager;
          manager.setClinic(this);
+    }
+
+    public void updateManager(ManagerEntity manager)
+    {
+        this.manager= manager;
     }
     public List<LabWorkerEntity> getLabWorkers() {
         return labWorkers;

@@ -73,15 +73,11 @@
             <Font name="System Bold" size="14.0" />
          </font>
       </Text>
-      <Text layoutX="72.0" layoutY="296.0" strokeType="OUTSIDE" strokeWidth="0.0" text="clinics:" underline="true" wrappingWidth="39.200000000000045">
+      <Text fx:id="clinic_text" layoutX="41.0" layoutY="296.0" strokeType="OUTSIDE" strokeWidth="0.0" text="text" textAlignment="CENTER" underline="true" wrappingWidth="144.69842529296875">
          <font>
             <Font size="13.0" />
          </font>
       </Text>
-      <MenuButton fx:id="choose_clinic_menu" layoutX="43.0" layoutY="314.0" mnemonicParsing="false" styleClass="button3" text="choose a clinic">
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor></MenuButton>
       <TextField fx:id="clinic_current_hours" editable="false" layoutX="24.0" layoutY="362.0" promptText="working hours" />
       <Text layoutX="30.0" layoutY="422.0" strokeType="OUTSIDE" strokeWidth="0.0" text="open hours:" />
       <TextField fx:id="clinic_open_txt" layoutX="108.0" layoutY="404.0" prefHeight="26.0" prefWidth="63.0" />

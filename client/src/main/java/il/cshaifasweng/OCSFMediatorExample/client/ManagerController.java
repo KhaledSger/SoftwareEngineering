@@ -34,7 +34,7 @@ public class ManagerController {
         // choose_doctor_menu.getItems().add(new MenuItem("doctor's name"));
     */
 
-    private ClinicEntity choosen_clinic ;
+    private ClinicEntity choosen_clinic = SimpleClient.getManagerClient().getClinic();
     private DoctorClinicEntity choosen_doctor_clinic;
 
     @FXML // ResourceBundle that was given to the FXMLLoader
@@ -121,6 +121,9 @@ public class ManagerController {
     @FXML // fx:id="welcome_text"
     private Text welcome_text; // Value injected by FXMLLoader
 
+    @FXML // fx:id="clinic_text"
+    private Text clinic_text; // Value injected by FXMLLoader
+
     @FXML
     void backBtnAction(ActionEvent event) throws IOException {
         App.setRoot("login");
@@ -160,6 +163,7 @@ public class ManagerController {
             );
             alert.show();
         });
+        SimpleClient.getClient().sendToServer(choosen_clinic);
         clinic_open_txt.setText("");
         clinic_close_txt.setText("");
     }
@@ -228,30 +232,31 @@ public class ManagerController {
         assert vaccine_open_txt != null : "fx:id=\"vaccine_open_txt\" was not injected: check your FXML file 'manager.fxml'.";
         assert waiting_time_report_btn != null : "fx:id=\"waiting_time_report_btn\" was not injected: check your FXML file 'manager.fxml'.";
         assert welcome_text != null : "fx:id=\"welcome_text\" was not injected: check your FXML file 'manager.fxml'.";
+        assert clinic_text != null : "fx:id=\"clinic_text\" was not injected: check your FXML file 'manager.fxml'.";
         welcome_text.setText(SimpleClient.managerClient.getName());  // add manager's name here
+        clinic_text.setText(SimpleClient.getManagerClient().getClinic().getName());
+        clinic_current_hours.setText(choosen_clinic.getOpen() + "-" + choosen_clinic.getClose());
        // covid_test_current_hours.setText();
         for(ClinicEntity clinic : SimpleClient.getClinicList())  // adding the clinics and doctors to the menus
         {
-            if(!choose_clinic_menu.getItems().contains(clinic.getName()))
-                choose_clinic_menu.getItems().add(new MenuItem(clinic.getName()));
             for(DoctorClinicEntity doc_clinic : clinic.getDoctorClinicEntities())
             {
                 if(!(choose_doctor_menu.getItems().contains(doc_clinic.getDoctor().getFirst_name() + " " +doc_clinic.getDoctor().getFamily_name())))
                 choose_doctor_menu.getItems().add(new MenuItem(doc_clinic.getDoctor().getFirst_name() + " " +doc_clinic.getDoctor().getFamily_name()));
             }
         }
-        for(MenuItem item : choose_clinic_menu.getItems())
-        {
-            item.setOnAction(actionEvent -> {
-                for(ClinicEntity clinic : SimpleClient.getClinicList())
-                    if(clinic.getName().equals(item.getText()))
-                    {
-                        clinic_current_hours.setText(clinic.getOpen() + "-" + clinic.getClose());
-                        choosen_clinic=clinic;
-                        choose_clinic_menu.setText(clinic.getName());
-                    }
-            });
-        }
+//        for(MenuItem item : choose_clinic_menu.getItems())
+//        {
+//            item.setOnAction(actionEvent -> {
+//                for(ClinicEntity clinic : SimpleClient.getClinicList())
+//                    if(clinic.getName().equals(item.getText()))
+//                    {
+//                        clinic_current_hours.setText(clinic.getOpen() + "-" + clinic.getClose());
+//                        choosen_clinic=clinic;
+//                        choose_clinic_menu.setText(clinic.getName());
+//                    }
+//            });
+//        }
         for(MenuItem item : choose_doctor_menu.getItems())
         {
             item.setOnAction(actionEvent -> {

@@ -48,7 +48,7 @@
             <Font name="System Bold" size="16.0" />
          </font>
       </Text>
-      <MenuButton fx:id="vaccine_btn" layoutX="217.0" layoutY="294.0" mnemonicParsing="false" onAction="#vaccineAction" prefHeight="72.0" prefWidth="130.0" styleClass="button3" text="Vaccine Appointment" textAlignment="CENTER" wrapText="true">
+      <MenuButton fx:id="vaccine_btn" layoutX="43.0" layoutY="300.0" mnemonicParsing="false" onAction="#vaccineAction" prefHeight="72.0" prefWidth="130.0" styleClass="button3" text="Vaccine Appointment" textAlignment="CENTER" wrapText="true">
          <items>
             <MenuItem fx:id="covid_vaccine_btn" mnemonicParsing="false" onAction="#covid_vaccine_action" text="covic 19 vaccine" />
             <MenuItem fx:id="Flu_vaccine_btn" mnemonicParsing="false" onAction="#Flu_vaccine_action" text="Flu vaccine" />
@@ -62,7 +62,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </DatePicker>
-      <ToggleButton fx:id="LabTest" layoutX="43.0" layoutY="204.0" mnemonicParsing="false" onAction="#LabTestAction" prefHeight="72.0" prefWidth="130.0" styleClass="button3" text="Lab Test Appointment" wrapText="true">
+      <ToggleButton fx:id="familyDocBtn" layoutX="217.0" layoutY="204.0" mnemonicParsing="false" onAction="#FamilyDocAction" prefHeight="72.0" prefWidth="130.0" styleClass="button3" text="Family Doctor Or Pediatrician Appointment " wrapText="true">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
@@ -70,17 +70,7 @@
             <ToggleGroup fx:id="buttons" />
          </toggleGroup>
       </ToggleButton>
-      <ToggleButton fx:id="familyDocBtn" layoutX="217.0" layoutY="204.0" mnemonicParsing="false" onAction="#FamilyDocAction" prefHeight="72.0" prefWidth="130.0" styleClass="button3" text="Family Doctor Or Pediatrician Appointment " toggleGroup="$buttons" wrapText="true">
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </ToggleButton>
-      <ToggleButton fx:id="CovidTestBtn" layoutX="43.0" layoutY="294.0" mnemonicParsing="false" onAction="#CovidTestAction" prefHeight="72.0" prefWidth="130.0" styleClass="button3" text="Covid 19 Test Appointment" toggleGroup="$buttons" wrapText="true">
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </ToggleButton>
-      <ToggleButton fx:id="NurseAppBtn" layoutX="400.0" layoutY="294.0" mnemonicParsing="false" onAction="#NurseAppAction" prefHeight="72.0" prefWidth="130.0" styleClass="button3" text="Nurse Appointment" toggleGroup="$buttons">
+      <ToggleButton fx:id="CovidTestBtn" layoutX="43.0" layoutY="204.0" mnemonicParsing="false" onAction="#CovidTestAction" prefHeight="72.0" prefWidth="130.0" styleClass="button3" text="Covid 19 Test Appointment" toggleGroup="$buttons" wrapText="true">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
@@ -107,5 +97,6 @@
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="22.0" layoutX="331.0" layoutY="389.0" stroke="WHITE" strokeType="INSIDE" width="138.0" />
       <Separator layoutX="563.0" layoutY="207.0" orientation="VERTICAL" prefHeight="383.0" prefWidth="12.0" />
       <ListView fx:id="vBox" layoutX="575.0" layoutY="248.0" prefHeight="324.0" prefWidth="200.0" styleClass="list-cell" />
+      <Button fx:id="cancel_app_btn" layoutX="576.0" layoutY="573.0" mnemonicParsing="false" onAction="#cancel_app_action" prefHeight="19.0" prefWidth="197.0" text="Cancel Appointment" />
    </children>
 </AnchorPane>

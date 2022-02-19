@@ -10,6 +10,7 @@ import java.util.List;
 public class PatientClient  extends AbstractClient {
     private static PatientClient client = null;
     public static PatientEntity Patient = null;
+    public int appointment_flag= -1 ;
 
     public PatientClient(String host, int port,PatientEntity patient) {
         super(host, port);
@@ -19,11 +20,23 @@ public class PatientClient  extends AbstractClient {
     protected void handleMessageFromServer(Object msg) {
         if (msg.getClass().equals(Warning.class)) {
             EventBus.getDefault().post(new WarningEvent((Warning) msg));
-        } else if (msg.getClass().equals(PatientEntity.class)){
+        }
+        else if (msg.getClass().equals(PatientEntity.class)){
            Patient = (PatientEntity) msg;
-        }else if(msg.getClass().equals(String.class))
+        }
+        else if(msg.getClass().equals(String.class))
         {
-            System.out.println("PatientClient string");
+            if(((String)msg).equals("reservation done!"))
+            {
+                appointment_flag=1;
+            }
+            else if(((String)msg).equals("failed to reserve the appointment!"))
+            {
+                appointment_flag=0;
+            }
+            else{
+                System.out.println("PatientClient string");
+            }
         }
     }
 
@@ -38,10 +51,19 @@ public class PatientClient  extends AbstractClient {
         return Patient.getDoctorPatientEntities();
     }
 
+    public ClinicEntity getClinic()
+    {
+        return this.Patient.getClinic();
+    }
 
     public String getName()
     {
         return (this.Patient.getFirst_name() + " " + this.Patient.getFamily_name());
+    }
+
+    public int getAge()
+    {
+        return this.Patient.getAge();
     }
 
     public int getId()
