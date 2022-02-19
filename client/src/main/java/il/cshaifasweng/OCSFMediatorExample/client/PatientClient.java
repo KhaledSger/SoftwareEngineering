@@ -38,6 +38,10 @@ public class PatientClient  extends AbstractClient {
                 System.out.println("PatientClient string");
             }
         }
+        else if(msg.getClass().equals(ArrayList.class))
+        {
+            this.Patient.setAppointments((ArrayList)msg);
+        }
     }
 
     public static PatientClient getClient() {
