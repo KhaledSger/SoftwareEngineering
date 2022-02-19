@@ -8,14 +8,10 @@ package il.cshaifasweng.OCSFMediatorExample.client;
         import java.io.IOException;
         import java.net.URL;
         import java.time.LocalDateTime;
-        import java.util.ArrayList;
-        import java.util.Calendar;
-        import java.util.Optional;
-        import java.util.ResourceBundle;
+        import java.util.*;
 
         import com.mysql.cj.x.protobuf.Mysqlx;
-        import il.cshaifasweng.OCSFMediatorExample.entities.ClinicEntity;
-        import il.cshaifasweng.OCSFMediatorExample.entities.PatientEntity;
+        import il.cshaifasweng.OCSFMediatorExample.entities.*;
         import javafx.application.Platform;
         import javafx.event.ActionEvent;
         import javafx.fxml.FXML;
@@ -26,6 +22,7 @@ public class MagneticCardController {
 
     private PatientEntity chosen_patient = MagneticCardLoginController.chosen_patient;
     private ClinicEntity chosen_clinic = MagneticCardLoginController.chosen_clinic;
+    private int has_app_flag=0;
 
     @FXML // ResourceBundle that was given to the FXMLLoader
     private ResourceBundle resources;
@@ -88,7 +85,46 @@ public class MagneticCardController {
 
     @FXML
     void doctor_app_action(ActionEvent event) {
+        LocalDateTime now=LocalDateTime.now();
+        for(ClinicEntity clinic : SimpleClient.ClinicList)
+        {
+            for(DoctorClinicEntity doc_clinic : clinic.getDoctorClinicEntities())
+            {
+                for(AppointmentEntity app : doc_clinic.getDoctor().getAppointments())
+                {
+                    if (app.isReserved()) {
+                        if (app.getPatient().getId() == chosen_patient.getId()) {
+                            has_app_flag=1;
+                            SimpleClient.next_doc_appointment += 1;
+                            doctor_listView.setText("appointment for Doctor: " + doc_clinic.getDoctor().getFirst_name() + " " + doc_clinic.getDoctor().getFamily_name() + "\n Appointment Time: " + app.getDate().getHour() + ":" + app.getDate().getMinute() + "\n Appointment number: " + SimpleClient.next_doc_appointment);
+                            if(now.isBefore(app.getDate())) // the patient is not late, and he needs to enter to the reserved time
+                            {
+                                app.setActual_date(app.getDate());
+                            }
+                            else  //the patient is late, so he needs to enter after the current patients
+                            {
+                                for(AppointmentEntity app1 : doc_clinic.getDoctor().getAppointments())
+                                {
+                                    if(app1.getDate().isAfter(app.getDate()))
+                                    {
 
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if(has_app_flag==0)
+        {
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.ERROR,
+                        String.format("You don't have an Appointment!")
+                );
+                alert.show();
+            });
+        }
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
@@ -100,7 +136,7 @@ public class MagneticCardController {
         assert nurse_lab_app_btn != null : "fx:id=\"nurse_lab_app_btn\" was not injected: check your FXML file 'magnetic_card.fxml'.";
         assert nurse_listView != null : "fx:id=\"nurse_listView\" was not injected: check your FXML file 'magnetic_card.fxml'.";
         assert welcome_text != null : "fx:id=\"welcome_text\" was not injected: check your FXML file 'magnetic_card.fxml'.";
-        welcome_text.setText(MagneticCardLoginController.chosen_patient.getFirst_name() + MagneticCardLoginController.chosen_patient.getFamily_name()); //patient's name
+        welcome_text.setText(MagneticCardLoginController.chosen_patient.getFirst_name() +" "+ MagneticCardLoginController.chosen_patient.getFamily_name()); //patient's name
 
     }
 

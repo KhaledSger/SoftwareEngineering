@@ -33,10 +33,10 @@
       </ImageView>
       <Text fx:id="welcome_text" layoutX="92.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text-field" text="text" wrappingWidth="118.93670654296875" />
       <Button fx:id="doctor_app_btn" layoutX="18.0" layoutY="106.0" mnemonicParsing="false" onAction="#doctor_app_action" prefHeight="64.0" prefWidth="130.0" text="Doctor Appointment" />
-      <TextArea fx:id="doctor_listView" layoutX="14.0" layoutY="185.0" prefHeight="200.0" prefWidth="200.0" />
+      <TextArea fx:id="doctor_listView" editable="false" layoutX="14.0" layoutY="185.0" prefHeight="200.0" prefWidth="200.0" />
       <Button fx:id="nurse_lab_app_btn" layoutX="586.0" layoutY="106.0" mnemonicParsing="false" onAction="#nurse_lab_app_action" prefHeight="64.0" prefWidth="130.0" text="nurse / lab appointment" wrapText="true" />
-      <TextArea fx:id="nurse_listView" layoutX="563.0" layoutY="185.0" prefHeight="200.0" prefWidth="200.0" />
-      <TextArea fx:id="appointment_display_listView" layoutX="259.0" layoutY="446.0" prefHeight="111.0" prefWidth="267.0" />
+      <TextArea fx:id="nurse_listView" editable="false" layoutX="563.0" layoutY="185.0" prefHeight="200.0" prefWidth="200.0" />
+      <TextArea fx:id="appointment_display_listView" editable="false" layoutX="259.0" layoutY="446.0" prefHeight="111.0" prefWidth="267.0" />
       <Text layoutX="327.0" layoutY="432.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Next Appointment :">
          <font>
             <Font name="System Bold" size="14.0" />
