@@ -99,8 +99,10 @@ public class MagneticCardLoginController {
                 else {
                     for(PatientEntity patient : SimpleClient.Patients )
                     {
+                        //System.out.println("patient==client"+patient.getFirst_name()+ "-" + patient.getId()+"="+client.getText());
                         if((patient.getFirst_name()+ "-" + patient.getId()).equals(client.getText()))
                         {
+                            System.out.println(patient+"patient!");
                             chosen_patient = patient;
                         }
                     }
