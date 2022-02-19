@@ -144,10 +144,13 @@ public class SimpleServer extends AbstractServer {
                 e.printStackTrace();
             }
         }
-        else if(msg.getClass().equals(PatientEntity.class))
+        else if(msgString.startsWith("#getPatientApps:"))
         {
-            ArrayList<AppointmentEntity> patient_apps=get_apps_with_PatientId(((PatientEntity) msg).getId());
+            msgString=msgString.substring(16);
             try {
+            ArrayList<AppointmentEntity> patient_apps=get_apps_with_PatientId((Integer.parseInt(msgString)));
+            System.out.println("patient apps size= "+patient_apps.size());
+
                 client.sendToClient(patient_apps);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -298,8 +301,6 @@ public class SimpleServer extends AbstractServer {
         List<DoctorEntity> all_docs=getALLDoctors();
         for (DoctorEntity doc:all_docs) {
             List<DoctorClinicEntity> doc_clinics = doc.getDoctorClinicEntities();
-            System.out.println(doc_clinics.size());
-            System.out.println(doc.getAppointments()+"doc_appointment");
             Set<AppointmentEntity> doc_appointments = doc.getAppointments();
             for (AppointmentEntity app:doc_appointments) {
 
@@ -454,16 +455,25 @@ public class SimpleServer extends AbstractServer {
         return null;
     }
 
+
     private static ArrayList<AppointmentEntity> get_apps_with_PatientId(int patient_id)
     {
         try {
+            System.out.println("1");
             CriteriaBuilder builder = session.getCriteriaBuilder();
+            System.out.println("2");
             CriteriaQuery<AppointmentEntity> query = builder.createQuery(AppointmentEntity.class);
+            System.out.println("3");
             Root<AppointmentEntity> tmp = query.from(AppointmentEntity.class);
+            System.out.println("4");
             query.select(tmp);
-            query.where(builder.equal(tmp.get("Patient_id"),patient_id));
+            System.out.println("5");
+            query.where(builder.equal(tmp.get("patient"),patient_id));
+            System.out.println("6");
             TypedQuery<AppointmentEntity> q = session.createQuery(query);
+            System.out.println("7");
             ArrayList<AppointmentEntity> apps = (ArrayList<AppointmentEntity>) q.getResultList(); //getSingleResult();
+            System.out.println("8");
             return apps;
         }
         catch (Exception e){

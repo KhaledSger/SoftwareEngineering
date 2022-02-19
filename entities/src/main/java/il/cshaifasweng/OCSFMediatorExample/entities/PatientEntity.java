@@ -69,4 +69,9 @@ public class PatientEntity extends UserEntity {
     public void setAppointments(List<AppointmentEntity> appointments) {
         this.appointments = appointments;
     }
+
+    public int getPatientId()
+    {
+        return this.patient_id;
+    }
 }

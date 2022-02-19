@@ -213,7 +213,7 @@ public class PatientController {
     @FXML
     void viewAppsAction(ActionEvent event) throws IOException { // view my appointments
         vBox.getItems().clear(); //clear the list view buttons
-        SimpleClient.getClient().sendToServer(SimpleClient.getClient());
+        SimpleClient.getClient().sendToServer("#getPatientApps:"+SimpleClient.patientClient.getPatient().getPatientId());
         System.out.println(SimpleClient.patientClient.getAppointments());
         cancel_app_btn.setDisable(false); //enabling the cancel button
         for(AppointmentEntity app : SimpleClient.patientClient.getAppointments()) //adding the appointments to the list
@@ -260,6 +260,7 @@ public class PatientController {
         assert welcome_text != null : "fx:id=\"welcome_text\" was not injected: check your FXML file 'patient.fxml'.";
         assert vBox != null : "fx:id=\"vBox\" was not injected: check your FXML file 'patient.fxml'.";
         assert viewAppsBtn != null : "fx:id=\"viewAppsBtn\" was not injected: check your FXML file 'patient.fxml'.";
+        SimpleClient.getClient().setCurrentUser(0);
         cancel_app_btn.setDisable(true);
         welcome_text.setText(SimpleClient.patientClient.getName());  // add patient's name here
         for (ClinicEntity clinic : SimpleClient.getClinicList()) { // adding the specialization of the doctors

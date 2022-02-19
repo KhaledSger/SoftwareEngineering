@@ -63,7 +63,7 @@ public class SimpleClient extends AbstractClient {
             }
             System.out.println("Patient List : "+ Patients.size());
         }
-        else if(msg.getClass().equals(ArrayList.class))
+        else if(msg.getClass().equals(ArrayList.class) && currentUser!=0)
         {
             Managers=((List<ManagerEntity>)msg) ;
             System.out.println("manager list= " + Managers.size());
