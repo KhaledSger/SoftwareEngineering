@@ -14,6 +14,7 @@ import org.hibernate.service.ServiceRegistry;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.io.IOException;
+import java.sql.Array;
 import java.sql.Connection;
 import java.time.*;
 import java.util.ArrayList;
@@ -143,6 +144,18 @@ public class SimpleServer extends AbstractServer {
                 e.printStackTrace();
             }
         }
+        else if(msgString.startsWith("#getPatientApps:"))
+        {
+            msgString=msgString.substring(16);
+            try {
+            ArrayList<AppointmentEntity> patient_apps=get_apps_with_PatientId((Integer.parseInt(msgString)));
+            System.out.println("patient apps size= "+patient_apps.size());
+
+                client.sendToClient(patient_apps);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         else if(msgString.equals("#getAllManagers"))
         {
             managers = getALLMangers();
@@ -196,6 +209,7 @@ public class SimpleServer extends AbstractServer {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                ((AppointmentEntity) msg).getPatient().getAppointments().add((AppointmentEntity) msg);
             }
             else  // isReserved=true and patient != null so we need to cancel the appointment
             {
@@ -216,6 +230,7 @@ public class SimpleServer extends AbstractServer {
 //            }
             session.beginTransaction();
             session.saveOrUpdate(app);
+           // session.saveOrUpdate(((AppointmentEntity) msg).getPatient());
             session.flush();
             session.getTransaction().commit();
         }
@@ -286,8 +301,6 @@ public class SimpleServer extends AbstractServer {
         List<DoctorEntity> all_docs=getALLDoctors();
         for (DoctorEntity doc:all_docs) {
             List<DoctorClinicEntity> doc_clinics = doc.getDoctorClinicEntities();
-            System.out.println(doc_clinics.size());
-            System.out.println(doc.getAppointments()+"doc_appointment");
             Set<AppointmentEntity> doc_appointments = doc.getAppointments();
             for (AppointmentEntity app:doc_appointments) {
 
@@ -435,6 +448,33 @@ public class SimpleServer extends AbstractServer {
             TypedQuery<AppointmentEntity> q = session.createQuery(query);
             AppointmentEntity app = q.getSingleResult(); //getSingleResult();
             return app;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    private static ArrayList<AppointmentEntity> get_apps_with_PatientId(int patient_id)
+    {
+        try {
+            System.out.println("1");
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+            System.out.println("2");
+            CriteriaQuery<AppointmentEntity> query = builder.createQuery(AppointmentEntity.class);
+            System.out.println("3");
+            Root<AppointmentEntity> tmp = query.from(AppointmentEntity.class);
+            System.out.println("4");
+            query.select(tmp);
+            System.out.println("5");
+            query.where(builder.equal(tmp.get("patient"),patient_id));
+            System.out.println("6");
+            TypedQuery<AppointmentEntity> q = session.createQuery(query);
+            System.out.println("7");
+            ArrayList<AppointmentEntity> apps = (ArrayList<AppointmentEntity>) q.getResultList(); //getSingleResult();
+            System.out.println("8");
+            return apps;
         }
         catch (Exception e){
             e.printStackTrace();
