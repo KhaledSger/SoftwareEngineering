@@ -70,7 +70,7 @@ public class PrimaryController {
 		assert anchor_pane != null : "fx:id=\"anchor_pane\" was not injected: check your FXML file 'primary.fxml'.";
 		assert vBox != null : "fx:id=\"vBox\" was not injected: check your FXML file 'primary.fxml'.";
 		assert control_station_btn != null : "fx:id=\"control_station_btn\" was not injected: check your FXML file 'primary.fxml'.";
-		control_station_btn.setDisable(false);
+		//control_station_btn.setDisable(false);
 //		String Vurl= "file:\\C:\\Users\\hakee\\JavaProjects\\SoftwareEngineering\\client\\src\\main\\resources\\My-Video.mp4";
 //		Media media = new Media(Vurl);
 
