@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.List;
 
+import com.mysql.cj.xdevapi.Client;
 import com.sun.jdi.connect.spi.TransportService;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import javafx.application.Platform;
@@ -49,6 +50,7 @@ public class PatientController {
     public Set<AppointmentEntity> doctor_appointments;
     private AppointmentEntity chosen_appointment;
     private DoctorEntity chosen_family_doctor;
+    private int view_app_counter=0;
 
     @FXML // ResourceBundle that was given to the FXMLLoader
     private ResourceBundle resources;
@@ -211,6 +213,7 @@ public class PatientController {
     @FXML
     void viewAppsAction(ActionEvent event) throws IOException { // view my appointments
         vBox.getItems().clear(); //clear the list view buttons
+        SimpleClient.getClient().sendToServer("#getPatientApps:"+SimpleClient.patientClient.getPatient().getPatientId());
         System.out.println(SimpleClient.patientClient.getAppointments());
         cancel_app_btn.setDisable(false); //enabling the cancel button
         for(AppointmentEntity app : SimpleClient.patientClient.getAppointments()) //adding the appointments to the list
@@ -257,6 +260,7 @@ public class PatientController {
         assert welcome_text != null : "fx:id=\"welcome_text\" was not injected: check your FXML file 'patient.fxml'.";
         assert vBox != null : "fx:id=\"vBox\" was not injected: check your FXML file 'patient.fxml'.";
         assert viewAppsBtn != null : "fx:id=\"viewAppsBtn\" was not injected: check your FXML file 'patient.fxml'.";
+        SimpleClient.getClient().setCurrentUser(0);
         cancel_app_btn.setDisable(true);
         welcome_text.setText(SimpleClient.patientClient.getName());  // add patient's name here
         for (ClinicEntity clinic : SimpleClient.getClinicList()) { // adding the specialization of the doctors

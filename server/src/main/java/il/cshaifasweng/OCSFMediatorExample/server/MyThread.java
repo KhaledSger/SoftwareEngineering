@@ -46,8 +46,6 @@ public class MyThread extends Thread {
                 sleep(30000); // 30 seconds
             } catch (InterruptedException e) {
                 e.printStackTrace();
-
-
             }
         }
     }
