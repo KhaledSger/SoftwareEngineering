@@ -86,9 +86,7 @@ public class MagneticCardController {
     @FXML
     void doctor_app_action(ActionEvent event) {
         LocalDateTime now=LocalDateTime.now();
-        for(ClinicEntity clinic : SimpleClient.ClinicList)
-        {
-            for(DoctorClinicEntity doc_clinic : clinic.getDoctorClinicEntities())
+            for(DoctorClinicEntity doc_clinic : chosen_clinic.getDoctorClinicEntities())
             {
                 for(AppointmentEntity app : doc_clinic.getDoctor().getAppointments())
                 {
@@ -103,11 +101,17 @@ public class MagneticCardController {
                             }
                             else  //the patient is late, so he needs to enter after the current patients
                             {
+                                ArrayList<AppointmentEntity> appointments = (ArrayList<AppointmentEntity>) doc_clinic.getDoctor().getAppointments().stream().toList();
                                 for(AppointmentEntity app1 : doc_clinic.getDoctor().getAppointments())
                                 {
                                     if(app1.getDate().isAfter(app.getDate()))
                                     {
-
+                                        app.setActual_date(app1.getDate().plusMinutes(20));
+                                        try {
+                                            SimpleClient.getClient().sendToServer("#updateAppsForDoc:"+app.getId());
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
                                     }
                                 }
                             }
@@ -115,7 +119,6 @@ public class MagneticCardController {
                     }
                 }
             }
-        }
         if(has_app_flag==0)
         {
             Platform.runLater(() -> {

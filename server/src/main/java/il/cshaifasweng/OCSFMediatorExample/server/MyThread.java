@@ -42,8 +42,8 @@ public class MyThread extends Thread {
                 }
             }
             try {
-                //sleep(300000); 5 minutes
-                sleep(30000); // 30 seconds
+                sleep(300000); //5 minutes
+             //   sleep(30000); // 30 seconds
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

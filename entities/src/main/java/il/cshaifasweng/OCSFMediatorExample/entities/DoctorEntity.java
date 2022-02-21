@@ -32,12 +32,12 @@ public class DoctorEntity extends UserEntity {
     List<DoctorPatientEntity> doctorPatientEntities;
 
     @OneToMany (fetch = FetchType.LAZY, mappedBy = "doctor")
-    private Set<AppointmentEntity> appointments;
+    private List<AppointmentEntity> appointments;
 
     private void initListsAndSets() {
         this.doctorClinicEntities=new ArrayList<DoctorClinicEntity>();
         this.doctorPatientEntities=new ArrayList<DoctorPatientEntity>();
-        this.appointments=new HashSet<AppointmentEntity>();
+        this.appointments=new ArrayList<AppointmentEntity>();
     }
 
     // TODO Add Many-to-many relation with clinic
@@ -75,11 +75,11 @@ public class DoctorEntity extends UserEntity {
     public void setDoctorPatientEntities(List<DoctorPatientEntity> doctorPatientEntities) {
         this.doctorPatientEntities = doctorPatientEntities;
     }
-    public Set<AppointmentEntity> getAppointments() {
+    public List<AppointmentEntity> getAppointments() {
         return appointments;
     }
 
-    public void setAppointments(Set<AppointmentEntity> appointments) {
+    public void setAppointments(List<AppointmentEntity> appointments) {
         this.appointments = appointments;
     }
 
