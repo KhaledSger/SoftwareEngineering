@@ -53,6 +53,7 @@ public class SimpleServer extends AbstractServer {
             ClinicEntity clinic4 = new ClinicEntity("Eilaboun clinic", "08:00", "12:00", service, new ArrayList<PatientEntity>());
             session.save(clinic4);
             PatientEntity pat1 = new PatientEntity(318588324,"Emad","daraw","Emad123@gmail.com","Em12345",17,clinic3);
+            pat1.setgPassExp(LocalDate.now().plusMonths(5).toString());
             session.save(pat1);
             PatientEntity pat2 = new PatientEntity(318234732,"Khaled","Sger","Khaled123@gmail.com","Kh12345",23,clinic4);
             session.save(pat2);
@@ -356,7 +357,9 @@ public class SimpleServer extends AbstractServer {
             }
             session.beginTransaction();
             session.saveOrUpdate(app);
-            // session.saveOrUpdate(((AppointmentEntity) msg).getPatient());
+            if(((AppointmentEntity) msg).getPatient()!=null) {
+                session.saveOrUpdate(((AppointmentEntity) msg).getPatient());
+            }
             session.flush();
             session.getTransaction().commit();
         }

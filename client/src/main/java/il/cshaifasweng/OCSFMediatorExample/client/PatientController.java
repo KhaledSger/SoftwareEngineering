@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.Menu;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.List;
@@ -226,9 +227,13 @@ public class PatientController {
         if its not valid return an error message
         if yes move to the green pass page  ----> App.setRoot("GreenPass");
          */
-        App.setRoot("GreenPass");
+        if (SimpleClient.getPatientClient().getPatient().getgPassExp().length() > 0) {
+            LocalDate expiraton = LocalDate.parse(SimpleClient.getPatientClient().getPatient().getgPassExp());
+            if(expiraton.isAfter(LocalDate.now())) {
+                App.setRoot("GreenPass");
+            }
+        }
     }
-
     @FXML
     void SpecializedDoctorAction(ActionEvent event) {
 

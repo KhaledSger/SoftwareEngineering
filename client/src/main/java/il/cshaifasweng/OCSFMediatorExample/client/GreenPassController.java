@@ -7,6 +7,7 @@ package il.cshaifasweng.OCSFMediatorExample.client;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -51,6 +52,10 @@ public class GreenPassController {
         assert anchor != null : "fx:id=\"anchor\" was not injected: check your FXML file 'GreenPass.fxml'.";
         assert back_btn != null : "fx:id=\"back_btn\" was not injected: check your FXML file 'GreenPass.fxml'.";
         id_text.setText(Integer.toString(SimpleClient.patientClient.getId())); // patient's id here
+        expiration_date.setText(SimpleClient.getPatientClient().getPatient().getgPassExp());
+        LocalDate effective = LocalDate.parse(SimpleClient.getPatientClient().getPatient().getgPassExp());
+
+        effective_date.setText(effective.minusMonths(6).toString());
         // expiration_date.setText(); set patient's vaccine expiration date here
         // effective_date.setText(); set patient's vaccine effective date here
     }
