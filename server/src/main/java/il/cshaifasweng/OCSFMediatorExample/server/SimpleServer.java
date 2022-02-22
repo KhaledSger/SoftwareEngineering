@@ -180,8 +180,10 @@ public class SimpleServer extends AbstractServer {
         {
             msgString=msgString.substring(16);
             try {
-            ArrayList<AppointmentEntity> patient_apps=get_apps_with_PatientId((Integer.parseInt(msgString)));
+                ArrayList<VaccineAppointmentEntity> patient_vac_apps=get_vac_apps_with_PatientId((Integer.parseInt(msgString)));
+                ArrayList<AppointmentEntity> patient_apps=get_apps_with_PatientId((Integer.parseInt(msgString)));
                 client.sendToClient(patient_apps);
+                client.sendToClient("patient vac:"+patient_vac_apps);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -317,6 +319,42 @@ public class SimpleServer extends AbstractServer {
             session.beginTransaction();
             session.saveOrUpdate(app);
            // session.saveOrUpdate(((AppointmentEntity) msg).getPatient());
+            session.flush();
+            session.getTransaction().commit();
+        }
+        else if (msg.getClass().equals(VaccineAppointmentEntity.class))
+        {
+            System.out.println("msg id "+((VaccineAppointmentEntity) msg).getId());
+            VaccineAppointmentEntity app=get_vac_app_with_id(((VaccineAppointmentEntity) msg).getId());
+            System.out.println(app.getDate());
+            if(!((VaccineAppointmentEntity) msg).isReserved()) // the client has pressed on app but not confirmed the reservation yet
+            {
+                app.setReserved(true);
+
+            }
+            else if((app.getPatient()==null) ) { // the client has confirmed the reservation
+                app.setPatient(((VaccineAppointmentEntity) msg).getPatient());
+                try {
+                    client.sendToClient("reservation done!");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                ((VaccineAppointmentEntity) msg).getPatient().getVac_appointments().add((VaccineAppointmentEntity) msg);
+            }
+            else  // isReserved=true and patient != null so we need to cancel the appointment
+            {
+                System.out.println("entering the else cancel");
+                app.setReserved(false);
+                app.setPatient(null);
+                try {
+                    client.sendToClient("Appointment Cancelled!");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            session.beginTransaction();
+            session.saveOrUpdate(app);
+            // session.saveOrUpdate(((AppointmentEntity) msg).getPatient());
             session.flush();
             session.getTransaction().commit();
         }
@@ -704,25 +742,53 @@ public class SimpleServer extends AbstractServer {
         return null;
     }
 
+    private static VaccineAppointmentEntity get_vac_app_with_id(int id)
+    {
+        try {
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+            CriteriaQuery<VaccineAppointmentEntity> query = builder.createQuery(VaccineAppointmentEntity.class);
+            Root<VaccineAppointmentEntity> tmp = query.from(VaccineAppointmentEntity.class);
+            query.select(tmp);
+            query.where(builder.equal(tmp.get("id"),id));
+            TypedQuery<VaccineAppointmentEntity> q = session.createQuery(query);
+            VaccineAppointmentEntity app = q.getSingleResult(); //getSingleResult();
+            return app;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     private static ArrayList<AppointmentEntity> get_apps_with_PatientId(int patient_id)
     {
         try {
-            System.out.println("1");
             CriteriaBuilder builder = session.getCriteriaBuilder();
-            System.out.println("2");
             CriteriaQuery<AppointmentEntity> query = builder.createQuery(AppointmentEntity.class);
-            System.out.println("3");
             Root<AppointmentEntity> tmp = query.from(AppointmentEntity.class);
-            System.out.println("4");
             query.select(tmp);
-            System.out.println("5");
             query.where(builder.equal(tmp.get("patient"),patient_id));
-            System.out.println("6");
             TypedQuery<AppointmentEntity> q = session.createQuery(query);
-            System.out.println("7");
             ArrayList<AppointmentEntity> apps = (ArrayList<AppointmentEntity>) q.getResultList(); //getSingleResult();
-            System.out.println("8");
+            return apps;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private static ArrayList<VaccineAppointmentEntity> get_vac_apps_with_PatientId(int patient_id)
+    {
+        try {
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+            CriteriaQuery<VaccineAppointmentEntity> query = builder.createQuery(VaccineAppointmentEntity.class);
+            Root<VaccineAppointmentEntity> tmp = query.from(VaccineAppointmentEntity.class);
+            query.select(tmp);
+            query.where(builder.equal(tmp.get("patient"),patient_id));
+            TypedQuery<VaccineAppointmentEntity> q = session.createQuery(query);
+            ArrayList<VaccineAppointmentEntity> apps = (ArrayList<VaccineAppointmentEntity>) q.getResultList(); //getSingleResult();
             return apps;
         }
         catch (Exception e){
