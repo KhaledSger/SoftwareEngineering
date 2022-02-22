@@ -242,7 +242,51 @@ public class PatientController {
 
     @FXML
     void covid_vaccine_action(ActionEvent event) {
+        List<VaccineAppointmentEntity> vaccine_apps = SimpleClient.getPatientClient().getClinic().getVac_appointments();
+        for(VaccineAppointmentEntity app : vaccine_apps )
+        {
+            if(app.getType().equals("covid") && !app.isReserved())
+            {
+                Button btn = new Button(app.getDate().toString());
+                vBox.getItems().add(btn);
+                btn.setOnAction(ActionEvent -> {
+                    try {
+                        SimpleClient.getClient().sendToServer(app);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Platform.runLater(() -> {
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                                String.format("Please confirm your reservation!")
+                        );
+                        Optional<ButtonType> result = alert.showAndWait();
+                        if (result.get() == ButtonType.OK) {
+                            app.setReserved(true);
+                            app.setPatient(SimpleClient.patientClient.getPatient());
+                            Platform.runLater(() -> {
+                                Alert alert1 = new Alert(Alert.AlertType.INFORMATION,
+                                        String.format("choose info receiving method:"), new ButtonType("email"), new ButtonType("phone")
+                                );
+                                Optional<ButtonType> method_result = alert1.showAndWait();
+                                try {
+                                    SimpleClient.getClient().sendToServer(app);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            });
 
+                        } else if (result.get() == ButtonType.CANCEL) {
+                            app.setReserved(false);
+                            try {
+                                SimpleClient.getClient().sendToServer(app);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                });
+            }
+        }
     }
 
     @FXML

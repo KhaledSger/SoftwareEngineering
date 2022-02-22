@@ -519,7 +519,13 @@ public class SimpleServer extends AbstractServer {
                     if(app.isReserved()) {
                         vaccine_old_apps.add(app);
                         if(app.getType().equals("covid")){
-                            app.getPatient().setgPassExp(app.getDate().plusMonths(6).toString());
+                            PatientEntity patient = app.getPatient();
+                            patient.setgPassExp(app.getDate().plusMonths(6).toString());
+                            session.getTransaction().begin();
+                            session.saveOrUpdate(patient);
+                            session.flush();
+                            session.getTransaction().commit();
+
                         }
                     }
                     vaccine_appointments.remove(app);
