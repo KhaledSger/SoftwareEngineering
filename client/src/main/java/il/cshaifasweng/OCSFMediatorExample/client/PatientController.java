@@ -49,6 +49,7 @@ public class PatientController {
     public List<AppointmentEntity> appointments = SimpleClient.patientClient.getAppointments();
     public Set<AppointmentEntity> doctor_appointments;
     private AppointmentEntity chosen_appointment;
+    private VaccineAppointmentEntity chosen_vac_appointment;
     private DoctorEntity chosen_family_doctor;
     private int view_app_counter=0;
 
@@ -139,7 +140,6 @@ public class PatientController {
                                 );
                                 Optional<ButtonType> result = alert.showAndWait();
                                 if (result.get() == ButtonType.OK) {
-                                    app1.setReserved(true);
                                     app1.setPatient(SimpleClient.patientClient.getPatient());
                                     Platform.runLater(() -> {
                                         Alert alert1 = new Alert(Alert.AlertType.INFORMATION,
@@ -147,13 +147,38 @@ public class PatientController {
                                         );
                                         Optional<ButtonType> method_result = alert1.showAndWait();
                                         try {
+                                            app1.setReserved(true);
                                             SimpleClient.getClient().sendToServer(app1);
+                                            while(SimpleClient.patientClient.appointment_flag ==-1)
+                                            {
+                                                ProgressBar pb = new ProgressBar(0.6);
+                                                ProgressBar pi = new ProgressBar(0.6);
+                                            }
+                                            if(SimpleClient.patientClient.appointment_flag ==1)
+                                            {
+                                                Platform.runLater(() -> {
+                                                    Alert alert3 = new Alert(Alert.AlertType.CONFIRMATION,
+                                                            String.format("reserved successfully!")
+                                                    );
+                                                    alert3.show();
+                                                });
+                                            }
+                                            else
+                                            {
+                                                Platform.runLater(() -> {
+                                                    Alert alert4 = new Alert(Alert.AlertType.ERROR,
+                                                            String.format("failed to reserve the appointment!")
+                                                    );
+                                                    alert4.show();
+                                                });
+                                            }
+                                            SimpleClient.patientClient.appointment_flag=-1;
                                         } catch (IOException e) {
                                             e.printStackTrace();
                                         }
                                     });
-
-                                } else if (result.get() == ButtonType.CANCEL) {
+                                }
+                                else if (result.get() == ButtonType.CANCEL) {
                                     app1.setReserved(false);
                                     try {
                                         SimpleClient.getClient().sendToServer(app1);
@@ -171,6 +196,7 @@ public class PatientController {
 
     @FXML
     void Flu_vaccine_action(ActionEvent event) {
+        vBox.getItems().clear();
         List<VaccineAppointmentEntity> vaccine_apps = SimpleClient.getPatientClient().getClinic().getVac_appointments();
         for(VaccineAppointmentEntity app : vaccine_apps )
         {
@@ -184,35 +210,60 @@ public class PatientController {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                Platform.runLater(() -> {
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
-                            String.format("Please confirm your reservation!")
-                    );
-                    Optional<ButtonType> result = alert.showAndWait();
-                    if (result.get() == ButtonType.OK) {
-                        app.setReserved(true);
-                        app.setPatient(SimpleClient.patientClient.getPatient());
-                        Platform.runLater(() -> {
-                            Alert alert1 = new Alert(Alert.AlertType.INFORMATION,
-                                    String.format("choose info receiving method:"), new ButtonType("email"), new ButtonType("phone")
-                            );
-                            Optional<ButtonType> method_result = alert1.showAndWait();
+                    Platform.runLater(() -> {
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                                String.format("Please confirm your reservation!")
+                        );
+                        Optional<ButtonType> result = alert.showAndWait();
+                        if (result.get() == ButtonType.OK) {
+                            app.setPatient(SimpleClient.patientClient.getPatient());
+                            Platform.runLater(() -> {
+                                Alert alert1 = new Alert(Alert.AlertType.INFORMATION,
+                                        String.format("choose info receiving method:"), new ButtonType("email"), new ButtonType("phone")
+                                );
+                                Optional<ButtonType> method_result = alert1.showAndWait();
+                                try {
+                                    app.setReserved(true);
+                                    SimpleClient.getClient().sendToServer(app);
+                                    while(SimpleClient.patientClient.appointment_flag ==-1)
+                                    {
+                                        ProgressBar pb = new ProgressBar(0.6);
+                                        ProgressBar pi = new ProgressBar(0.6);
+                                    }
+                                    if(SimpleClient.patientClient.appointment_flag ==1)
+                                    {
+                                        Platform.runLater(() -> {
+                                            Alert alert3 = new Alert(Alert.AlertType.CONFIRMATION,
+                                                    String.format("reserved successfully!")
+                                            );
+                                            alert3.show();
+                                        });
+                                    }
+                                    else
+                                    {
+                                        Platform.runLater(() -> {
+                                            Alert alert4 = new Alert(Alert.AlertType.ERROR,
+                                                    String.format("failed to reserve the appointment!")
+                                            );
+                                            alert4.show();
+                                        });
+                                    }
+                                    SimpleClient.patientClient.appointment_flag=-1;
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            });
+                        }
+                        else if (result.get() == ButtonType.CANCEL) {
+                            app.setReserved(false);
                             try {
                                 SimpleClient.getClient().sendToServer(app);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                        });
-
-                    } else if (result.get() == ButtonType.CANCEL) {
-                        app.setReserved(false);
-                        try {
-                            SimpleClient.getClient().sendToServer(app);
-                        } catch (IOException e) {
-                            e.printStackTrace();
                         }
-                    }
-                });
+                    });
+
                 });
             }
         }
@@ -280,6 +331,13 @@ public class PatientController {
                         chosen_appointment=app;
                     }
                 }
+                for(VaccineAppointmentEntity app : SimpleClient.patientClient.getPatient().getVac_appointments())
+                {
+                    if(((app.getDate().toString()+"-"+ app.getClinic().getName()).equals(button.getText())))
+                    {
+                        chosen_vac_appointment=app;
+                    }
+                }
             });
         }
     }
@@ -290,6 +348,19 @@ public class PatientController {
             {
                 SimpleClient.getClient().sendToServer(chosen_appointment); //sending to server an appointment with isReserved=true and patient != null
             }
+           if(chosen_vac_appointment!=null) //if the patient has selected an appointment we need to delete it
+           {
+               SimpleClient.getClient().sendToServer(chosen_vac_appointment); //sending to server an appointment with isReserved=true and patient != null
+           }
+        if(SimpleClient.patientClient.cancel_app_flag==1)
+        {
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                        String.format("Appointment Canceled!")
+                );
+                alert.show();
+            });
+        }
 //            for(Button button : vBox.getItems())
 //            {
 //                if((chosen_appointment.getDate().toString()+"-"+ chosen_appointment.getDoctor().getFirst_name() + " " + chosen_appointment.getDoctor().getFamily_name()+"-"+chosen_appointment.getDoctor().getSpecialization()).equals(button.getText()))

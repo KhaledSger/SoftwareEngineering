@@ -25,7 +25,10 @@ public class VaccineAppointmentEntity implements Serializable {
     @JoinColumn(name = "Patient_id")
     private PatientEntity patient;
 
-    public VaccineAppointmentEntity(LocalDateTime date, int duration, ClinicEntity clinic,String type) {
+    public VaccineAppointmentEntity() {
+    }
+
+    public VaccineAppointmentEntity(LocalDateTime date, int duration, ClinicEntity clinic, String type) {
         this.id = id;
         this.date = date;
         this.reserved = false;
@@ -94,6 +97,9 @@ public class VaccineAppointmentEntity implements Serializable {
 
     public void setPatient(PatientEntity patient) {
         this.patient = patient;
-        patient.getVac_appointments().add(this);
+        if(this.patient!=null)
+        {
+            patient.getVac_appointments().add(this);
+        }
     }
 }

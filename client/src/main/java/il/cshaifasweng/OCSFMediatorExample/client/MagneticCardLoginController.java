@@ -40,8 +40,8 @@ public class MagneticCardLoginController {
     private MenuButton choose_clinic_btn; // Value injected by FXMLLoader
 
     @FXML
-    void pc_appointment_action(ActionEvent event) {
-
+    void pc_appointment_action(ActionEvent event) throws IOException{
+        App.setRoot("primary");
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete

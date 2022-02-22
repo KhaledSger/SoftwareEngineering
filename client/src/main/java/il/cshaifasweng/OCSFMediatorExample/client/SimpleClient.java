@@ -30,6 +30,7 @@ public class SimpleClient extends AbstractClient {
     public static long next_nurse_appointment=0;
     public static long next_lab_appointment=0;
     public static long next_doc_appointment=0;
+    public static ArrayList<PatientEntity> doc_patients = new ArrayList<PatientEntity>(); //for doctor controller use
 
 
     private SimpleClient(String host, int port) {
