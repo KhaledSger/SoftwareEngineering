@@ -1,9 +1,12 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
 import il.cshaifasweng.OCSFMediatorExample.client.ocsf.AbstractClient;
+import il.cshaifasweng.OCSFMediatorExample.entities.AppointmentEntity;
 import il.cshaifasweng.OCSFMediatorExample.entities.DoctorEntity;
 import il.cshaifasweng.OCSFMediatorExample.entities.Warning;
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.List;
 
 public class DoctorClient  extends AbstractClient {
     private static DoctorClient client = null;
@@ -36,5 +39,10 @@ public class DoctorClient  extends AbstractClient {
     public String getName()
     {
         return (this.Doctor.getFirst_name() + " " + this.Doctor.getFamily_name());
+    }
+
+    public List<AppointmentEntity> getReservedAppointment()
+    {
+       return this.Doctor.getResevedAppointments();
     }
 }

@@ -83,4 +83,15 @@ public class DoctorEntity extends UserEntity {
         this.appointments = appointments;
     }
 
+    public List<AppointmentEntity> getResevedAppointments() {
+        List<AppointmentEntity> reserved_Apps = new ArrayList<AppointmentEntity>();
+        for(AppointmentEntity app : this.appointments)
+        {
+            if(app.isReserved() && app.getPatient() != null)
+            {
+                reserved_Apps.add(app);
+            }
+        }
+        return reserved_Apps;
+    }
 }

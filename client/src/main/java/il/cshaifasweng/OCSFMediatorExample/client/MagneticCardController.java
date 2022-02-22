@@ -6,6 +6,7 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
         import java.io.IOException;
+        import java.lang.reflect.Array;
         import java.net.URL;
         import java.time.LocalDateTime;
         import java.util.*;
@@ -103,6 +104,7 @@ public class MagneticCardController {
                 {
                     if (app.isReserved()) {
                         if (app.getPatient().getId() == chosen_patient.getId()) {
+                            SimpleClient.doc_patients.add(chosen_patient);
                             has_app_flag=1;
                             SimpleClient.next_doc_appointment += 1;
                             doctor_listView.setText("appointment for Doctor: " + doc_clinic.getDoctor().getFirst_name() + " " + doc_clinic.getDoctor().getFamily_name() + "\n Appointment Time: " + app.getDate().getHour() + ":" + app.getDate().getMinute() + "\n Appointment number: " + SimpleClient.next_doc_appointment);
