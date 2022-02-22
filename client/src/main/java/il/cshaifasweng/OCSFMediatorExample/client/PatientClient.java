@@ -4,6 +4,7 @@ import il.cshaifasweng.OCSFMediatorExample.client.ocsf.AbstractClient;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import org.greenrobot.eventbus.EventBus;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +42,12 @@ public class PatientClient  extends AbstractClient {
         else if(msg.getClass().equals(ArrayList.class))
         {
             this.Patient.setAppointments((ArrayList)msg);
-            System.out.println("new patient list= "+(ArrayList)msg);
+            System.out.println("patient app size= "+this.Patient.getAppointments().size());
+        }
+        else if(msg.toString().startsWith("patient vac:"))
+        {
+           String msgString= msg.toString().substring(12);
+           this.Patient.setVac_appointments((ArrayList<VaccineAppointmentEntity>) msg);
         }
     }
 

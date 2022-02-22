@@ -15,6 +15,7 @@ public class VaccineAppointmentEntity implements Serializable {
     private LocalDateTime actual_date; // time of treatment
     private boolean reserved = false; // the appointment is not reserved by default
     private int duration;
+    private String type;
 
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name = "Clinic_id")
@@ -24,17 +25,30 @@ public class VaccineAppointmentEntity implements Serializable {
     @JoinColumn(name = "Patient_id")
     private PatientEntity patient;
 
-    public VaccineAppointmentEntity(LocalDateTime date, int duration, ClinicEntity clinic) {
+    public VaccineAppointmentEntity(LocalDateTime date, int duration, ClinicEntity clinic,String type) {
         this.id = id;
         this.date = date;
         this.reserved = false;
         this.duration = duration;
         setClinic(clinic);
         this.patient = null;
+        this.type=type;
+    }
+
+    public VaccineAppointmentEntity() {
+
     }
 
     public int getId() {
         return id;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public LocalDateTime getDate() {

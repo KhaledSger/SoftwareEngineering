@@ -107,6 +107,7 @@ public class PatientController {
     @FXML
     void FamilyDocAction(ActionEvent event) throws InterruptedException
     {
+        vBox.getItems().clear();
         String specialization ;
         if(SimpleClient.patientClient.getAge() >= 18) // decide which doctor needs to treat the patient according to his age
             specialization = "Family Doctor";
@@ -165,12 +166,56 @@ public class PatientController {
                     }
                 });
             }
-
+        System.out.println(chosen_family_doctor.getFamily_name());
     }
 
     @FXML
     void Flu_vaccine_action(ActionEvent event) {
-        datePickerBtn.show();
+        List<VaccineAppointmentEntity> vaccine_apps = SimpleClient.getPatientClient().getClinic().getVac_appointments();
+        for(VaccineAppointmentEntity app : vaccine_apps )
+        {
+            if(app.getType().equals("flu") && !app.isReserved())
+            {
+                Button btn = new Button(app.getDate().toString());
+                vBox.getItems().add(btn);
+                btn.setOnAction(ActionEvent -> {
+                    try {
+                        SimpleClient.getClient().sendToServer(app);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                Platform.runLater(() -> {
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                            String.format("Please confirm your reservation!")
+                    );
+                    Optional<ButtonType> result = alert.showAndWait();
+                    if (result.get() == ButtonType.OK) {
+                        app.setReserved(true);
+                        app.setPatient(SimpleClient.patientClient.getPatient());
+                        Platform.runLater(() -> {
+                            Alert alert1 = new Alert(Alert.AlertType.INFORMATION,
+                                    String.format("choose info receiving method:"), new ButtonType("email"), new ButtonType("phone")
+                            );
+                            Optional<ButtonType> method_result = alert1.showAndWait();
+                            try {
+                                SimpleClient.getClient().sendToServer(app);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        });
+
+                    } else if (result.get() == ButtonType.CANCEL) {
+                        app.setReserved(false);
+                        try {
+                            SimpleClient.getClient().sendToServer(app);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                });
+            }
+        }
     }
 
     @FXML
@@ -197,7 +242,7 @@ public class PatientController {
 
     @FXML
     void covid_vaccine_action(ActionEvent event) {
-        datePickerBtn.show();
+
     }
 
     @FXML
@@ -207,25 +252,30 @@ public class PatientController {
 
     @FXML
     void vaccineAction(ActionEvent event) {
-        datePickerBtn.show();
+
     }
 
     @FXML
     void viewAppsAction(ActionEvent event) throws IOException { // view my appointments
         vBox.getItems().clear(); //clear the list view buttons
-        SimpleClient.getClient().sendToServer("#getPatientApps:"+SimpleClient.patientClient.getPatient().getPatientId());
-        System.out.println(SimpleClient.patientClient.getAppointments());
+        SimpleClient.getClient().sendToServer("#getPatientApps:" + SimpleClient.patientClient.getPatient().getPatientId());
+        System.out.println("patientclient.getappointments size= "+SimpleClient.patientClient.getAppointments().size());
         cancel_app_btn.setDisable(false); //enabling the cancel button
         for(AppointmentEntity app : SimpleClient.patientClient.getAppointments()) //adding the appointments to the list
         {
-            vBox.getItems().add(new Button(app.getDate().toString()));
+            vBox.getItems().add(new Button(app.getDate().toString()+"-"+ app.getDoctor().getFirst_name() + " " + app.getDoctor().getFamily_name()+"-"+app.getDoctor().getSpecialization() ));
+        }
+        for(VaccineAppointmentEntity app : SimpleClient.patientClient.getPatient().getVac_appointments()) //adding the appointments to the list
+        {
+            vBox.getItems().add(new Button(app.getDate().toString()+"-"+ app.getClinic().getName() ));
         }
         for(Button button : vBox.getItems())
         {
+           // button.wrapTextProperty().setValue(true);
             button.setOnAction(ActionEvent -> {
                 for(AppointmentEntity app : SimpleClient.patientClient.getAppointments())
                 {
-                    if(app.getDate().toString().equals(button.getText()))
+                    if((app.getDate().toString()+"-"+ app.getDoctor().getFirst_name() + " " + app.getDoctor().getFamily_name()+"-"+app.getDoctor().getSpecialization()).equals(button.getText()))
                     {
                         chosen_appointment=app;
                     }
@@ -240,6 +290,14 @@ public class PatientController {
             {
                 SimpleClient.getClient().sendToServer(chosen_appointment); //sending to server an appointment with isReserved=true and patient != null
             }
+//            for(Button button : vBox.getItems())
+//            {
+//                if((chosen_appointment.getDate().toString()+"-"+ chosen_appointment.getDoctor().getFirst_name() + " " + chosen_appointment.getDoctor().getFamily_name()+"-"+chosen_appointment.getDoctor().getSpecialization()).equals(button.getText()))
+//                {
+//                    // delete the button because we have canceled this appointment
+//                    vBox.getItems().remove(button);
+//                }
+//            }
     }
 
 
@@ -263,12 +321,23 @@ public class PatientController {
         SimpleClient.getClient().setCurrentUser(0);
         cancel_app_btn.setDisable(true);
         welcome_text.setText(SimpleClient.patientClient.getName());  // add patient's name here
-        for (ClinicEntity clinic : SimpleClient.getClinicList()) { // adding the specialization of the doctors
+        for (ClinicEntity clinic : SimpleClient.getClinicList()) {
+            inner:// adding the specialization of the doctors
             for (DoctorClinicEntity doc_clinic : clinic.getDoctorClinicEntities()) {
-                if ((!SpecializedDoctorMenuBtn.getItems().contains(doc_clinic.getDoctor().getSpecialization())) && !doc_clinic.getDoctor().getSpecialization().equals("Family Doctor") && !doc_clinic.getDoctor().getSpecialization().equals("Children Doctor"))
-                {
-                    SpecializedDoctorMenuBtn.getItems().add(new MenuItem(doc_clinic.getDoctor().getSpecialization()));
+                for(MenuItem mi : SpecializedDoctorMenuBtn.getItems()){
+                    if(mi.getText().equals(doc_clinic.getDoctor().getSpecialization())||
+                            doc_clinic.getDoctor().getSpecialization().equals("Family Doctor") ||
+                            doc_clinic.getDoctor().getSpecialization().equals("Children Doctor")){
+                        System.out.println("MI " + mi.getText());
+                        continue  inner;
+                    }
                 }
+          /*      if ((!SpecializedDoctorMenuBtn.getItems().contains(doc_clinic.getDoctor().getSpecialization())) && !doc_clinic.getDoctor().getSpecialization().equals("Family Doctor") && !doc_clinic.getDoctor().getSpecialization().equals("Children Doctor"))
+                {
+                    System.out.println(" Specilaztion"+SpecializedDoctorMenuBtn.getItems().contains(doc_clinic.getDoctor().getSpecialization()));
+                    SpecializedDoctorMenuBtn.getItems().add(new MenuItem(doc_clinic.getDoctor().getSpecialization()));
+                }*/
+                SpecializedDoctorMenuBtn.getItems().add(new MenuItem(doc_clinic.getDoctor().getSpecialization()));
 
             }
         }
@@ -277,38 +346,55 @@ public class PatientController {
             item.setOnAction(actionEvent -> {
                         vBox.getItems().clear();
                         doc_clinic_list = new ArrayList<DoctorClinicEntity>();
-                        //datePickerBtn.show();
                         System.out.println(" here print list doctor entity !!");
-                        //System.out.println(item.getText());
                         specialation_of_doctor = item.getText();
                         //// find doctor name and doctor clinic by specialization
                         for (ClinicEntity clinic : SimpleClient.getClinicList()) {
                             for (DoctorClinicEntity doc_clinic : clinic.getDoctorClinicEntities()) {
-                                if (doc_clinic.getDoctor().getSpecialization() == specialation_of_doctor) {
-                                    doc_clinic_list.add(doc_clinic);
-
+                                if (doc_clinic.getDoctor().getSpecialization().equals(specialation_of_doctor)) {
+                                    if (!(doc_clinic_list.contains(doc_clinic))) {
+                                        doc_clinic_list.add(doc_clinic);
+                                    }
                                 }
-
                             }
-                            appointments.sort(Comparator.comparing(o -> o.getDate())); // sorting the appointment list by date
-                            for (AppointmentEntity app : appointments) {
+                        }
+                try {
+                    SimpleClient.getClient().sendToServer("#getPatientApps:" + SimpleClient.patientClient.getPatient().getPatientId());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                appointments.sort(Comparator.comparing(o -> o.getDate())); // sorting the appointment list by date TODO update the list to have the old appointments
+                System.out.println();
+                          /*  for (AppointmentEntity app : appointments) {
                                 if (app.getDoctor().getSpecialization().equals(specialation_of_doctor)) {
-                                    vBox.getItems().add(new Button(app.getDoctor().getFirst_name() + " " + app.getDoctor().getFamily_name() + "-" + app.getClinic().getName()));
+                                    if(!(vBox.getItems().contains((app.getDoctor().getFirst_name() + " " + app.getDoctor().getFamily_name() + "-" + app.getClinic().getName()).toString()))) {
+                                        vBox.getItems().add(new Button((app.getDoctor().getFirst_name() + " " + app.getDoctor().getFamily_name() + "-" + app.getClinic().getName()).toString()));
+                                    }
                                 }
-
-                            }
-                            for (DoctorClinicEntity doc_clinic_entity : doc_clinic_list) {
+                            }*/
+                            /*List<DoctorPatientEntity> docpats = SimpleClient.getPatientClient().getDoctorPatientEntities();
+                            for(int i = docpats.size()-1; i>0;i--){
+                                DoctorEntity doc = docpats.get(i).getDoctor();
+                                if(doc.getSpecialization().equals(specialation_of_doctor)){
+                                    if(!(vBox.getItems().contains((doc.getFirst_name() + " " + doc.getFamily_name() + "-" + doc.getDoctorClinicEntities().get(0).getClinic().getName())))){
+                                        vBox.getItems().add(new Button(doc.getFirst_name() + " " + doc.getFamily_name() + "-" + doc.getDoctorClinicEntities().get(0).getClinic().getName()));
+                                    }
+                                }
+                            }*/
+                            System.out.println("doc_clinic size= "+doc_clinic_list.size());
+                            for (DoctorClinicEntity doc_clinic_entity : doc_clinic_list) { // adding the available specialized doctors and clinics to the list
                                 if (doc_clinic_entity.getDoctor().getSpecialization().equals(specialation_of_doctor)) {
-                                    if (!(vBox.getItems().contains(doc_clinic_entity.getDoctor().getFirst_name() + " " + doc_clinic_entity.getDoctor().getFamily_name() + "-" + doc_clinic_entity.getClinic().getName()))) {
-                                        vBox.getItems().add(new Button(doc_clinic_entity.getDoctor().getFirst_name() + " " + doc_clinic_entity.getDoctor().getFamily_name() + "-" + doc_clinic_entity.getClinic().getName()));
+                                    if (!(vBox.getItems().contains((doc_clinic_entity.getDoctor().getFirst_name() + " " + doc_clinic_entity.getDoctor().getFamily_name() + "-" + doc_clinic_entity.getClinic().getName()).toString()))) {
+                                        vBox.getItems().add(new Button((doc_clinic_entity.getDoctor().getFirst_name() + " " + doc_clinic_entity.getDoctor().getFamily_name() + "-" + doc_clinic_entity.getClinic().getName()).toString()));
                                     }
                                 }
                             }
 
-                            for (Button bt : vBox.getItems())//setting action events for each button in vbox
+                            for (Button bt : vBox.getItems())//setting action events for each button in vbox (buttons are:  doctor name-clinic name
                             {
                                 bt.setOnAction(actionEvent1 ->
                                         {
+                                            String clinic_name = "";
                                             chosen_doctor_name = bt.getText();
                                             chosen_doctor_array = chosen_doctor_name.split("-");
                                             for (ClinicEntity clinic1 : SimpleClient.getClinicList()) {
@@ -317,19 +403,27 @@ public class PatientController {
                                                         chosen_doctor = doc_clinic1.getDoctor();
                                                         vBox.getItems().clear(); //deleting the list items so we can add the appointments instead
                                                         //datePickerBtn.show();  // need to change the free appointments with datePickerBtn
-
-
-                                                        for (AppointmentEntity app : chosen_doctor.getAppointments()) {
-                                                            if (app.isReserved() == false /*&& app.getClinic().getName().equals(chosen_doctor_array[1])*/) {
-                                                                vBox.getItems().add(new Button(app.getDate().toString()));
-                                                                vBox.getItems().sort(Comparator.comparing(o -> o.getText()));
-                                                            }
+                                                        System.out.println("chosen array [0]= "+chosen_doctor_array[0]);
+                                                        System.out.println("chosen array [1]= "+chosen_doctor_array[1]);
+                                                        if(doc_clinic1.getClinic().getName().equals("Tel-Aviv clinic"))
+                                                        {
+                                                            clinic_name="Tel-Aviv clinic";
                                                         }
+                                                        else {
+                                                            clinic_name = chosen_doctor_array[1];
+                                                        }
+                                                        break;
                                                     }
-
                                                 }
                                             }
-
+                                            System.out.println("before our for: "+chosen_doctor.getAppointments().size());
+                                            for (AppointmentEntity app : chosen_doctor.getAppointments()) {
+                                                if ((!app.isReserved())  && app.getClinic().getName().equals(clinic_name) &&  (!(vBox.getItems().contains(app.getDate().toString())))) {
+                                                    vBox.getItems().add(new Button(app.getDate().toString()));
+                                                    //System.out.println(app.getDate().toString());
+                                                }
+                                            }
+                                           // vBox.getItems().sort(Comparator.comparing(o -> o.getText()));
                                             for (Button button : vBox.getItems()) {
                                                 button.setOnAction(ActionEvent ->
                                                 {
@@ -402,7 +496,7 @@ public class PatientController {
                                 );
 
                             }
-                        }
+
                     }
             );
         }
