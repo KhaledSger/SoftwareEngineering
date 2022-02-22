@@ -91,6 +91,7 @@ public class SimpleServer extends AbstractServer {
                     " Saturday: \nFamily Doctor: 3,Children Doctor: 8, vaccine treatment: 9, covid test: 2, lab test: 1, nurse appointment: 8"
             );
             clinic4.setReport2("Family Doctor: 1 \nChildren Doctor: 1 \nVaccine treatment: 1 \nCovid Test: 1");
+            clinic4.setReport3("Sunday: 1 \nMonday: 3 \nTuesday: 2 \nWednesday: 4 \nThursday: 3 \nFriday: 6 \nSaturday: 1");
             session.save(clinic4);
 
 
