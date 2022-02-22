@@ -273,12 +273,24 @@ public class PatientController {
         SimpleClient.getClient().setCurrentUser(0);
         cancel_app_btn.setDisable(true);
         welcome_text.setText(SimpleClient.patientClient.getName());  // add patient's name here
-        for (ClinicEntity clinic : SimpleClient.getClinicList()) { // adding the specialization of the doctors
+        for (ClinicEntity clinic : SimpleClient.getClinicList()) {
+            inner:// adding the specialization of the doctors
             for (DoctorClinicEntity doc_clinic : clinic.getDoctorClinicEntities()) {
-                if ((!SpecializedDoctorMenuBtn.getItems().contains(doc_clinic.getDoctor().getSpecialization())) && !doc_clinic.getDoctor().getSpecialization().equals("Family Doctor") && !doc_clinic.getDoctor().getSpecialization().equals("Children Doctor"))
-                {
-                    SpecializedDoctorMenuBtn.getItems().add(new MenuItem(doc_clinic.getDoctor().getSpecialization()));
+                for(MenuItem mi : SpecializedDoctorMenuBtn.getItems()){
+                    if(mi.getText().equals(doc_clinic.getDoctor().getSpecialization())||
+                            doc_clinic.getDoctor().getSpecialization().equals("Family Doctor") ||
+                            doc_clinic.getDoctor().getSpecialization().equals("Children Doctor")){
+                        System.out.println("MI " + mi.getText());
+                        continue  inner;
+                    }
                 }
+          /*      if ((!SpecializedDoctorMenuBtn.getItems().contains(doc_clinic.getDoctor().getSpecialization())) && !doc_clinic.getDoctor().getSpecialization().equals("Family Doctor") && !doc_clinic.getDoctor().getSpecialization().equals("Children Doctor"))
+                {
+                    System.out.println(" Specilaztion"+SpecializedDoctorMenuBtn.getItems().contains(doc_clinic.getDoctor().getSpecialization()));
+                    SpecializedDoctorMenuBtn.getItems().add(new MenuItem(doc_clinic.getDoctor().getSpecialization()));
+                }*/
+                SpecializedDoctorMenuBtn.getItems().add(new MenuItem(doc_clinic.getDoctor().getSpecialization()));
+
             }
         }
         for (MenuItem item : SpecializedDoctorMenuBtn.getItems())//setting action events for each item in specialized doctor menu
@@ -305,13 +317,22 @@ public class PatientController {
                 }
                 appointments.sort(Comparator.comparing(o -> o.getDate())); // sorting the appointment list by date TODO update the list to have the old appointments
                 System.out.println();
-                            for (AppointmentEntity app : appointments) {
+                          /*  for (AppointmentEntity app : appointments) {
                                 if (app.getDoctor().getSpecialization().equals(specialation_of_doctor)) {
                                     if(!(vBox.getItems().contains((app.getDoctor().getFirst_name() + " " + app.getDoctor().getFamily_name() + "-" + app.getClinic().getName()).toString()))) {
                                         vBox.getItems().add(new Button((app.getDoctor().getFirst_name() + " " + app.getDoctor().getFamily_name() + "-" + app.getClinic().getName()).toString()));
                                     }
                                 }
-                            }
+                            }*/
+                            /*List<DoctorPatientEntity> docpats = SimpleClient.getPatientClient().getDoctorPatientEntities();
+                            for(int i = docpats.size()-1; i>0;i--){
+                                DoctorEntity doc = docpats.get(i).getDoctor();
+                                if(doc.getSpecialization().equals(specialation_of_doctor)){
+                                    if(!(vBox.getItems().contains((doc.getFirst_name() + " " + doc.getFamily_name() + "-" + doc.getDoctorClinicEntities().get(0).getClinic().getName())))){
+                                        vBox.getItems().add(new Button(doc.getFirst_name() + " " + doc.getFamily_name() + "-" + doc.getDoctorClinicEntities().get(0).getClinic().getName()));
+                                    }
+                                }
+                            }*/
                             System.out.println("doc_clinic size= "+doc_clinic_list.size());
                             for (DoctorClinicEntity doc_clinic_entity : doc_clinic_list) { // adding the available specialized doctors and clinics to the list
                                 if (doc_clinic_entity.getDoctor().getSpecialization().equals(specialation_of_doctor)) {
@@ -335,13 +356,13 @@ public class PatientController {
                                                         vBox.getItems().clear(); //deleting the list items so we can add the appointments instead
                                                         //datePickerBtn.show();  // need to change the free appointments with datePickerBtn
                                                         System.out.println("chosen array [0]= "+chosen_doctor_array[0]);
-                                                        System.out.println("chosen array [1]= "+chosen_doctor_array[1]+chosen_doctor_array[2]);
+                                                        System.out.println("chosen array [1]= "+chosen_doctor_array[1]);
                                                         if(doc_clinic1.getClinic().getName().equals("Tel-Aviv clinic"))
                                                         {
                                                             clinic_name="Tel-Aviv clinic";
                                                         }
                                                         else {
-                                                            clinic_name = chosen_doctor_array[1]+chosen_doctor_array[2];
+                                                            clinic_name = chosen_doctor_array[1];
                                                         }
                                                         break;
                                                     }

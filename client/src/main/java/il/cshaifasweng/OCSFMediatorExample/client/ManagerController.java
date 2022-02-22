@@ -260,16 +260,15 @@ public class ManagerController {
         for(MenuItem item : choose_doctor_menu.getItems())
         {
             item.setOnAction(actionEvent -> {
-                for(ClinicEntity clinic : SimpleClient.getClinicList())
-                {
-                    for(DoctorClinicEntity doc_clinic : clinic.getDoctorClinicEntities())
+                    List<DoctorClinicEntity> doc_clinics = SimpleClient.getManagerClient().getClinic().getDoctorClinicEntities();
+                    for(DoctorClinicEntity doc_clinic :doc_clinics)
                     {
                         if((doc_clinic.getDoctor().getFirst_name() +" "+ doc_clinic.getDoctor().getFamily_name()).equals(item.getText()))
                             doctor_current_hours.setText(doc_clinic.getDay_hours());
                             choosen_doctor_clinic = doc_clinic;
                             choose_doctor_menu.setText(doc_clinic.getDoctor().getFirst_name()+" "+ doc_clinic.getDoctor().getFamily_name());
                     }
-                }
+
             });
         }
     }
