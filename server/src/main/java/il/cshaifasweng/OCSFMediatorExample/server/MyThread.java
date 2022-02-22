@@ -41,6 +41,16 @@ public class MyThread extends Thread {
 
                 }
             }
+//            if(LocalDateTime.now().getHour()==23 && LocalDateTime.now().getMinute()==55)
+//            {
+//                SimpleServer.UpdateReports();
+//                LocalDate localDate=LocalDate.of(LocalDate.now().getYear(),LocalDate.now().getMonth(),LocalDate.now().getDayOfMonth());
+//                int day_of_week= getDayNumberNew(localDate);
+//                if(day_of_week==6)
+//                {
+//                    SimpleServer.UpdateWeeklyReports();
+//                }
+//            }
             try {
                 sleep(300000); //5 minutes
              //   sleep(30000); // 30 seconds
@@ -48,5 +58,10 @@ public class MyThread extends Thread {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static int getDayNumberNew(LocalDate date) {
+        DayOfWeek day = date.getDayOfWeek();
+        return (day.getValue());
     }
 }

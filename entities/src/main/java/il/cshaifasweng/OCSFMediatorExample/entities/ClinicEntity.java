@@ -1,5 +1,7 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
 
+import com.sun.istack.NotNull;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -20,6 +22,13 @@ public class ClinicEntity implements Serializable {
     private String close;
     private String[] services;
 
+    private String report1;
+    private long[] reports2;
+    private String report2;
+
+    @Column(length = 65555)
+    @NotNull
+    private long[][] reports;
 
     @OneToMany (mappedBy = "clinic")
     private List<PatientEntity> Patients;
@@ -49,14 +58,16 @@ public class ClinicEntity implements Serializable {
         this.open = open;
         this.close = close;
         this.services = services;
-
+        this.reports = new long[7][6]; // rows for days and columns for services
         this.Patients=new ArrayList<PatientEntity>();
         this.nurseEntities=new ArrayList<NurseEntity>();
         this.doctorClinicEntities=new ArrayList<DoctorClinicEntity>();
         this.labWorkers = new ArrayList<LabWorkerEntity>();
         this.appointments=new ArrayList<AppointmentEntity>();
         this.vac_appointments = new ArrayList<VaccineAppointmentEntity>();
-
+        this.report1="";
+        this.reports2 = new long[4];
+        this.report2 = "";
     }
 
 
@@ -72,11 +83,43 @@ public class ClinicEntity implements Serializable {
         this.labWorkers = CE.labWorkers;
     }
 
+    public long[] getReports2() {
+        return reports2;
+    }
+
+    public void setReports2(long[] reports2) {
+        this.reports2 = reports2;
+    }
+
+    public String getReport2() {
+        return report2;
+    }
+
+    public void setReport2(String report2) {
+        this.report2 = report2;
+    }
+
     public ClinicEntity() {
     }
 
     public ClinicEntity(String name) {
         this.name = name;
+    }
+
+    public long[][] getReports() {
+        return reports;
+    }
+
+    public String getReport1() {
+        return report1;
+    }
+
+    public void setReport1(String report) {
+        this.report1 = report;
+    }
+
+    public void setReports(long[][] reports) {
+        this.reports = reports;
     }
 
     public String getName() {

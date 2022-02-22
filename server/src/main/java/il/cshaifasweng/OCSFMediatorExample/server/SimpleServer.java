@@ -3,6 +3,7 @@ package il.cshaifasweng.OCSFMediatorExample.server;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.AbstractServer;
 import il.cshaifasweng.OCSFMediatorExample.server.ocsf.ConnectionToClient;
+import net.bytebuddy.asm.Advice;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -12,6 +13,8 @@ import org.hibernate.service.ServiceRegistry;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.net.InetAddress;
 import java.time.*;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -27,6 +30,8 @@ public class SimpleServer extends AbstractServer {
     private static List<ManagerEntity> managers;
     public static ArrayList<AppointmentEntity> Appointments=new ArrayList<AppointmentEntity>();
     public static ArrayList<VaccineAppointmentEntity> vaccine_Appointments=new ArrayList<VaccineAppointmentEntity>();
+    private static ArrayList<AppointmentEntity> doc_old_apps = new ArrayList<AppointmentEntity>();
+    private static ArrayList<VaccineAppointmentEntity> vaccine_old_apps = new ArrayList<VaccineAppointmentEntity>();
 
 
     public void initSesssion() {
@@ -103,6 +108,7 @@ public class SimpleServer extends AbstractServer {
 
     public SimpleServer(int port) {
         super(port);
+
         initSesssion();
         MyThread myThread = new MyThread();
         myThread.start();
@@ -224,6 +230,37 @@ public class SimpleServer extends AbstractServer {
                     break;
                 }
 
+            }
+        }
+        else if(msgString.startsWith("#increase nurse app:"))
+        {
+            LocalDate localDate=LocalDate.of(LocalDate.now().getYear(),LocalDate.now().getMonth(),LocalDate.now().getDayOfMonth());
+            int day_of_week= getDayNumberNew(localDate);
+            if(day_of_week==7)
+                day_of_week=0;
+            msgString = msgString.substring(20);
+            for(ClinicEntity clinic : Clinics)
+            {
+                if(clinic.getId() == Integer.parseInt(msgString))
+                {
+                    clinic.getReports()[day_of_week][5]+=1;
+                    break;
+                }
+            }
+        }
+        else if(msgString.startsWith("#increase lab app:"))
+        {
+            LocalDate localDate=LocalDate.of(LocalDate.now().getYear(),LocalDate.now().getMonth(),LocalDate.now().getDayOfMonth());
+            int day_of_week= getDayNumberNew(localDate);
+            if(day_of_week==7)
+                day_of_week=0;
+            msgString = msgString.substring(18);
+            for(ClinicEntity clinic : Clinics)
+            {
+                if(clinic.getId() == Integer.parseInt(msgString))
+                {
+                    clinic.getReports()[day_of_week][4]+=1;
+                }
             }
         }
         else if (msg.getClass().equals(ClinicEntity.class)) {
@@ -348,7 +385,8 @@ public class SimpleServer extends AbstractServer {
             for (AppointmentEntity app:doc_appointments) {
 
                 if(app.getDate().isBefore(now)) {
-                    doc_appointments.remove(app);
+                    doc_old_apps.add(app); //adding the appointment to the old apps array
+                    Appointments.remove(app); //removing the appointment from the array of the current apps
                 }
             }
             LocalDateTime latest_appointment;
@@ -428,6 +466,7 @@ public class SimpleServer extends AbstractServer {
             List<VaccineAppointmentEntity> vaccine_appointments = clinic.getVac_appointments();
             for (VaccineAppointmentEntity app:vaccine_appointments) {
                 if(app.getDate().isBefore(now)) {
+                    vaccine_old_apps.add(app);
                     vaccine_appointments.remove(app);
                 }
             }
@@ -469,10 +508,13 @@ public class SimpleServer extends AbstractServer {
                                 LocalDateTime appointment_time = LocalDateTime.of(year, i % 12, j, hour / 60, hour % 60);
                                 if (!appointment_time.isBefore(now)) {
 
-                                    VaccineAppointmentEntity app = new VaccineAppointmentEntity(appointment_time,10,clinic);
-                                    clinic.getVac_appointments().add(app);
+                                    VaccineAppointmentEntity covid_app = new VaccineAppointmentEntity(appointment_time,10,clinic,"covid");
+                                    VaccineAppointmentEntity flu_app = new VaccineAppointmentEntity(appointment_time,10,clinic,"flu");
+//                                    clinic.getVac_appointments().add(covid_app);
+//                                    clinic.getVac_appointments().add(flu_app);
                                     session.getTransaction().begin();
-                                    session.saveOrUpdate(app);
+                                    session.saveOrUpdate(covid_app);
+                                    session.saveOrUpdate(flu_app);
                                     session.flush();
                                     session.getTransaction().commit();
 
@@ -482,6 +524,88 @@ public class SimpleServer extends AbstractServer {
 //                    }
                 }
             }
+        }
+    }
+
+    public static void UpdateReports()
+    {
+        int[] doc_reports = new int[Clinics.size()*2];
+        for(AppointmentEntity app : doc_old_apps)
+        {
+            if (app.getDate().toLocalDate().equals(LocalDate.now()))
+            {
+              if (app.getDoctor().getSpecialization().equals("Family Doctor"))
+              {
+                  if(!app.getActual_date().equals(null))
+                  {
+                      doc_reports[app.getClinic().getId() * 2 - 2] += 1;
+                  }
+                  else {
+                      app.getClinic().getReports2()[0]+=1;
+                  }
+              }
+              else if (app.getDoctor().getSpecialization().equals("Children Doctor"))
+              {
+                  if(!app.getActual_date().equals(null))
+                  {
+                      doc_reports[app.getClinic().getId() * 2 - 1 ] += 1;
+                  }
+                  else {
+                      app.getClinic().getReports2()[1]+=1;
+                  }
+              }
+           }
+        }
+        int[] vac_reports = new int[Clinics.size()];
+        for(VaccineAppointmentEntity app : vaccine_old_apps)
+        {
+            if (app.getDate().toLocalDate().equals(LocalDate.now()))
+            {
+                if (!app.getActual_date().equals(null))
+                {
+                    vac_reports[app.getClinic().getId()-1]+=1;
+                }
+                else{
+                    app.getClinic().getReports2()[2]+=1;
+                }
+            }
+        }
+        LocalDate localDate=LocalDate.of(LocalDate.now().getYear(),LocalDate.now().getMonth(),LocalDate.now().getDayOfMonth());
+        int day_of_week= getDayNumberNew(localDate);
+        if(day_of_week==7)
+            day_of_week=0;
+        for(ClinicEntity clinic : Clinics)
+        {
+            clinic.getReports()[day_of_week][0] = doc_reports[clinic.getId()*2-2]; // family doctor
+            clinic.getReports()[day_of_week][1] = doc_reports[clinic.getId()*2-1]; // children doctor
+            clinic.getReports()[day_of_week][2] = vac_reports[clinic.getId()-1]; // vaccine reports
+        }
+        //TODO add covid test reports
+    }
+
+    public static void UpdateWeeklyReports()
+    {
+       // session.getTransaction().begin();
+        String[] arr = {"Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
+        for(ClinicEntity clinic : Clinics)
+        {
+            String report="";
+            for(int i=0;i<7;i++)
+            {
+                report += arr[i] + ":\n" + "Family Doctor: " + clinic.getReports()[i][0] + ", Children Doctor: " + clinic.getReports()[i][1]
+                        + ", vaccine treatment: " + clinic.getReports()[i][2] +", covid test: " + clinic.getReports()[i][3] + ", lab test: "
+                        + clinic.getReports()[i][4] +", nurse appointment: " + clinic.getReports()[i][5] +"\n";
+            }
+
+            for (int i = 0; i < 4 ;i++){
+
+                clinic.getReports2()[i] = 0;
+            }
+            session.beginTransaction();
+            clinic.setReport1(report);
+            session.saveOrUpdate(clinic);
+            session.flush();
+            session.getTransaction().commit();
         }
     }
 

@@ -75,9 +75,20 @@ public class MagneticCardController {
                 Optional<ButtonType> lab_nurse =  alert.showAndWait();
                 System.out.println("lab nurse= "+lab_nurse.get().getText());
                 if(lab_nurse.get().getText() == "Nurse")
-                    Reserve_nurse_app();
-                else
-                    Reserve_lab_app();
+                {
+                    try {
+                        Reserve_nurse_app();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else {
+                    try {
+                        Reserve_lab_app();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             });
 
         }
@@ -143,13 +154,14 @@ public class MagneticCardController {
 
     }
 
-    private void Reserve_nurse_app()
+    private void Reserve_nurse_app() throws IOException
     {
         SimpleClient.next_nurse_appointment+=1;
         SimpleClient.nurse_patients.add(chosen_patient.getId());
         nurse_listView.setText("appointment for: nurse\n appointment number: "+ SimpleClient.next_nurse_appointment);
+        SimpleClient.getClient().sendToServer("#increase nurse app:"+chosen_clinic.getId());
     }
-    private void Reserve_lab_app()
+    private void Reserve_lab_app() throws IOException
     {
         LocalDateTime now=LocalDateTime.now();
         if(now.getHour() > 7 && now.getHour() < 10 )
@@ -157,6 +169,7 @@ public class MagneticCardController {
             SimpleClient.next_lab_appointment+=1;
             SimpleClient.nurse_patients.add(chosen_patient.getId());
             nurse_listView.setText("appointment for: lab\n appointment number: "+ SimpleClient.next_lab_appointment);
+            SimpleClient.getClient().sendToServer("#increase lab app:"+chosen_clinic.getId());
         }
         else {
             Platform.runLater(() -> {
