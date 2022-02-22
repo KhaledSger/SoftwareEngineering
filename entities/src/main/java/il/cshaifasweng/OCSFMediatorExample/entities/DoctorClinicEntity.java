@@ -30,9 +30,12 @@ public class DoctorClinicEntity implements Serializable {
 
 
     public DoctorClinicEntity(DoctorEntity doctor, ClinicEntity clinic, ArrayList<String> day_hour) {
-        setDay_hours(day_hour);
-        setDoctor(doctor);
-        setClinic(clinic);
+          setDoctor(doctor); // TODO change tp set
+          setClinic(clinic); // TODO change tp set
+          setDay_hours(day_hour);
+        //  doctor.getDoctorClinicEntities().add(this);
+        //  clinic.getDoctorClinicEntities().add(this);
+
     }
     public DoctorClinicEntity() {
     }

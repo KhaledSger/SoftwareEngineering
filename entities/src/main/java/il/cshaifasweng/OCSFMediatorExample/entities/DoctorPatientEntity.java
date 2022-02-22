@@ -37,6 +37,7 @@ public class DoctorPatientEntity implements Serializable {
     public void setDoctor(DoctorEntity doctor) {
         this.doctor = doctor;
         doctor.getDoctorPatientEntities().add(this);
+
     }
 
     public PatientEntity getPatient() {
@@ -45,7 +46,7 @@ public class DoctorPatientEntity implements Serializable {
 
     public void setPatient(PatientEntity patient) {
         this.patient = patient;
-        patient.getDoctorPatientEntities().add(this);
+        this.patient.getDoctorPatientEntities().add(this);
     }
 
 

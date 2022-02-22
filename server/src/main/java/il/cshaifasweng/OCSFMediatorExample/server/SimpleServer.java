@@ -87,8 +87,16 @@ public class SimpleServer extends AbstractServer {
             ManagerEntity manger = new ManagerEntity(doc1.getId(), doc1.getFirst_name(), doc1.getFamily_name(),
                     doc1.getMail(),"111",clinic3);
             session.save(manger);
-            DoctorPatientEntity docpat=new DoctorPatientEntity(doc1,pat1);
-            session.save(docpat);
+             ManagerEntity manger1 = new ManagerEntity(doc2.getId(), doc2.getFirst_name(), doc2.getFamily_name(),
+                     doc2.getMail(),"111",clinic1);
+              session.save(manger1);
+               ManagerEntity manger2 = new ManagerEntity(doc3.getId(), doc3.getFirst_name(), doc3.getFamily_name(),
+                       doc3.getMail(),"111",clinic2);
+            session.save(manger2);
+             ManagerEntity manger3 = new ManagerEntity(doc4.getId(), doc4.getFirst_name(), doc4.getFamily_name(),doc4.getMail(),"111",clinic4);
+             session.save(manger3);
+              DoctorPatientEntity docpat = new DoctorPatientEntity(doc1,pat1);
+              session.save(docpat);
             session.flush();
             session.getTransaction().commit();
             UpdateAppointments();
@@ -385,7 +393,9 @@ public class SimpleServer extends AbstractServer {
             for (AppointmentEntity app:doc_appointments) {
 
                 if(app.getDate().isBefore(now)) {
-                    doc_old_apps.add(app); //adding the appointment to the old apps array
+                    if(app.isReserved()) {
+                        doc_old_apps.add(app);
+                    }//adding the appointment to the old apps array
                     Appointments.remove(app); //removing the appointment from the array of the current apps
                 }
             }
@@ -466,7 +476,9 @@ public class SimpleServer extends AbstractServer {
             List<VaccineAppointmentEntity> vaccine_appointments = clinic.getVac_appointments();
             for (VaccineAppointmentEntity app:vaccine_appointments) {
                 if(app.getDate().isBefore(now)) {
-                    vaccine_old_apps.add(app);
+                    if(app.isReserved()) {
+                        vaccine_old_apps.add(app);
+                    }
                     vaccine_appointments.remove(app);
                 }
             }
@@ -474,9 +486,10 @@ public class SimpleServer extends AbstractServer {
             if(vaccine_appointments.size()>0)
             {
                 //latest_appointment=doc_appointments.stream().toList().get(doc_appointments.size()-1).getDate();
-                ArrayList<VaccineAppointmentEntity> allvacapps = new ArrayList<VaccineAppointmentEntity>();
-                allvacapps.addAll(vaccine_appointments);
-                latest_appointment=allvacapps.get(vaccine_appointments.size()-1).getDate();
+              /*  ArrayList<VaccineAppointmentEntity> allvacapps = new ArrayList<VaccineAppointmentEntity>();
+                allvacapps.addAll(vaccine_appointments);*/
+                vaccine_appointments.sort(Comparator.comparing(o -> o.getDate()));
+                latest_appointment=vaccine_appointments.get(vaccine_appointments.size()-1).getDate();
             }else{
                 latest_appointment = now;
             }
@@ -525,6 +538,7 @@ public class SimpleServer extends AbstractServer {
                 }
             }
         }
+        System.out.println("Vaccine Update Done");
     }
 
     public static void UpdateReports()
