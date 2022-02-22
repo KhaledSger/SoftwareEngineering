@@ -40,6 +40,8 @@ public class SimpleServer extends AbstractServer {
             session.getTransaction().begin();
             String[] service = new String[]{"aaa", "bbb", "ccc"};
             ClinicEntity clinic1 = new ClinicEntity("Haifa clinic", "10:00", "20:00", service, new ArrayList<PatientEntity>());
+
+
             session.save(clinic1);
             service = new String[]{"bbb", "ddd", "ccc"};
             ClinicEntity clinic2 = new ClinicEntity("Acre clinic", "12:00", "18:00", service, new ArrayList<PatientEntity>());
@@ -582,6 +584,7 @@ public class SimpleServer extends AbstractServer {
     public static void UpdateReports()
     {
         int[] doc_reports = new int[Clinics.size()*2];
+        int[] avg_wait_report = new int[Clinics.size()*2];
         for(AppointmentEntity app : doc_old_apps)
         {
             if (app.getDate().toLocalDate().equals(LocalDate.now()))
@@ -591,6 +594,9 @@ public class SimpleServer extends AbstractServer {
                   if(!app.getActual_date().equals(null))
                   {
                       doc_reports[app.getClinic().getId() * 2 - 2] += 1;
+                      Duration d = Duration.between(app.getDate(),app.getActual_date());
+                      avg_wait_report[app.getClinic().getId()*2-2]+= d.toMinutes();
+                      avg_wait_report[app.getClinic().getId()*2-1]+=1;
                   }
                   else {
                       app.getClinic().getReports2()[0]+=1;
@@ -601,6 +607,9 @@ public class SimpleServer extends AbstractServer {
                   if(!app.getActual_date().equals(null))
                   {
                       doc_reports[app.getClinic().getId() * 2 - 1 ] += 1;
+                      Duration d = Duration.between(app.getDate(),app.getActual_date());
+                      avg_wait_report[app.getClinic().getId()*2-2]+= d.toMinutes();
+                      avg_wait_report[app.getClinic().getId()*2-1]+=1;
                   }
                   else {
                       app.getClinic().getReports2()[1]+=1;
@@ -631,7 +640,11 @@ public class SimpleServer extends AbstractServer {
             clinic.getReports()[day_of_week][0] = doc_reports[clinic.getId()*2-2]; // family doctor
             clinic.getReports()[day_of_week][1] = doc_reports[clinic.getId()*2-1]; // children doctor
             clinic.getReports()[day_of_week][2] = vac_reports[clinic.getId()-1]; // vaccine reports
+            if(avg_wait_report[clinic.getId()*2-1]>0){
+                clinic.getReports3()[day_of_week]=avg_wait_report[clinic.getId()*2-2]/avg_wait_report[clinic.getId()*2-1];
+            }
         }
+
         //TODO add covid test reports
     }
 
@@ -642,19 +655,30 @@ public class SimpleServer extends AbstractServer {
         for(ClinicEntity clinic : Clinics)
         {
             String report="";
+            String report3 ="";
             for(int i=0;i<7;i++)
             {
                 report += arr[i] + ":\n" + "Family Doctor: " + clinic.getReports()[i][0] + ", Children Doctor: " + clinic.getReports()[i][1]
                         + ", vaccine treatment: " + clinic.getReports()[i][2] +", covid test: " + clinic.getReports()[i][3] + ", lab test: "
                         + clinic.getReports()[i][4] +", nurse appointment: " + clinic.getReports()[i][5] +"\n";
+                for(int j=0; j<6;j++){
+                    clinic.getReports()[i][j]=0;
+                }
+                report3 += arr[i] +": "+ clinic.getReports3()[i]+"\n";
+                clinic.getReports3()[i]=0;
             }
+             String report2 ="";
+            report2+= "Family Doctor: "+clinic.getReports2()[0] + "\nChildren Doctor: " + clinic.getReports2()[1]
+                      +"\nVaccine treatment: " + clinic.getReports2()[2] + "\nCovid Test: " + clinic.getReports2()[3];
 
             for (int i = 0; i < 4 ;i++){
 
                 clinic.getReports2()[i] = 0;
             }
             session.beginTransaction();
+            clinic.setReport2(report2);
             clinic.setReport1(report);
+            clinic.setReport3(report3);
             session.saveOrUpdate(clinic);
             session.flush();
             session.getTransaction().commit();

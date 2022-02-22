@@ -25,6 +25,9 @@ public class ClinicEntity implements Serializable {
     private String report1;
     private long[] reports2;
     private String report2;
+    private long[] reports3;
+    private String report3;
+
 
     @Column(length = 65555)
     @NotNull
@@ -68,6 +71,8 @@ public class ClinicEntity implements Serializable {
         this.report1="";
         this.reports2 = new long[4];
         this.report2 = "";
+        this.reports3=new long[7];
+        this.report3 = "";
     }
 
 
@@ -208,5 +213,21 @@ public class ClinicEntity implements Serializable {
 
     public void setVac_appointments(List<VaccineAppointmentEntity> vac_appointments) {
         this.vac_appointments = vac_appointments;
+    }
+
+    public long[] getReports3() {
+        return reports3;
+    }
+
+    public void setReports3(long[] reports3) {
+        this.reports3 = reports3;
+    }
+
+    public String getReport3() {
+        return report3;
+    }
+
+    public void setReport3(String report3) {
+        this.report3 = report3;
     }
 }
