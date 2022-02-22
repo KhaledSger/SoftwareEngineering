@@ -13,6 +13,8 @@ public class PatientEntity extends UserEntity {
     @Column(name = "Patient_id")
     private int patient_id;
     private int age;
+    private String gPassExp;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "Clinic_id")
@@ -36,6 +38,7 @@ public class PatientEntity extends UserEntity {
         this.doctorPatientEntities=new ArrayList<DoctorPatientEntity>();
         this.appointments=new ArrayList<AppointmentEntity>();
         this.vac_appointments = new ArrayList<VaccineAppointmentEntity>();
+        this.gPassExp="";
     }
 
     public PatientEntity() {
@@ -84,5 +87,13 @@ public class PatientEntity extends UserEntity {
 
     public void setVac_appointments(List<VaccineAppointmentEntity> vac_appointments) {
         this.vac_appointments = vac_appointments;
+    }
+
+    public String getgPassExp() {
+        return gPassExp;
+    }
+
+    public void setgPassExp(String gPassExp) {
+        this.gPassExp = gPassExp;
     }
 }

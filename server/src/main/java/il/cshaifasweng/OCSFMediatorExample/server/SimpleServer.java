@@ -40,6 +40,8 @@ public class SimpleServer extends AbstractServer {
             session.getTransaction().begin();
             String[] service = new String[]{"aaa", "bbb", "ccc"};
             ClinicEntity clinic1 = new ClinicEntity("Haifa clinic", "10:00", "20:00", service, new ArrayList<PatientEntity>());
+
+
             session.save(clinic1);
             service = new String[]{"bbb", "ddd", "ccc"};
             ClinicEntity clinic2 = new ClinicEntity("Acre clinic", "12:00", "18:00", service, new ArrayList<PatientEntity>());
@@ -516,6 +518,9 @@ public class SimpleServer extends AbstractServer {
                 if(app.getDate().isBefore(now)) {
                     if(app.isReserved()) {
                         vaccine_old_apps.add(app);
+                        if(app.getType().equals("covid")){
+                            app.getPatient().setgPassExp(app.getDate().plusMonths(6).toString());
+                        }
                     }
                     vaccine_appointments.remove(app);
                 }
@@ -551,21 +556,22 @@ public class SimpleServer extends AbstractServer {
                         }else{
                             day_of_week++;
                         }
-                        LocalTime opening = LocalTime.parse(clinic.getOpen());
-                        LocalTime closing = LocalTime.parse(clinic.getClose());
+                        LocalTime opening = LocalTime.parse(clinic.getVac_test_open());
+                        LocalTime closing = LocalTime.parse(clinic.getVac_test_close());
 
-                        if(!opening.toString().equals("00:00") && !closing.toString().equals("00:00") && day_of_week!= 6 && day_of_week != 7 && day_of_week != 2 && day_of_week != 3){
+                        if(day_of_week!= 6 && day_of_week != 7 && day_of_week != 2 && day_of_week != 3){
                             for(int hour=opening.getHour()*60;hour<=closing.getHour()*60;hour+=10) {
                                 LocalDateTime appointment_time = LocalDateTime.of(year, i % 12, j, hour / 60, hour % 60);
                                 if (!appointment_time.isBefore(now)) {
-
                                     VaccineAppointmentEntity covid_app = new VaccineAppointmentEntity(appointment_time,10,clinic,"covid");
                                     VaccineAppointmentEntity flu_app = new VaccineAppointmentEntity(appointment_time,10,clinic,"flu");
+                                    VaccineAppointmentEntity cov_test = new VaccineAppointmentEntity(appointment_time,10,clinic,"covid test");
 //                                    clinic.getVac_appointments().add(covid_app);
 //                                    clinic.getVac_appointments().add(flu_app);
                                     session.getTransaction().begin();
                                     session.saveOrUpdate(covid_app);
                                     session.saveOrUpdate(flu_app);
+                                    session.saveOrUpdate(cov_test);
                                     session.flush();
                                     session.getTransaction().commit();
 
@@ -582,6 +588,7 @@ public class SimpleServer extends AbstractServer {
     public static void UpdateReports()
     {
         int[] doc_reports = new int[Clinics.size()*2];
+        int[] avg_wait_report = new int[Clinics.size()*2];
         for(AppointmentEntity app : doc_old_apps)
         {
             if (app.getDate().toLocalDate().equals(LocalDate.now()))
@@ -591,6 +598,9 @@ public class SimpleServer extends AbstractServer {
                   if(!app.getActual_date().equals(null))
                   {
                       doc_reports[app.getClinic().getId() * 2 - 2] += 1;
+                      Duration d = Duration.between(app.getDate(),app.getActual_date());
+                      avg_wait_report[app.getClinic().getId()*2-2]+= d.toMinutes();
+                      avg_wait_report[app.getClinic().getId()*2-1]+=1;
                   }
                   else {
                       app.getClinic().getReports2()[0]+=1;
@@ -601,6 +611,9 @@ public class SimpleServer extends AbstractServer {
                   if(!app.getActual_date().equals(null))
                   {
                       doc_reports[app.getClinic().getId() * 2 - 1 ] += 1;
+                      Duration d = Duration.between(app.getDate(),app.getActual_date());
+                      avg_wait_report[app.getClinic().getId()*2-2]+= d.toMinutes();
+                      avg_wait_report[app.getClinic().getId()*2-1]+=1;
                   }
                   else {
                       app.getClinic().getReports2()[1]+=1;
@@ -609,17 +622,31 @@ public class SimpleServer extends AbstractServer {
            }
         }
         int[] vac_reports = new int[Clinics.size()];
+        int[] vac_test= new int[Clinics.size()];
         for(VaccineAppointmentEntity app : vaccine_old_apps)
         {
             if (app.getDate().toLocalDate().equals(LocalDate.now()))
             {
-                if (!app.getActual_date().equals(null))
-                {
-                    vac_reports[app.getClinic().getId()-1]+=1;
+                if(app.getType().equals("covid test")){
+                    if (!app.getActual_date().equals(null)){
+                        vac_test[app.getClinic().getId()-1]+=1;
+                    }else{
+                        app.getClinic().getReports2()[3]+=1;
+                    }
+
+
+                }else{
+                    if (!app.getActual_date().equals(null))
+                    {
+                        vac_reports[app.getClinic().getId()-1]+=1;
+                    }
+                    else{
+                        app.getClinic().getReports2()[2]+=1;
+                    }
+
                 }
-                else{
-                    app.getClinic().getReports2()[2]+=1;
-                }
+
+
             }
         }
         LocalDate localDate=LocalDate.of(LocalDate.now().getYear(),LocalDate.now().getMonth(),LocalDate.now().getDayOfMonth());
@@ -631,8 +658,12 @@ public class SimpleServer extends AbstractServer {
             clinic.getReports()[day_of_week][0] = doc_reports[clinic.getId()*2-2]; // family doctor
             clinic.getReports()[day_of_week][1] = doc_reports[clinic.getId()*2-1]; // children doctor
             clinic.getReports()[day_of_week][2] = vac_reports[clinic.getId()-1]; // vaccine reports
+            clinic.getReports()[day_of_week][3] = vac_test[clinic.getId()-1];
+            if(avg_wait_report[clinic.getId()*2-1]>0){
+                clinic.getReports3()[day_of_week]=avg_wait_report[clinic.getId()*2-2]/avg_wait_report[clinic.getId()*2-1];
+            }
         }
-        //TODO add covid test reports
+
     }
 
     public static void UpdateWeeklyReports()
@@ -642,19 +673,30 @@ public class SimpleServer extends AbstractServer {
         for(ClinicEntity clinic : Clinics)
         {
             String report="";
+            String report3 ="";
             for(int i=0;i<7;i++)
             {
                 report += arr[i] + ":\n" + "Family Doctor: " + clinic.getReports()[i][0] + ", Children Doctor: " + clinic.getReports()[i][1]
                         + ", vaccine treatment: " + clinic.getReports()[i][2] +", covid test: " + clinic.getReports()[i][3] + ", lab test: "
                         + clinic.getReports()[i][4] +", nurse appointment: " + clinic.getReports()[i][5] +"\n";
+                for(int j=0; j<6;j++){
+                    clinic.getReports()[i][j]=0;
+                }
+                report3 += arr[i] +": "+ clinic.getReports3()[i]+"\n";
+                clinic.getReports3()[i]=0;
             }
+             String report2 ="";
+            report2+= "Family Doctor: "+clinic.getReports2()[0] + "\nChildren Doctor: " + clinic.getReports2()[1]
+                      +"\nVaccine treatment: " + clinic.getReports2()[2] + "\nCovid Test: " + clinic.getReports2()[3];
 
             for (int i = 0; i < 4 ;i++){
 
                 clinic.getReports2()[i] = 0;
             }
             session.beginTransaction();
+            clinic.setReport2(report2);
             clinic.setReport1(report);
+            clinic.setReport3(report3);
             session.saveOrUpdate(clinic);
             session.flush();
             session.getTransaction().commit();
