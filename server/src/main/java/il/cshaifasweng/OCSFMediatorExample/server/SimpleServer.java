@@ -480,7 +480,7 @@ public class SimpleServer extends AbstractServer {
             }else{
                 latest_appointment = now;
             }
-            for (int i = latest_appointment.getMonthValue() ; i <= (now.getMonthValue()+3); i++)
+            for (int i = latest_appointment.getMonthValue() ; i <= (now.getMonthValue()+1); i++)
             {
                 int year= now.getYear();
                 if(i>12){

@@ -333,15 +333,12 @@ public class PatientController {
                                                     if (chosen_doctor_array[0].equals(doc_clinic1.getDoctor().getFirst_name() + " " + doc_clinic1.getDoctor().getFamily_name())) {
                                                         chosen_doctor = doc_clinic1.getDoctor();
                                                         vBox.getItems().clear(); //deleting the list items so we can add the appointments instead
-                                                        //datePickerBtn.show();  // need to change the free appointments with datePickerBtn
-                                                        System.out.println("chosen array [0]= "+chosen_doctor_array[0]);
-                                                        System.out.println("chosen array [1]= "+chosen_doctor_array[1]+chosen_doctor_array[2]);
                                                         if(doc_clinic1.getClinic().getName().equals("Tel-Aviv clinic"))
                                                         {
                                                             clinic_name="Tel-Aviv clinic";
                                                         }
                                                         else {
-                                                            clinic_name = chosen_doctor_array[1]+chosen_doctor_array[2];
+                                                            clinic_name = chosen_doctor_array[1];
                                                         }
                                                         break;
                                                     }
