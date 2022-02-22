@@ -21,6 +21,7 @@ public class ClinicEntity implements Serializable {
     private String open;
     private String close;
     private String[] services;
+
     private String report1;
     private long[] reports2;
     private String report2;
