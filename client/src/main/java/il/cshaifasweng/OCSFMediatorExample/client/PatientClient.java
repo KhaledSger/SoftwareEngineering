@@ -41,7 +41,7 @@ public class PatientClient  extends AbstractClient {
         else if(msg.getClass().equals(ArrayList.class))
         {
             this.Patient.setAppointments((ArrayList)msg);
-            System.out.println("new patient list= "+(ArrayList)msg);
+            System.out.println("patient app size= "+this.Patient.getAppointments().size());
         }
     }
 
