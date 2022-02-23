@@ -113,6 +113,8 @@ public class SimpleServer extends AbstractServer {
             session.save(pat1);
             PatientEntity pat2 = new PatientEntity(318234732,"Khaled","Sger","Khaled123@gmail.com","Kh12345",23,clinic4);
             session.save(pat2);
+            PatientEntity pat3 = new PatientEntity(314325457,"Malki","Grosman","malkigr@gmail.com","Kh12345",23,clinic3);
+            session.save(pat3);
             NurseEntity nurse1 = new NurseEntity(792596666,"Good","Nurse","nursegood@gmail.com","Goo123",clinic1);
             session.save(nurse1);
             DoctorEntity doc1= new DoctorEntity(2113423,"dr","fischer","drfischer@gmail.com","111","Neurology");
@@ -156,6 +158,8 @@ public class SimpleServer extends AbstractServer {
              session.save(manger3);
               DoctorPatientEntity docpat = new DoctorPatientEntity(doc1,pat1);
               session.save(docpat);
+//              AppointmentEntity app = new AppointmentEntity(2022-02-24-19:10,doctorClinic,20);
+//              session.save(app);
             session.flush();
             session.getTransaction().commit();
             UpdateAppointments();
