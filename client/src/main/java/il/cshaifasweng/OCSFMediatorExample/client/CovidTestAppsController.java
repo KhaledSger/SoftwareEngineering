@@ -7,6 +7,8 @@ package il.cshaifasweng.OCSFMediatorExample.client;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import il.cshaifasweng.OCSFMediatorExample.entities.AppointmentEntity;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
