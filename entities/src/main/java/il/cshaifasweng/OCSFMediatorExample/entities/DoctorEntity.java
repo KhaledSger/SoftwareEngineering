@@ -79,6 +79,7 @@ public class DoctorEntity extends UserEntity {
         return appointments;
     }
 
+
     public void setAppointments(Set<AppointmentEntity> appointments) {
         this.appointments = appointments;
     }

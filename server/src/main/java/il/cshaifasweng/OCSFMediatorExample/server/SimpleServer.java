@@ -11,12 +11,11 @@ import org.hibernate.service.ServiceRegistry;
 
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
+import java.util.*;
 
 
 public class SimpleServer extends AbstractServer {
@@ -30,6 +29,13 @@ public class SimpleServer extends AbstractServer {
 
     public void initSesssion() {
         session = getSessionFactory().openSession();
+        executeSqlScript(new File("C:\\Users\\basel-2020-pc\\IdeaProjects\\SoftwareEngineering\\server\\src\\main\\resources\\query1.sql"));
+        UpdateAppointments();
+        Appointments = (ArrayList<AppointmentEntity>) GetAllAppointments();
+        UpdateVaccineAppointments();
+
+
+       /* session = getSessionFactory().openSession();
         try {
             session.getTransaction().begin();
             String[] service = new String[]{"aaa", "bbb", "ccc"};
@@ -80,7 +86,7 @@ public class SimpleServer extends AbstractServer {
             if (session != null) {
                 session.getTransaction().rollback();
             }
-        }
+        }*/
 
         //Appointments = (ArrayList<AppointmentEntity>) GetAllAppointments();
     }
@@ -565,5 +571,34 @@ public class SimpleServer extends AbstractServer {
             e.printStackTrace();
         }
         return null;
+    }
+    public void executeSqlScript(File inputFile) {
+        String delimiter = ";";
+        Scanner scanner;
+        try {
+            scanner = new Scanner(inputFile).useDelimiter(delimiter);
+        } catch (FileNotFoundException e1) {
+            e1.printStackTrace();
+            return;
+        }
+        String rawStatement=scanner.toString();
+        while(scanner.hasNext()) {
+             rawStatement = scanner.next() + delimiter;
+            System.out.println(rawStatement);
+            try {
+                session.getTransaction().begin();
+                session.createSQLQuery(rawStatement).executeUpdate();
+                session.flush();
+                session.getTransaction().commit();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+        /*session.getTransaction().begin();
+        session.createSQLQuery(rawStatement).executeUpdate();
+        session.flush();
+        session.getTransaction().commit();*/
+        scanner.close();
     }
 }

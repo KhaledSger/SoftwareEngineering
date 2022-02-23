@@ -33,6 +33,10 @@ public class VaccineAppointmentEntity implements Serializable {
         this.patient = null;
     }
 
+    public VaccineAppointmentEntity() {
+
+    }
+
     public int getId() {
         return id;
     }
