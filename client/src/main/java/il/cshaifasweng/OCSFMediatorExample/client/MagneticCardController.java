@@ -6,6 +6,7 @@
 package il.cshaifasweng.OCSFMediatorExample.client;
 
         import java.io.IOException;
+        import java.lang.reflect.Array;
         import java.net.URL;
         import java.time.LocalDateTime;
         import java.util.*;
@@ -75,9 +76,20 @@ public class MagneticCardController {
                 Optional<ButtonType> lab_nurse =  alert.showAndWait();
                 System.out.println("lab nurse= "+lab_nurse.get().getText());
                 if(lab_nurse.get().getText() == "Nurse")
-                    Reserve_nurse_app();
-                else
-                    Reserve_lab_app();
+                {
+                    try {
+                        Reserve_nurse_app();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else {
+                    try {
+                        Reserve_lab_app();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             });
 
         }
@@ -86,14 +98,13 @@ public class MagneticCardController {
     @FXML
     void doctor_app_action(ActionEvent event) {
         LocalDateTime now=LocalDateTime.now();
-        for(ClinicEntity clinic : SimpleClient.ClinicList)
-        {
-            for(DoctorClinicEntity doc_clinic : clinic.getDoctorClinicEntities())
+            for(DoctorClinicEntity doc_clinic : chosen_clinic.getDoctorClinicEntities())
             {
                 for(AppointmentEntity app : doc_clinic.getDoctor().getAppointments())
                 {
                     if (app.isReserved()) {
                         if (app.getPatient().getId() == chosen_patient.getId()) {
+                            SimpleClient.doc_patients.add(chosen_patient);
                             has_app_flag=1;
                             SimpleClient.next_doc_appointment += 1;
                             doctor_listView.setText("appointment for Doctor: " + doc_clinic.getDoctor().getFirst_name() + " " + doc_clinic.getDoctor().getFamily_name() + "\n Appointment Time: " + app.getDate().getHour() + ":" + app.getDate().getMinute() + "\n Appointment number: " + SimpleClient.next_doc_appointment);
@@ -103,11 +114,17 @@ public class MagneticCardController {
                             }
                             else  //the patient is late, so he needs to enter after the current patients
                             {
+                                ArrayList<AppointmentEntity> appointments = (ArrayList<AppointmentEntity>) doc_clinic.getDoctor().getAppointments().stream().toList();
                                 for(AppointmentEntity app1 : doc_clinic.getDoctor().getAppointments())
                                 {
                                     if(app1.getDate().isAfter(app.getDate()))
                                     {
-
+                                        app.setActual_date(app1.getDate().plusMinutes(20));
+                                        try {
+                                            SimpleClient.getClient().sendToServer("#updateAppsForDoc:"+app.getId());
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
                                     }
                                 }
                             }
@@ -115,7 +132,6 @@ public class MagneticCardController {
                     }
                 }
             }
-        }
         if(has_app_flag==0)
         {
             Platform.runLater(() -> {
@@ -140,13 +156,14 @@ public class MagneticCardController {
 
     }
 
-    private void Reserve_nurse_app()
+    private void Reserve_nurse_app() throws IOException
     {
         SimpleClient.next_nurse_appointment+=1;
         SimpleClient.nurse_patients.add(chosen_patient.getId());
         nurse_listView.setText("appointment for: nurse\n appointment number: "+ SimpleClient.next_nurse_appointment);
+        SimpleClient.getClient().sendToServer("#increase nurse app:"+chosen_clinic.getId());
     }
-    private void Reserve_lab_app()
+    private void Reserve_lab_app() throws IOException
     {
         LocalDateTime now=LocalDateTime.now();
         if(now.getHour() > 7 && now.getHour() < 10 )
@@ -154,6 +171,7 @@ public class MagneticCardController {
             SimpleClient.next_lab_appointment+=1;
             SimpleClient.nurse_patients.add(chosen_patient.getId());
             nurse_listView.setText("appointment for: lab\n appointment number: "+ SimpleClient.next_lab_appointment);
+            SimpleClient.getClient().sendToServer("#increase lab app:"+chosen_clinic.getId());
         }
         else {
             Platform.runLater(() -> {

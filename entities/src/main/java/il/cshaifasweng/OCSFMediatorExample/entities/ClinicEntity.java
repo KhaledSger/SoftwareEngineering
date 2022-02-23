@@ -1,5 +1,7 @@
 package il.cshaifasweng.OCSFMediatorExample.entities;
 
+import com.sun.istack.NotNull;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -20,6 +22,17 @@ public class ClinicEntity implements Serializable {
     private String close;
     private String[] services;
 
+    private String report1;
+    private long[] reports2;
+    private String report2;
+    private long[] reports3;
+    private String report3;
+    private String vac_test_open ;
+   private String vac_test_close;
+
+    @Column(length = 65555)
+    @NotNull
+    private long[][] reports;
 
     @OneToMany (mappedBy = "clinic")
     private List<PatientEntity> Patients;
@@ -49,13 +62,20 @@ public class ClinicEntity implements Serializable {
         this.open = open;
         this.close = close;
         this.services = services;
-
+        this.reports = new long[7][6]; // rows for days and columns for services
         this.Patients=new ArrayList<PatientEntity>();
         this.nurseEntities=new ArrayList<NurseEntity>();
         this.doctorClinicEntities=new ArrayList<DoctorClinicEntity>();
         this.labWorkers = new ArrayList<LabWorkerEntity>();
         this.appointments=new ArrayList<AppointmentEntity>();
         this.vac_appointments = new ArrayList<VaccineAppointmentEntity>();
+        this.report1="";
+        this.reports2 = new long[4];
+        this.report2 = "";
+        this.reports3=new long[7];
+        this.report3 = "";
+        this.vac_test_open ="12:00";
+        this.vac_test_close="13:00";
 
     }
 
@@ -72,11 +92,43 @@ public class ClinicEntity implements Serializable {
         this.labWorkers = CE.labWorkers;
     }
 
+    public long[] getReports2() {
+        return reports2;
+    }
+
+    public void setReports2(long[] reports2) {
+        this.reports2 = reports2;
+    }
+
+    public String getReport2() {
+        return report2;
+    }
+
+    public void setReport2(String report2) {
+        this.report2 = report2;
+    }
+
     public ClinicEntity() {
     }
 
     public ClinicEntity(String name) {
         this.name = name;
+    }
+
+    public long[][] getReports() {
+        return reports;
+    }
+
+    public String getReport1() {
+        return report1;
+    }
+
+    public void setReport1(String report) {
+        this.report1 = report;
+    }
+
+    public void setReports(long[][] reports) {
+        this.reports = reports;
     }
 
     public String getName() {
@@ -165,5 +217,37 @@ public class ClinicEntity implements Serializable {
 
     public void setVac_appointments(List<VaccineAppointmentEntity> vac_appointments) {
         this.vac_appointments = vac_appointments;
+    }
+
+    public long[] getReports3() {
+        return reports3;
+    }
+
+    public void setReports3(long[] reports3) {
+        this.reports3 = reports3;
+    }
+
+    public String getReport3() {
+        return report3;
+    }
+
+    public void setReport3(String report3) {
+        this.report3 = report3;
+    }
+
+    public String getVac_test_open() {
+        return vac_test_open;
+    }
+
+    public void setVac_test_open(String vac_test_open) {
+        this.vac_test_open = vac_test_open;
+    }
+
+    public String getVac_test_close() {
+        return vac_test_close;
+    }
+
+    public void setVac_test_close(String vac_test_close) {
+        this.vac_test_close = vac_test_close;
     }
 }

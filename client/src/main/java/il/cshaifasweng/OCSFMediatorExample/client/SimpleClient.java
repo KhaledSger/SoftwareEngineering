@@ -30,6 +30,7 @@ public class SimpleClient extends AbstractClient {
     public static long next_nurse_appointment=0;
     public static long next_lab_appointment=0;
     public static long next_doc_appointment=0;
+    public static ArrayList<PatientEntity> doc_patients = new ArrayList<PatientEntity>(); //for doctor controller use
 
 
     private SimpleClient(String host, int port) {
@@ -93,7 +94,9 @@ public class SimpleClient extends AbstractClient {
         } else if (msg.getClass().equals(String.class)) {
             if (((String) msg).equals("#Login Success")) {
                 logInFlag = 1;
-            } else if (((String) msg).equals("#Login Failure")) {
+            }else if (((String) msg).equals("#Login Active")) {
+                logInFlag = 3;
+            }else if ((((String) msg).equals("#Login Failure")) && logInFlag != 3) {
                 logInFlag = 2;
             }
         }

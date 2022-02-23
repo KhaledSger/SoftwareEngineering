@@ -50,7 +50,7 @@
       </Text>
       <MenuButton fx:id="vaccine_btn" layoutX="43.0" layoutY="300.0" mnemonicParsing="false" onAction="#vaccineAction" prefHeight="72.0" prefWidth="130.0" styleClass="button3" text="Vaccine Appointment" textAlignment="CENTER" wrapText="true">
          <items>
-            <MenuItem fx:id="covid_vaccine_btn" mnemonicParsing="false" onAction="#covid_vaccine_action" text="covic 19 vaccine" />
+            <MenuItem fx:id="covid_vaccine_btn" mnemonicParsing="false" onAction="#covid_vaccine_action" text="covid 19 vaccine" />
             <MenuItem fx:id="Flu_vaccine_btn" mnemonicParsing="false" onAction="#Flu_vaccine_action" text="Flu vaccine" />
          </items>
          <cursor>
