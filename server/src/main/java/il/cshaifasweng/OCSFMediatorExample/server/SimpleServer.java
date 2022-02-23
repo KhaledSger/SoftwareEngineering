@@ -398,6 +398,7 @@ public class SimpleServer extends AbstractServer {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                app.setPatient(((VaccineAppointmentEntity) msg).getPatient());
                 ((VaccineAppointmentEntity) msg).getPatient().getVac_appointments().add((VaccineAppointmentEntity) msg);
             }
             else  // isReserved=true and patient != null so we need to cancel the appointment
@@ -412,7 +413,6 @@ public class SimpleServer extends AbstractServer {
                 }
             }
             session.beginTransaction();
-            app.setPatient(((VaccineAppointmentEntity) msg).getPatient());
             session.saveOrUpdate(app);
             session.flush();
             session.getTransaction().commit();
