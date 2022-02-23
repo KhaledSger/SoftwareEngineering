@@ -361,7 +361,7 @@ public class SimpleServer extends AbstractServer {
             }
             else if((app.getPatient()==null) ) { // the client has confirmed the reservation
                 app.setPatient(((AppointmentEntity) msg).getPatient());
-                EmailUtil.sendEmail((((AppointmentEntity) msg).getPatient()).getMail(),"appointment conformation","you have appointment in :"+app.getClinic().getName().toString()+"\n"+"with doctor: "+app.getDoctor().getFamily_name().toString()+"\n"+"at : "+app.getDate());
+                EmailUtil.sendEmail((((AppointmentEntity) msg).getPatient()).getMail(),"appointment confirmation","you have appointment in :"+app.getClinic().getName().toString()+"\n"+"with doctor: "+app.getDoctor().getFamily_name().toString()+"\n"+"at : "+app.getDate());
                 try {
                     client.sendToClient("reservation done!");
                 } catch (IOException e) {
@@ -398,7 +398,7 @@ public class SimpleServer extends AbstractServer {
             }
             else if((app.getPatient()==null) ) { // the client has confirmed the reservation
                 app.setPatient(((VaccineAppointmentEntity) msg).getPatient());
-                EmailUtil.sendEmail((((VaccineAppointmentEntity) msg).getPatient()).getMail(),"vaccine appointment conformation","you have a  vaccine appointment in :"+app.getClinic().getName().toString()+"\n"+"at : "+app.getDate());
+                EmailUtil.sendEmail((((VaccineAppointmentEntity) msg).getPatient()).getMail(),"vaccine appointment confirmation","you have a  vaccine appointment in :"+app.getClinic().getName().toString()+"\n"+"at : "+app.getDate());
                 try {
                     client.sendToClient("reservation done!");
                 } catch (IOException e) {

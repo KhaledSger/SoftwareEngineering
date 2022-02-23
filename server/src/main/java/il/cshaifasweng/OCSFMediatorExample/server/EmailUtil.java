@@ -22,7 +22,7 @@ public class EmailUtil {
         {
 
             final String fromEmail = "engineersoftware705@gmail.com"; //requires valid gmail id
-            final String password = "s123456s$"; // correct password for gmail id
+            final String password = " "; // correct password for gmail id
 
             Authenticator auth = new Authenticator() {
                 //override the getPasswordAuthentication method
@@ -70,7 +70,7 @@ public class EmailUtil {
         {
 
             final String fromEmail = "engineersoftware705@gmail.com"; //requires valid gmail id
-            final String password = "s123456s$"; // correct password for gmail id
+            final String password = " "; // correct password for gmail id
 
             Authenticator auth = new Authenticator() {
                 //override the getPasswordAuthentication method
@@ -118,7 +118,7 @@ public class EmailUtil {
         {
 
             final String fromEmail = "engineersoftware705@gmail.com"; //requires valid gmail id
-            final String password = "s123456s$"; // correct password for gmail id
+            final String password = " "; // correct password for gmail id
 
             Authenticator auth = new Authenticator() {
                 //override the getPasswordAuthentication method
