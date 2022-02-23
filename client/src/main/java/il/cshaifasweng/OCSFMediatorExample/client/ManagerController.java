@@ -156,7 +156,6 @@ public class ManagerController {
             choosen_clinic.setOpen(clinic_open_txt.getText());
         if(!clinic_close_txt.getText().equals(""))
             choosen_clinic.setClose(clinic_close_txt.getText());
-        clinic_current_hours.setText(choosen_clinic.getOpen() + "-" + choosen_clinic.getClose());
         Platform.runLater(() -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
                     String.format("updated successfully!")
@@ -164,8 +163,7 @@ public class ManagerController {
             alert.show();
         });
         SimpleClient.getClient().sendToServer(choosen_clinic);
-        clinic_open_txt.setText("");
-        clinic_close_txt.setText("");
+        clinic_current_hours.setText(choosen_clinic.getOpen() + "-" + choosen_clinic.getClose());
     }
 
     @FXML
@@ -194,8 +192,19 @@ public class ManagerController {
     }
 
     @FXML
-    void update_vaccine_handler(ActionEvent event) {
-
+    void update_vaccine_handler(ActionEvent event) throws IOException {
+        if(!vaccine_open_txt.getText().equals(""))
+            choosen_clinic.setVac_test_open(vaccine_open_txt.getText());
+        if(!vaccine_close_txt.getText().equals(""))
+            choosen_clinic.setVac_test_close(vaccine_close_txt.getText());
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                    String.format("updated successfully!")
+            );
+            alert.show();
+        });
+        SimpleClient.getClient().sendToServer(choosen_clinic);
+        vaccine_current_hours.setText(choosen_clinic.getVac_test_open() + "-" + choosen_clinic.getVac_test_close());
     }
 
     @FXML
@@ -233,6 +242,7 @@ public class ManagerController {
         assert waiting_time_report_btn != null : "fx:id=\"waiting_time_report_btn\" was not injected: check your FXML file 'manager.fxml'.";
         assert welcome_text != null : "fx:id=\"welcome_text\" was not injected: check your FXML file 'manager.fxml'.";
         assert clinic_text != null : "fx:id=\"clinic_text\" was not injected: check your FXML file 'manager.fxml'.";
+        vaccine_current_hours.setText(choosen_clinic.getVac_test_open() + "-" + choosen_clinic.getVac_test_close());
         welcome_text.setText(SimpleClient.managerClient.getName());  // add manager's name here
         clinic_text.setText(SimpleClient.getManagerClient().getClinic().getName());
         clinic_current_hours.setText(choosen_clinic.getOpen() + "-" + choosen_clinic.getClose());

@@ -340,6 +340,8 @@ public class SimpleServer extends AbstractServer {
                     session.beginTransaction();
                     Clinics.get(i).setOpen(((ClinicEntity) msg).getOpen());
                     Clinics.get(i).setClose(((ClinicEntity) msg).getClose());
+                    Clinics.get(i).setVac_test_open(((ClinicEntity) msg).getVac_test_open());
+                    Clinics.get(i).setVac_test_close(((ClinicEntity) msg).getVac_test_close());
                     session.save(Clinics.get(i));
                     session.flush();
                     session.getTransaction().commit();
