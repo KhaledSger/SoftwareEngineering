@@ -38,10 +38,10 @@ public class SimpleServer extends AbstractServer {
         session = getSessionFactory().openSession();
         try {
             session.getTransaction().begin();
+
             String[] service = new String[]{"aaa", "bbb", "ccc"};
+
             ClinicEntity clinic1 = new ClinicEntity("Haifa clinic", "10:00", "20:00", service, new ArrayList<PatientEntity>());
-
-
             session.save(clinic1);
             service = new String[]{"bbb", "ddd", "ccc"};
             ClinicEntity clinic2 = new ClinicEntity("Acre clinic", "12:00", "18:00", service, new ArrayList<PatientEntity>());
@@ -52,6 +52,62 @@ public class SimpleServer extends AbstractServer {
             service = new String[]{"ww", "zz"};
             ClinicEntity clinic4 = new ClinicEntity("Eilaboun clinic", "08:00", "12:00", service, new ArrayList<PatientEntity>());
             session.save(clinic4);
+
+//            ClinicEntity clinic1 = new ClinicEntity("Haifa clinic", "10:00", "20:00", service, new ArrayList<PatientEntity>());
+//            clinic1.setReport1("Sunday: Family Doctor: 11,Children Doctor: 12, vaccine treatment: 20, covid test: 89, lab test: 5, nurse appointment:17" + "\n" +
+//                    " Monday: \nFamily Doctor: 15,Children Doctor:19 , vaccine treatment: 20, covid test: 50, lab test: 10, nurse appointment: 16" + "\n" +
+//                    " Tuesday: \nFamily Doctor: 4,Children Doctor: 8, vaccine treatment: 32, covid test: 14, lab test: 17, nurse appointment: 3" + "\n" +
+//                    " Wednesday:\n Family Doctor: 5,Children Doctor: 13, vaccine treatment: 17, covid test: 14, lab test: 4, nurse appointment: 4" + "\n" +
+//                    " Thursday: \nFamily Doctor: 7,Children Doctor: 9, vaccine treatment: 12, covid test: 11, lab test: 10, nurse appointment: 8" + "\n" +
+//                    " Friday: \nFamily Doctor: 19,Children Doctor: 20, vaccine treatment: 21, covid test: 22, lab test: 16, nurse appointment: 15" + "\n" +
+//                    " Saturday: \nFamily Doctor: 21,Children Doctor: 14, vaccine treatment: 4, covid test: 8, lab test: 9, nurse appointment: 10"
+//            );
+//            clinic1.setReport2("Family Doctor: 3 \nChildren Doctor: 4 \nVaccine treatment: 2 \nCovid Test: 5");
+//            clinic1.setReport3("Sunday: 1 \nMonday: 2 \nTuesday: 2 \nWednesday: 3 \nThursday: 1 \nFriday: 0 \nSaturday:1");
+//            session.save(clinic1);
+//
+//            service = new String[]{"bbb", "ddd", "ccc"};
+//            ClinicEntity clinic2 = new ClinicEntity("Acre clinic", "12:00", "18:00", service, new ArrayList<PatientEntity>());
+//            clinic2.setReport1("Sunday: Family Doctor:18 ,Children Doctor: 2, vaccine treatment: 19, covid test: 11, lab test: 3, nurse appointment: 11" + "\n" +
+//                    " Monday: \n Family Doctor: 5,Children Doctor:9 , vaccine treatment: 23, covid test: 36, lab test: 2, nurse appointment: 3" + "\n" +
+//                    " Tuesday: \nFamily Doctor: 13,Children Doctor: 1, vaccine treatment: 21, covid test: 12, lab test: 5, nurse appointment: 12" + "\n" +
+//                    " Wednesday: \nFamily Doctor: 2,Children Doctor: 3, vaccine treatment: 17, covid test: 15, lab test: 7, nurse appointment: 21" + "\n" +
+//                    " Thursday: \nFamily Doctor: 8,Children Doctor: 6, vaccine treatment: 15, covid test: 19, lab test: 3, nurse appointment: 12" + "\n" +
+//                    " Friday: \nFamily Doctor: 19,Children Doctor: 5, vaccine treatment: 13, covid test: 23, lab test: 2, nurse appointment: 19" + "\n" +
+//                    " Saturday: \nFamily Doctor: 20,Children Doctor: 9, vaccine treatment: 14, covid test: 13, lab test: 8, nurse appointment: 33"
+//            );
+//            clinic2.setReport2("Family Doctor: 4 \nChildren Doctor: 0 \nVaccine treatment: 1 \nCovid Test: 3");
+//            clinic2.setReport3("Sunday: 3 \nMonday: 4 \nTuesday: 1 \nWednesday: 0 \nThursday: 2 \nFriday: 3 \nSaturday:1");
+//            session.save(clinic2);
+//
+//            service = new String[]{"aaa", "eee", "ddd"};
+//            ClinicEntity clinic3 = new ClinicEntity("Tel-Aviv clinic", "14:00", "22:00", service, new ArrayList<PatientEntity>());
+//            clinic3.setReport1("Sunday: Family Doctor:17 ,Children Doctor: 3, vaccine treatment: 20, covid test: 12, lab test: 11, nurse appointment: 15" + "\n" +
+//                    " Monday: \nFamily Doctor: 15,Children Doctor:19 , vaccine treatment: 20, covid test: 50, lab test: 10, nurse appointment: 16" + "\n" +
+//                    " Tuesday: \nFamily Doctor: 2,Children Doctor: 23, vaccine treatment: 18, covid test: 19, lab test: 14, nurse appointment: 17" + "\n" +
+//                    " Wednesday: \nFamily Doctor: 8,Children Doctor: 10, vaccine treatment: 31, covid test: 34, lab test: 21, nurse appointment: 13" + "\n" +
+//                    " Thursday: \nFamily Doctor: 2,Children Doctor: 3, vaccine treatment: 6, covid test: 32, lab test: 3, nurse appointment: 18" + "\n" +
+//                    " Friday: \nFamily Doctor: 6,Children Doctor: 7, vaccine treatment: 9, covid test: 3, lab test: 19, nurse appointment: 15" + "\n" +
+//                    " Saturday: \nFamily Doctor: 6,Children Doctor: 6, vaccine treatment: 10, covid test: 14, lab test: 9, nurse appointment: 5"
+//            );
+//            clinic3.setReport2("Family Doctor: 5 \nChildren Doctor: 2 \nVaccine treatment: 1 \nCovid Test: 9");
+//            clinic3.setReport3("Sunday: 0 \nMonday: 10 \nTuesday: 4 \nWednesday: 6 \nThursday: 2 \nFriday: 3 \nSaturday:1");
+//            session.save(clinic3);
+//
+//            service = new String[]{"ww", "zz"};
+//            ClinicEntity clinic4 = new ClinicEntity("Eilaboun clinic", "08:00", "12:00", service, new ArrayList<PatientEntity>());
+//            clinic4.setReport1("Sunday: Family Doctor: 13,Children Doctor: 23, vaccine treatment: 22, covid test: 31, lab test: 8, nurse appointment: 9" + "\n" +
+//                    " Monday: \nFamily Doctor: 13,Children Doctor:9 , vaccine treatment: 10, covid test: 15, lab test: 1, nurse appointment: 6" + "\n" +
+//                    " Tuesday: \nFamily Doctor: 23,Children Doctor: 26, vaccine treatment: 33, covid test: 22, lab test: 11, nurse appointment: 14" + "\n" +
+//                    " Wednesday: \nFamily Doctor: 16,Children Doctor: 7, vaccine treatment: 7, covid test: 3, lab test: 7, nurse appointment: 11" + "\n" +
+//                    " Thursday: \nFamily Doctor: 6,Children Doctor: 5, vaccine treatment: 31, covid test: 10, lab test: 13, nurse appointment: 29" + "\n" +
+//                    " Friday: \nFamily Doctor: 13,Children Doctor: 14, vaccine treatment: 15, covid test: 12, lab test: 9, nurse appointment: 3" + "\n" +
+//                    " Saturday: \nFamily Doctor: 3,Children Doctor: 8, vaccine treatment: 9, covid test: 2, lab test: 1, nurse appointment: 8"
+//            );
+//            clinic4.setReport2("Family Doctor: 1 \nChildren Doctor: 1 \nVaccine treatment: 1 \nCovid Test: 1");
+//            clinic4.setReport3("Sunday: 1 \nMonday: 3 \nTuesday: 2 \nWednesday: 4 \nThursday: 3 \nFriday: 6 \nSaturday: 1");
+//            session.save(clinic4);
+
             PatientEntity pat1 = new PatientEntity(318588324,"Emad","daraw","Emad123@gmail.com","Em12345",17,clinic3);
             pat1.setgPassExp(LocalDate.now().plusMonths(5).toString());
             session.save(pat1);
@@ -342,6 +398,7 @@ public class SimpleServer extends AbstractServer {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                app.setPatient(((VaccineAppointmentEntity) msg).getPatient());
                 ((VaccineAppointmentEntity) msg).getPatient().getVac_appointments().add((VaccineAppointmentEntity) msg);
             }
             else  // isReserved=true and patient != null so we need to cancel the appointment
@@ -357,9 +414,6 @@ public class SimpleServer extends AbstractServer {
             }
             session.beginTransaction();
             session.saveOrUpdate(app);
-            if(((AppointmentEntity) msg).getPatient()!=null) {
-                session.saveOrUpdate(((AppointmentEntity) msg).getPatient());
-            }
             session.flush();
             session.getTransaction().commit();
         }

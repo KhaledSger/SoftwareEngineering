@@ -298,6 +298,7 @@ public class PatientController {
 
     @FXML
     void covid_vaccine_action(ActionEvent event) {
+        vBox.getItems().clear();
         List<VaccineAppointmentEntity> vaccine_apps = SimpleClient.getPatientClient().getClinic().getVac_appointments();
         for(VaccineAppointmentEntity app : vaccine_apps )
         {
