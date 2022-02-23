@@ -98,7 +98,7 @@ public class EmailUtil {
             msg.setReplyTo(InternetAddress.parse("engineersoftware705@gmail.com", false));
 
             msg.setSubject("reminder for appointment", "UTF-8");
-            String body="your appointment in,"+ app.getClinic()+" at :"+ app.getDate()+" with doctor: "+ app.getDoctor()+"\n";
+            String body="your appointment in,"+ app.getClinic().getName()+"\n"+" at :"+ app.getDate()+"\n"+" with doctor: "+ app.getDoctor().getFamily_name()+"\n";
             msg.setText(body, "UTF-8");
 
             msg.setSentDate(new Date());
@@ -146,7 +146,7 @@ public class EmailUtil {
             msg.setReplyTo(InternetAddress.parse("engineersoftware705@gmail.com", false));
 
             msg.setSubject("reminder for vaccine", "UTF-8");
-            String body="your vaccine in,"+ app.getClinic()+" at :"+ app.getDate()+"\n";
+            String body="your vaccine in:"+ app.getClinic().getName()+"\n"+" at :"+ app.getDate()+"\n";
             msg.setText(body, "UTF-8");
 
             msg.setSentDate(new Date());
