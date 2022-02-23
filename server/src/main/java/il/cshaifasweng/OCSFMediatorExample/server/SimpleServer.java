@@ -113,6 +113,8 @@ public class SimpleServer extends AbstractServer {
             session.save(pat1);
             PatientEntity pat2 = new PatientEntity(318234732,"Khaled","Sger","Khaled123@gmail.com","Kh12345",23,clinic4);
             session.save(pat2);
+            PatientEntity pat3 = new PatientEntity(123456789,"Basel","Mousa","mousabasel@gmail.com","B12345",23,clinic4);
+            session.save(pat3);
             PatientEntity pat3 = new PatientEntity(314325457,"Malki","Grosman","malkigr@gmail.com","Kh12345",23,clinic3);
             session.save(pat3);
             NurseEntity nurse1 = new NurseEntity(792596666,"Good","Nurse","nursegood@gmail.com","Goo123",clinic1);
@@ -363,6 +365,7 @@ public class SimpleServer extends AbstractServer {
             }
             else if((app.getPatient()==null) ) { // the client has confirmed the reservation
                 app.setPatient(((AppointmentEntity) msg).getPatient());
+                EmailUtil.sendEmail((((AppointmentEntity) msg).getPatient()).getMail(),"appointment confirmation","you have appointment in :"+app.getClinic().getName().toString()+"\n"+"with doctor: "+app.getDoctor().getFamily_name().toString()+"\n"+"at : "+app.getDate());
                 try {
                     client.sendToClient("reservation done!");
                 } catch (IOException e) {
@@ -399,6 +402,7 @@ public class SimpleServer extends AbstractServer {
             }
             else if((app.getPatient()==null) ) { // the client has confirmed the reservation
                 app.setPatient(((VaccineAppointmentEntity) msg).getPatient());
+                EmailUtil.sendEmail((((VaccineAppointmentEntity) msg).getPatient()).getMail(),"vaccine appointment confirmation","you have a  vaccine appointment in :"+app.getClinic().getName().toString()+"\n"+"at : "+app.getDate());
                 try {
                     client.sendToClient("reservation done!");
                 } catch (IOException e) {
@@ -828,6 +832,14 @@ public class SimpleServer extends AbstractServer {
         CriteriaQuery<AppointmentEntity> query = builder.createQuery(AppointmentEntity.class);
         query.from(AppointmentEntity.class);
         List<AppointmentEntity> result = session.createQuery(query).getResultList();
+        return result;
+    }
+    public static List<VaccineAppointmentEntity> GetAllVacAppointments() {
+        // UpdateAppointments();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<VaccineAppointmentEntity> query = builder.createQuery(VaccineAppointmentEntity.class);
+        query.from(VaccineAppointmentEntity.class);
+        List<VaccineAppointmentEntity> result = session.createQuery(query).getResultList();
         return result;
     }
 
