@@ -42,9 +42,8 @@ public class SimpleClient extends AbstractClient {
         System.out.println(msg.getClass().toString());
         if (msg.getClass().equals(Warning.class)) {
             EventBus.getDefault().post(new WarningEvent((Warning) msg));
-        } else if (msg.getClass().equals(ArrayList.class) && cliniclistflag == 0) {
+        } else if (msg.getClass().equals(ArrayList.class) && cliniclistflag == 0) { // receive the clinic list from the server
                 ClinicList = ((List<ClinicEntity>) msg);
-            System.out.println("Clinic List  :" + ClinicList.size());
                 cliniclistflag = 1;
             try {
                 client.sendToServer("#getAllPatients");
@@ -52,7 +51,7 @@ public class SimpleClient extends AbstractClient {
                 e.printStackTrace();
             }
         }
-        else if(msg.getClass().equals(ArrayList.class) && patientlistflag == 0)
+        else if(msg.getClass().equals(ArrayList.class) && patientlistflag == 0)  // receive the patients list from the server
         {
             Patients = ((List<PatientEntity>) msg);
             patientlistflag=1;
@@ -62,13 +61,10 @@ public class SimpleClient extends AbstractClient {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            System.out.println("Patient List : "+ Patients.size());
         }
-        else if(msg.getClass().equals(ArrayList.class) && currentUser!=0)
+        else if(msg.getClass().equals(ArrayList.class) && currentUser!=0) // receive the manager  list from the server
         {
             Managers=((List<ManagerEntity>)msg) ;
-            System.out.println("manager list= " + Managers.size());
-            System.out.println(Managers.get(0).getClinic().getName());
             patientlistflag=2;
         }
         else if(currentUser == 0){
@@ -102,7 +98,7 @@ public class SimpleClient extends AbstractClient {
         }
     }
 
-    public static void resetClient()
+    public static void resetClient() // when the client logs off from his username we reset it to enable the process to be done again
     {
         availableUsers = 0;
         logInFlag = -1;

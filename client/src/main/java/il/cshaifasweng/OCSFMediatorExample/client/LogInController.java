@@ -40,7 +40,7 @@ public class LogInController {
         assert ManagerBtn != null : "fx:id=\"ManagerBtn\" was not injected: check your FXML file 'login.fxml'.";
         assert Nursebtn != null : "fx:id=\"Nursebtn\" was not injected: check your FXML file 'login.fxml'.";
         assert back_btn != null : "fx:id=\"back_btn\" was not injected: check your FXML file 'login.fxml'.";
-        if(SimpleClient.getNurseClient() == null){
+        if(SimpleClient.getNurseClient() == null){ // disabling the buttons according to the current user
             Nursebtn.setDisable(true);
         }
         if(SimpleClient.getDoctorClient() == null){

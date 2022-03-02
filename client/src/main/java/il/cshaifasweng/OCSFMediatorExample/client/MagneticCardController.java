@@ -21,9 +21,9 @@ package il.cshaifasweng.OCSFMediatorExample.client;
 
 public class MagneticCardController {
 
-    private PatientEntity chosen_patient = MagneticCardLoginController.chosen_patient;
-    private ClinicEntity chosen_clinic = MagneticCardLoginController.chosen_clinic;
-    private int has_app_flag=0;
+    private PatientEntity chosen_patient = MagneticCardLoginController.chosen_patient; // the current patient that has checked in by magnetic card
+    private ClinicEntity chosen_clinic = MagneticCardLoginController.chosen_clinic; // the clinic that the patient has checked in into
+    private int has_app_flag=0; // flag to help us determine if the patient has a reserved appointment
 
     @FXML // ResourceBundle that was given to the FXMLLoader
     private ResourceBundle resources;
@@ -59,7 +59,7 @@ public class MagneticCardController {
 
     @FXML
     void nurse_lab_app_action(ActionEvent event) {
-        if(!(chosen_patient.getClinic().getId()==(chosen_clinic.getId())))
+        if(!(chosen_patient.getClinic().getId()==(chosen_clinic.getId()))) // if the patient is not a member of this clinic then he can't receive this kind of service
         {
             Platform.runLater(() -> {
                 Alert alert = new Alert(Alert.AlertType.ERROR,
@@ -158,7 +158,7 @@ public class MagneticCardController {
 
     private void Reserve_nurse_app() throws IOException
     {
-        SimpleClient.next_nurse_appointment+=1;
+        SimpleClient.next_nurse_appointment+=1;  // increment the counter of the nurse appointments
         SimpleClient.nurse_patients.add(chosen_patient.getId());
         nurse_listView.setText("appointment for: nurse\n appointment number: "+ SimpleClient.next_nurse_appointment);
         SimpleClient.getClient().sendToServer("#increase nurse app:"+chosen_clinic.getId());
@@ -166,9 +166,9 @@ public class MagneticCardController {
     private void Reserve_lab_app() throws IOException
     {
         LocalDateTime now=LocalDateTime.now();
-        if(now.getHour() > 7 && now.getHour() < 10 )
+        if(now.getHour() > 7 && now.getHour() < 10 ) // the lab test services are only available between 8 and 10 AM
         {
-            SimpleClient.next_lab_appointment+=1;
+            SimpleClient.next_lab_appointment+=1; // increment the counter for the lab appointments
             SimpleClient.nurse_patients.add(chosen_patient.getId());
             nurse_listView.setText("appointment for: lab\n appointment number: "+ SimpleClient.next_lab_appointment);
             SimpleClient.getClient().sendToServer("#increase lab app:"+chosen_clinic.getId());

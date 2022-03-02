@@ -255,19 +255,8 @@ public class ManagerController {
                 choose_doctor_menu.getItems().add(new MenuItem(doc_clinic.getDoctor().getFirst_name() + " " +doc_clinic.getDoctor().getFamily_name()));
             }
         }
-//        for(MenuItem item : choose_clinic_menu.getItems())
-//        {
-//            item.setOnAction(actionEvent -> {
-//                for(ClinicEntity clinic : SimpleClient.getClinicList())
-//                    if(clinic.getName().equals(item.getText()))
-//                    {
-//                        clinic_current_hours.setText(clinic.getOpen() + "-" + clinic.getClose());
-//                        choosen_clinic=clinic;
-//                        choose_clinic_menu.setText(clinic.getName());
-//                    }
-//            });
-//        }
-        for(MenuItem item : choose_doctor_menu.getItems())
+
+        for(MenuItem item : choose_doctor_menu.getItems()) // setting action for every menu item so that when we choose a doctor it displays his work hours
         {
             item.setOnAction(actionEvent -> {
                     List<DoctorClinicEntity> doc_clinics = SimpleClient.getManagerClient().getClinic().getDoctorClinicEntities();
