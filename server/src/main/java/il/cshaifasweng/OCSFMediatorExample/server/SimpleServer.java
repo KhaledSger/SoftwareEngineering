@@ -630,6 +630,7 @@ public class SimpleServer extends AbstractServer {
                 }
             }
         }
+        System.out.println("Vaccine Update Done");
     }
 
     public static void UpdateReports()
