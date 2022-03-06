@@ -79,7 +79,7 @@ public class AllClinicsManagerController {
                 choose_clinic_menu.getItems().add(new MenuItem(clinic.getName()));
             }
         }
-        for(MenuItem item : choose_clinic_menu.getItems())
+        for(MenuItem item : choose_clinic_menu.getItems()) // setting an action for every added menu item
         {
             item.setOnAction(actionEvent -> {
                 for(ClinicEntity clinic : SimpleClient.getClinicList())

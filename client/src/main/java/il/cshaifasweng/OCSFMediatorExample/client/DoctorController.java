@@ -49,7 +49,7 @@ public class DoctorController {
     }
 
     @FXML
-    void view_apps_handler(ActionEvent event) {
+    void view_apps_handler(ActionEvent event) {  // show each appointment that belongs to the current doctor
         for(AppointmentEntity app : SimpleClient.doctorClient.getReservedAppointment())
         {
             apps_list.getItems().add(new Text(app.getDate().toString()+"-"+app.getPatient().getFirst_name()+" "+app.getPatient().getFamily_name()));
@@ -57,7 +57,7 @@ public class DoctorController {
     }
 
     @FXML
-    void view_patients_handler(ActionEvent event) {
+    void view_patients_handler(ActionEvent event) {  // add a button for each daily appointment (that has been confirmed by the appointment control station) that belongs to the doctor
         for(PatientEntity patient : SimpleClient.doc_patients)
         {
             patients_list.getItems().add(new Button(patient.getFirst_name()+" "+patient.getFamily_name()));

@@ -69,11 +69,11 @@ public class CovidTestAppsController {
         welcome_text.setText(SimpleClient.patientClient.getName());
         for(VaccineAppointmentEntity app : SimpleClient.getPatientClient().getClinic().getVac_appointments())
         {
-            if(!app.isReserved() && app.getType().equals("covid test"))
+            if(!app.isReserved() && app.getType().equals("covid test"))  // display the covid-19 tests appointments that are not reserved
             {
                 Button btn = new Button(app.getDate().toString());
                 list_view.getItems().add(btn);
-                btn.setOnAction(ActionEvent -> {
+                btn.setOnAction(ActionEvent -> {  // setting an action for each button that we add
                     try {
                         SimpleClient.getClient().sendToServer(app);
                     } catch (IOException e) {

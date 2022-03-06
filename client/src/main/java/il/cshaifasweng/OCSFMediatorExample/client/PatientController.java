@@ -4,8 +4,6 @@
 
 package il.cshaifasweng.OCSFMediatorExample.client;
 
-import java.awt.*;
-import java.awt.Menu;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -13,8 +11,6 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.List;
 
-import com.mysql.cj.xdevapi.Client;
-import com.sun.jdi.connect.spi.TransportService;
 import il.cshaifasweng.OCSFMediatorExample.entities.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -26,23 +22,7 @@ import javafx.scene.text.Text;
 
 public class PatientController {
 
-    // set patients name in initialize()
-    /* add buttons for appointments dynamically like this:
-        ToggleGroup group = new ToggleGroup();
-        ToggleButton btn1 = new ToggleButton("aaa");
-		ToggleButton btn2 = new ToggleButton("bbb");
-		vBox.getChildren().add(btn1);
-		vBox.getChildren().add(btn2);
-		group.getToggles().add(btn1);
-	    group.getToggles().add(btn2); we add the buttons to the same toggle group so we can press only one button at a time
-		this way you add two toggle buttons with the text "aaa" in the first one and "bbb" in the second one
-    */
-    /*
-        add menu items to specialized doctor menu dynamically like this:
-        // SpecializedDoctorMenuBtn.getItems().add(new MenuItem("specialization"));
-    */
-
-    public String specialation_of_doctor;
+    public String specialization_of_doctor;
     public String chosen_doctor_name;
     public String[] chosen_doctor_array;
     private DoctorEntity chosen_doctor;
@@ -115,7 +95,7 @@ public class PatientController {
             specialization = "Family Doctor";
         else
             specialization = "Children Doctor";
-        for (DoctorClinicEntity doc_patient : SimpleClient.patientClient.getClinic().getDoctorClinicEntities()) { // we search for the family doctor or children doctor in the clinic of the patient
+        for (DoctorClinicEntity doc_patient : SimpleClient.patientClient.getClinic().getDoctorClinicEntities()) { // we search for the family doctor or children doctor in the clinic that the patient belongs to
             if (doc_patient.getDoctor().getSpecialization().equals(specialization)) {
                 chosen_family_doctor = doc_patient.getDoctor();
                 for (AppointmentEntity app : doc_patient.getDoctor().getAppointments()) {
@@ -201,7 +181,7 @@ public class PatientController {
         List<VaccineAppointmentEntity> vaccine_apps = SimpleClient.getPatientClient().getClinic().getVac_appointments();
         for(VaccineAppointmentEntity app : vaccine_apps )
         {
-            if(app.getType().equals("flu") && !app.isReserved())
+            if(app.getType().equals("flu") && !app.isReserved()) // displaying the free flu vaccine appointments
             {
                 Button btn = new Button(app.getDate().toString());
                 vBox.getItems().add(btn);
@@ -240,7 +220,7 @@ public class PatientController {
                                             alert3.show();
                                         });
                                     }
-                                    else
+                                    else // cancel the appointment
                                     {
                                         Platform.runLater(() -> {
                                             Alert alert4 = new Alert(Alert.AlertType.ERROR,
@@ -274,14 +254,22 @@ public class PatientController {
     void GreenPassAction(ActionEvent event) throws IOException {
         /* check if the patients is vaccinated for covid
         if not return an error message
-        if yes check if the vaccination is still valid by checking the date of the vaccination
-        if its not valid return an error message
+        if yes, check if the vaccination is still valid by checking the expiration date of the vaccination
+        if it's not valid return an error message
         if yes move to the green pass page  ----> App.setRoot("GreenPass");
          */
         if (SimpleClient.getPatientClient().getPatient().getgPassExp().length() > 0) {
             LocalDate expiraton = LocalDate.parse(SimpleClient.getPatientClient().getPatient().getgPassExp());
             if(expiraton.isAfter(LocalDate.now())) {
                 App.setRoot("GreenPass");
+            }
+            else {
+                Platform.runLater(() -> {
+                    Alert alert = new Alert(Alert.AlertType.ERROR,
+                            String.format("You don't have a green pass")
+                    );
+                    alert.show();
+                });
             }
         }
     }
@@ -359,8 +347,7 @@ public class PatientController {
     @FXML
     void viewAppsAction(ActionEvent event) throws IOException { // view my appointments
         vBox.getItems().clear(); //clear the list view buttons
-        SimpleClient.getClient().sendToServer("#getPatientApps:" + SimpleClient.patientClient.getPatient().getPatientId());
-        System.out.println("patientclient.getappointments size= "+SimpleClient.patientClient.getAppointments().size());
+        SimpleClient.getClient().sendToServer("#getPatientApps:" + SimpleClient.patientClient.getPatient().getPatientId()); // get the updated appointments of the patient
         cancel_app_btn.setDisable(false); //enabling the cancel button
         for(AppointmentEntity app : SimpleClient.patientClient.getAppointments()) //adding the appointments to the list
         {
@@ -440,7 +427,7 @@ public class PatientController {
         assert vBox != null : "fx:id=\"vBox\" was not injected: check your FXML file 'patient.fxml'.";
         assert viewAppsBtn != null : "fx:id=\"viewAppsBtn\" was not injected: check your FXML file 'patient.fxml'.";
         SimpleClient.getClient().setCurrentUser(0);
-        cancel_app_btn.setDisable(true);
+        cancel_app_btn.setDisable(true); // disabling the cancel button
         welcome_text.setText(SimpleClient.patientClient.getName());  // add patient's name here
         for (ClinicEntity clinic : SimpleClient.getClinicList()) {
             inner:// adding the specialization of the doctors
@@ -453,11 +440,6 @@ public class PatientController {
                         continue  inner;
                     }
                 }
-          /*      if ((!SpecializedDoctorMenuBtn.getItems().contains(doc_clinic.getDoctor().getSpecialization())) && !doc_clinic.getDoctor().getSpecialization().equals("Family Doctor") && !doc_clinic.getDoctor().getSpecialization().equals("Children Doctor"))
-                {
-                    System.out.println(" Specilaztion"+SpecializedDoctorMenuBtn.getItems().contains(doc_clinic.getDoctor().getSpecialization()));
-                    SpecializedDoctorMenuBtn.getItems().add(new MenuItem(doc_clinic.getDoctor().getSpecialization()));
-                }*/
                 SpecializedDoctorMenuBtn.getItems().add(new MenuItem(doc_clinic.getDoctor().getSpecialization()));
 
             }
@@ -467,12 +449,11 @@ public class PatientController {
             item.setOnAction(actionEvent -> {
                         vBox.getItems().clear();
                         doc_clinic_list = new ArrayList<DoctorClinicEntity>();
-                        System.out.println(" here print list doctor entity !!");
-                        specialation_of_doctor = item.getText();
+                        specialization_of_doctor = item.getText();
                         //// find doctor name and doctor clinic by specialization
                         for (ClinicEntity clinic : SimpleClient.getClinicList()) {
                             for (DoctorClinicEntity doc_clinic : clinic.getDoctorClinicEntities()) {
-                                if (doc_clinic.getDoctor().getSpecialization().equals(specialation_of_doctor)) {
+                                if (doc_clinic.getDoctor().getSpecialization().equals(specialization_of_doctor)) {
                                     if (!(doc_clinic_list.contains(doc_clinic))) {
                                         doc_clinic_list.add(doc_clinic);
                                     }
@@ -484,7 +465,7 @@ public class PatientController {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                appointments.sort(Comparator.comparing(o -> o.getDate())); // sorting the appointment list by date TODO update the list to have the old appointments
+                appointments.sort(Comparator.comparing(o -> o.getDate())); // sorting the appointment list by date
                 System.out.println();
                           /*  for (AppointmentEntity app : appointments) {
                                 if (app.getDoctor().getSpecialization().equals(specialation_of_doctor)) {
@@ -504,7 +485,7 @@ public class PatientController {
                             }*/
                             System.out.println("doc_clinic size= "+doc_clinic_list.size());
                             for (DoctorClinicEntity doc_clinic_entity : doc_clinic_list) { // adding the available specialized doctors and clinics to the list
-                                if (doc_clinic_entity.getDoctor().getSpecialization().equals(specialation_of_doctor)) {
+                                if (doc_clinic_entity.getDoctor().getSpecialization().equals(specialization_of_doctor)) {
                                     if (!(vBox.getItems().contains((doc_clinic_entity.getDoctor().getFirst_name() + " " + doc_clinic_entity.getDoctor().getFamily_name() + "-" + doc_clinic_entity.getClinic().getName()).toString()))) {
                                         vBox.getItems().add(new Button((doc_clinic_entity.getDoctor().getFirst_name() + " " + doc_clinic_entity.getDoctor().getFamily_name() + "-" + doc_clinic_entity.getClinic().getName()).toString()));
                                     }
@@ -537,14 +518,12 @@ public class PatientController {
                                                     }
                                                 }
                                             }
-                                            System.out.println("before our for: "+chosen_doctor.getAppointments().size());
                                             for (AppointmentEntity app : chosen_doctor.getAppointments()) {
                                                 if ((!app.isReserved())  && app.getClinic().getName().equals(clinic_name) &&  (!(vBox.getItems().contains(app.getDate().toString())))) {
                                                     vBox.getItems().add(new Button(app.getDate().toString()));
                                                     //System.out.println(app.getDate().toString());
                                                 }
                                             }
-                                           // vBox.getItems().sort(Comparator.comparing(o -> o.getText()));
                                             for (Button button : vBox.getItems()) {
                                                 button.setOnAction(ActionEvent ->
                                                 {
